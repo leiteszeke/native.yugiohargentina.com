@@ -1,6 +1,6 @@
 // Dependencies
 import React, { useEffect, useRef, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
+import { Dimensions, ScrollView, View } from 'react-native';
 import Drawer from 'react-native-drawer';
 import { SafeAreaView } from 'react-navigation';
 // Hooks
@@ -42,6 +42,33 @@ const Content = ({ children, noScroll, onContentChange, scrollEnabled }) => {
     )
 }
 
+const MyDrawer = ({ children, close, drawerRef, open }) => (
+    <Drawer
+        closedDrawerOffset={ -3 }
+        content={ <Menu /> }
+        onCloseStart={ close }
+        onOpenStart={ open }
+        openDrawerOffset={ 0.2 }
+        panCloseMask={ 0.2 }
+        ref={ drawerRef }
+        styles={{
+            drawer: {
+                backgroundColor: '#FFFFFF',
+                shadowColor: '#000000',
+                shadowOpacity: 0.8,
+                shadowRadius: 3,
+            },
+        }}
+        tapToClose={ true }
+        tweenHandler={ ratio => ({
+            main: { opacity: (2 - ratio) / 2 }
+        }) }
+        type="overlay"
+    >
+        { children }
+    </Drawer>
+)
+
 const Layout = ({ children, noScroll, title }) => {
     const drawerRef = useRef(null);
     const [scrollEnabled, setScrollEnabled] = useState(false);
@@ -59,41 +86,19 @@ const Layout = ({ children, noScroll, title }) => {
         setRef(drawerRef);
     }, []);
 
+    const contentProps = { onContentChange, noScroll, scrollEnabled };
+    const drawerProps = { close, drawerRef, open };
+
     return (
-        <Drawer
-            closedDrawerOffset={ -3 }
-            content={ <Menu /> }
-            onCloseStart={ close }
-            onOpenStart={ open }
-            openDrawerOffset={ 0.2 }
-            panCloseMask={ 0.2 }
-            ref={ drawerRef }
-            styles={{
-                drawer: {
-                    backgroundColor: '#FFFFFF',
-                    shadowColor: '#000000',
-                    shadowOpacity: 0.8,
-                    shadowRadius: 3,
-                },
-            }}
-            tapToClose={ true }
-            tweenHandler={ ratio => ({
-                main: { opacity: (2 - ratio) / 2 }
-            }) }
-            type="overlay"
-        >
+        <MyDrawer { ...drawerProps }>
             <SafeAreaView style={{ height: '100%', width: '100%' }}>
                 <Header title={ title } />
-                <Content
-                    onContentChange={ onContentChange }
-                    noScroll={ noScroll }
-                    scrollEnabled={ scrollEnabled }
-                >
+                <Content { ...contentProps }>
                     { children }
                 </Content>
             </SafeAreaView>
             <DrawerOverlay show={ show } />
-        </Drawer>
+        </MyDrawer>
     )
 }
 

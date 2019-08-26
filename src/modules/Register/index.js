@@ -1,44 +1,28 @@
 // Dependencies
-import React from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { View } from 'react-native';
 // Components
+import Button from '../../components/Button';
+import Input from '../../components/Input';
 import Layout from '../../components/Layout';
 
 const Register = () => {
+    const [data, setData] = useState({});
+
+    const setValue = e => {
+        const { name, value } = e.target;
+        setData({ ...data, [name]: value });
+    }
+
     return (
         <Layout noScroll title="Crear cuenta">
             <View style={{ flex: 1, paddingTop: 20 }}>
-                <View style={{ height: 40, marginBottom: 12 }}>
-                    <TextInput
-                        placeholder="Usuario"
-                        placeholderTextColor="black"
-                        style={{
-                            borderBottomColor: 'black',
-                            borderBottomWidth: 2,
-                            height: 40,
-                            width: '100%',
-                        }}
-                    />
-                </View>
-                <View style={{ height: 40, marginBottom: 12 }}>
-                    <TextInput
-                        placeholder="Contraseña"
-                        placeholderTextColor="black"
-                        secureTextEntry={ true }
-                        style={{
-                            borderBottomColor: 'black',
-                            borderBottomWidth: 2,
-                            height: 40,
-                        }}
-                    />
-                </View>
+                <Input name="username" onChange={ setValue } placeholder="Usuario" />
+                <Input name="email" onChange={ setValue } placeholder="Email" />
+                <Input name="password" onChange={ setValue } placeholder="Contraseña" secure={ true } />
             </View>
             <View style={{ height: 40, marginTop: 12 }}>
-                <TouchableOpacity
-                    style={{ alignItems: 'center', height: 40, justifyContent: 'center', borderRadius: 4, backgroundColor: 'red' }}
-                >
-                    <Text style={{ color: '#FFFFFF', fontSize: 18, fontWeight: 'bold' }}>CREAR CUENTA</Text>
-                </TouchableOpacity>
+                <Button text="Crear cuenta" />
             </View>
         </Layout>
     )
