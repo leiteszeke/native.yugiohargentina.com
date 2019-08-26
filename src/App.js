@@ -4,12 +4,15 @@ import React from 'react';
 import Stack from './Stack';
 // Providers
 import { Provider as DrawerProvider } from './modules/Drawer/context';
+import NavigationProvider from './components/Navigation/context';
 
 const App = () => {
   return (
-    <DrawerProvider>
-      <Stack />
-    </DrawerProvider>
+    <NavigationProvider>
+      <DrawerProvider>
+        <Stack />
+      </DrawerProvider>
+    </NavigationProvider>
   )
 };
 

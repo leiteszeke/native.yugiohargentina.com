@@ -1,21 +1,18 @@
 // Dependencies
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { NavigationActions, SafeAreaView, StackActions, withNavigation } from 'react-navigation';
+import { SafeAreaView } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
+// Hooks
+import { useNavigation } from '../Navigation/hooks';
 
 const menuItems = [
     { icon: 'ios-calendar', name: 'Eventos', url: 'Events' },
     { icon: 'ios-home', name: 'Locales', url: 'Stores' },
 ];
 
-const Menu = ({ navigation }) => {
-    const goToRoute = url => () => {
-        navigation.dispatch(StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: url })],
-        }));
-    };
+const Menu = () => {
+    const { goTo } = useNavigation();
 
     return (
         <SafeAreaView style={{ height: '100%', padding: 12, width: '100%' }}>
@@ -23,7 +20,7 @@ const Menu = ({ navigation }) => {
                 { menuItems.map((menuItem, index) =>
                     <TouchableOpacity
                         key={ index }
-                        onPress={ goToRoute(menuItem.url) }
+                        onPress={ goTo(menuItem.url) }
                         style={{
                             alignItems: 'center',
                             flexDirection: 'row',
@@ -39,7 +36,7 @@ const Menu = ({ navigation }) => {
             </View>
             <View style={{ height: 40 }}>
                 <TouchableOpacity
-                    onPress={ goToRoute('Login') }
+                    onPress={ goTo('Login') }
                     style={{ height: 40, justifyContent: 'center' }}
                 >
                     <Text style={{
@@ -53,4 +50,4 @@ const Menu = ({ navigation }) => {
     );
 }
 
-export default withNavigation(Menu);
+export default Menu;
