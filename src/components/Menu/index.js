@@ -1,5 +1,5 @@
 // Dependencies
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -43,9 +43,14 @@ const BottomItem = menuItem => (
 
 const Menu = () => {
     const bottomItems = [];
+    const [isUser, setIsUser] = useState(false);
     const logout = () => {
         removeSession();
         goTo('Events');
+    }
+    const getIsUser = async () => {
+        const logged = await isLogged();
+        setIsUser(logged);
     }
 
     const menuItems = [
@@ -53,7 +58,11 @@ const Menu = () => {
         { icon: 'ios-home', name: 'Locales', onPress: () => goTo('Stores') },
     ];
 
-    if (isLogged()) {
+    useEffect(() => {
+        getIsUser();
+    }, [])
+
+    if (isUser) {
         bottomItems.push({ name: 'Salir', onPress: () => logout() });
         menuItems.push()
     } else {
