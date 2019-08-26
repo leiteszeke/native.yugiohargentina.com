@@ -7,21 +7,26 @@ import { SafeAreaView } from 'react-navigation';
 import { useDrawer, useDrawerActions } from '../../modules/Drawer/hooks';
 // Components
 import Header from '../Header';
+import Footer from '../Footer';
 import Menu from '../Menu';
 
 const DrawerOverlay = ({ show }) => {
     if (!show) return <View />;
 
-    return <View style={{
-        backgroundColor: '#000000',
-        flex: 1,
-        height: '100%',
-        left: 0,
-        opacity: 0.5,
-        position: 'absolute',
-        top: 0,
-        width: '100%',
-    }} />
+    return (
+        <View
+            style={{
+                backgroundColor: '#000000',
+                flex: 1,
+                height: '100%',
+                left: 0,
+                opacity: 0.5,
+                position: 'absolute',
+                top: 0,
+                width: '100%',
+            }}
+        />
+    );
 }
 
 const Content = ({ children, noScroll, onContentChange, scrollEnabled }) => {
@@ -96,10 +101,19 @@ const Layout = ({ children, noScroll, title }) => {
                 <Content { ...contentProps }>
                     { children }
                 </Content>
+                { footer &&
+                    <Footer>
+                        { footer }
+                    </Footer>
+                }
             </SafeAreaView>
             <DrawerOverlay show={ show } />
         </MyDrawer>
     )
 }
+
+Layout.defaultProps = {
+    footer: false,
+};
 
 export default Layout;
