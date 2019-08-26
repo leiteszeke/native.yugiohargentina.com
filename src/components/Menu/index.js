@@ -3,8 +3,8 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
-// Hooks
-import { useNavigation } from '../Navigation/hooks';
+// Services
+import { goTo } from '../../NavigationService';
 // Helpers
 import { isLogged, removeSession } from '../../helpers/session';
 
@@ -43,7 +43,6 @@ const BottomItem = menuItem => (
 
 const Menu = () => {
     const bottomItems = [];
-    const { goTo } = useNavigation();
     const logout = () => {
         removeSession();
         goTo('Events');
@@ -55,7 +54,7 @@ const Menu = () => {
     ];
 
     if (isLogged()) {
-        bottomItems.push({ name: 'Salir', onPress: logout });
+        bottomItems.push({ name: 'Salir', onPress: () => logout() });
         menuItems.push()
     } else {
         bottomItems.push({ name: 'Ingresar', onPress: () => goTo('Login') });

@@ -74,7 +74,7 @@ const MyDrawer = ({ children, close, drawerRef, open }) => (
     </Drawer>
 )
 
-const Layout = ({ children, noScroll, title }) => {
+const Layout = ({ children, footer, noScroll, title }) => {
     const drawerRef = useRef(null);
     const [scrollEnabled, setScrollEnabled] = useState(false);
     const { show } = useDrawer();

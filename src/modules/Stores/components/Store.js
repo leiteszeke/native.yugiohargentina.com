@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 // Components
-import Map from '../../components/Map';
+import Map from '../../../components/Map';
 
 const Store = store => (
     <View style={{ 

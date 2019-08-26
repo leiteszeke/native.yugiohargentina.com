@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 
-const Button = ({ buttonColor, onPress, text, textColor }) => {
+const Button = ({ buttonColor, onPress, text, textColor }) => (
     <TouchableOpacity
         onPress={ onPress }
         style={{
@@ -24,7 +24,7 @@ const Button = ({ buttonColor, onPress, text, textColor }) => {
             { text.toUpperCase() }
         </Text>
     </TouchableOpacity>
-};
+);
 
 Button.defaultProps = {
     buttonColor: '#FF0000',

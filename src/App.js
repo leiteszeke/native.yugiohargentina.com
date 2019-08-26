@@ -4,15 +4,18 @@ import React from 'react';
 import Stack from './Stack';
 // Providers
 import { Provider as DrawerProvider } from './modules/Drawer/context';
-import NavigationProvider from './components/Navigation/context';
+import { setTopLevelNavigator } from './NavigationService';
+
 
 const App = () => {
   return (
-    <NavigationProvider>
-      <DrawerProvider>
-        <Stack />
-      </DrawerProvider>
-    </NavigationProvider>
+    <DrawerProvider>
+      <Stack
+        ref={navigatorRef => {
+          setTopLevelNavigator(navigatorRef);
+        }}
+      />
+    </DrawerProvider>
   )
 };
 
