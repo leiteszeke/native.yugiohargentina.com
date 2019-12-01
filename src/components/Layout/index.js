@@ -1,119 +1,55 @@
 // Dependencies
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Dimensions, ScrollView, View } from 'react-native';
-import Drawer from 'react-native-drawer';
 import { SafeAreaView } from 'react-navigation';
-// Hooks
-import { useDrawer, useDrawerActions } from '../../modules/Drawer/hooks';
 // Components
-import Header from '../Header';
 import Footer from '../Footer';
-import Menu from '../Menu';
-
-const DrawerOverlay = ({ show }) => {
-    if (!show) return <View />;
-
-    return (
-        <View
-            style={{
-                backgroundColor: '#000000',
-                flex: 1,
-                height: '100%',
-                left: 0,
-                opacity: 0.5,
-                position: 'absolute',
-                top: 0,
-                width: '100%',
-            }}
-        />
-    );
-}
 
 const Content = ({ children, noScroll, onContentChange, scrollEnabled }) => {
-    const Component = noScroll ? View : ScrollView;
+  const Component = noScroll ? View : ScrollView;
 
-    return (
-        <Component
-            onContentSizeChange={ onContentChange }
-            scrollEnabled={ scrollEnabled }
-            style={{
-                flex: 1,
-                padding: 16,
-                width: '100%',
-            }}
-        >
-            { children }
-        </Component>
-    )
+  return (
+    <Component
+      onContentSizeChange={ onContentChange }
+      scrollEnabled={ scrollEnabled }
+      style={{
+        flex: 1,
+        padding: 16,
+        width: '100%',
+      }}
+    >
+      { children }
+    </Component>
+  )
 }
 
-const MyDrawer = ({ children, close, drawerRef, open }) => (
-    <Drawer
-        closedDrawerOffset={ -3 }
-        content={ <Menu /> }
-        onCloseStart={ close }
-        onOpenStart={ open }
-        openDrawerOffset={ 0.2 }
-        panCloseMask={ 0.2 }
-        ref={ drawerRef }
-        styles={{
-            drawer: {
-                backgroundColor: '#FFFFFF',
-                shadowColor: '#000000',
-                shadowOpacity: 0.8,
-                shadowRadius: 3,
-            },
-        }}
-        tapToClose={ true }
-        tweenHandler={ ratio => ({
-            main: { opacity: (2 - ratio) / 2 }
-        }) }
-        type="overlay"
-    >
-        { children }
-    </Drawer>
-)
-
 const Layout = ({ children, footer, noScroll, title }) => {
-    const drawerRef = useRef(null);
-    const [scrollEnabled, setScrollEnabled] = useState(false);
-    const { show } = useDrawer();
-    const { close, open, setRef } = useDrawerActions();
-    const HEADER_HEIGHT = 50;
-    const CONTENT_PADDING = 32;
+  const [scrollEnabled, setScrollEnabled] = useState(false);
+  const HEADER_HEIGHT = 50;
+  const CONTENT_PADDING = 32;
 
-    const onContentChange = (width, height) => {
-        setScrollEnabled(height > Dimensions.get('window').height - HEADER_HEIGHT - CONTENT_PADDING);
-    }
+  const onContentChange = (width, height) => {
+    setScrollEnabled(height > Dimensions.get('window').height - HEADER_HEIGHT - CONTENT_PADDING);
+  }
 
-    useEffect(() => {
-        close();
-        setRef(drawerRef);
-    }, []);
+  const contentProps = { onContentChange, noScroll, scrollEnabled };
 
-    const contentProps = { onContentChange, noScroll, scrollEnabled };
-    const drawerProps = { close, drawerRef, open };
-
-    return (
-        <MyDrawer { ...drawerProps }>
-            <SafeAreaView style={{ height: '100%', width: '100%' }}>
-                <Header title={ title } />
-                <Content { ...contentProps }>
-                    { children }
-                </Content>
-                { footer &&
-                    <Footer>
-                        { footer }
-                    </Footer>
-                }
-            </SafeAreaView>
-            <DrawerOverlay show={ show } />
-        </MyDrawer>
-    )
+  return (
+    <SafeAreaView style={{ backgroundColor: '#f0f2f5', height: '100%', width: '100%' }}>
+      <Content { ...contentProps }>
+        { children }
+      </Content>
+      { footer &&
+        <Footer>
+          { footer }
+        </Footer>
+      }
+    </SafeAreaView>
+  )
 }
 
 Layout.defaultProps = {
-    footer: false,
+  footer: false,
 };
 
 export default Layout;

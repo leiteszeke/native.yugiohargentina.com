@@ -39,6 +39,8 @@
 	</dict>
 	<key>UIAppFonts</key>
 	<array>
+		<string>AntDesign.ttf</string>
+		<string>antoutline.ttf</string>
 		<string>Futura.ttf</string>
 		<string>Ionicons.ttf</string>
 	</array>

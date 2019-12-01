@@ -1,31 +1,36 @@
 {
   "name": "ygoargentina",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "commit": "npx git-cz"
   },
   "dependencies": {
-    "@react-native-community/async-storage": "^1.6.1",
+    "@ant-design/icons-react-native": "^1.0.2",
+    "@ant-design/react-native": "^3.2.0",
+    "@react-native-community/async-storage": "^1.6.3",
     "prop-types": "^15.7.2",
     "react": "16.8.6",
     "react-native": "0.60.4",
     "react-native-drawer": "^2.5.1",
-    "react-native-gesture-handler": "^1.4.1",
+    "react-native-gesture-handler": "^1.5.2",
     "react-native-maps": "0.25.0",
-    "react-native-reanimated": "^1.2.0",
+    "react-native-reanimated": "^1.4.0",
     "react-native-vector-icons": "^6.6.0",
-    "react-navigation": "^3.12.0"
+    "react-navigation": "^4.0.10",
+    "react-navigation-stack": "^1.10.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/runtime": "^7.5.5",
+    "@babel/core": "^7.7.4",
+    "@babel/runtime": "^7.7.4",
     "@react-native-community/eslint-config": "^0.0.5",
-    "babel-jest": "^24.8.0",
-    "eslint": "^6.1.0",
-    "jest": "^24.8.0",
+    "babel-jest": "^24.9.0",
+    "cz-conventional-changelog": "3.0.2",
+    "eslint": "^6.7.2",
+    "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.55.0",
     "react-test-renderer": "16.8.6"
   },
@@ -36,5 +41,10 @@
     "assets": [
       "./assets/fonts/"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

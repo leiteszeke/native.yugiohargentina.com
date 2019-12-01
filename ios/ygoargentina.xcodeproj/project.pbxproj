@@ -12,6 +12,7 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		AAE383E8239435E9000BC6E8 /* antoutline.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AAE383E7239435E9000BC6E8 /* antoutline.ttf */; };
 		FA062F34B15077A2B8256A17 /* libPods-Production.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B2FD9BD2DDEF155F05BFA05F /* libPods-Production.a */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		AA470A272312B78600119CBB /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		AA470A282312B78600119CBB /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		AA470A292312B78600119CBB /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
+		AAE383E7239435E9000BC6E8 /* antoutline.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = antoutline.ttf; path = "../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf"; sourceTree = "<group>"; };
 		B13C8C3028098EC01D4D29D8 /* libPods-ygoargentina-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ygoargentina-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2FD9BD2DDEF155F05BFA05F /* libPods-Production.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Production.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBFFC355E4C36085E610828C /* Pods-ygoargentina-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ygoargentina-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-ygoargentina-tvOSTests/Pods-ygoargentina-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 				AA470A202312B78600119CBB /* FontAwesome5_Regular.ttf */,
 				AA470A1E2312B78600119CBB /* FontAwesome5_Solid.ttf */,
 				AA470A272312B78600119CBB /* Fontisto.ttf */,
+				AAE383E7239435E9000BC6E8 /* antoutline.ttf */,
 				AA470A222312B78600119CBB /* Foundation.ttf */,
 				AA470A1A2312B78500119CBB /* Ionicons.ttf */,
 				AA470A212312B78600119CBB /* MaterialCommunityIcons.ttf */,
@@ -232,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				AAE383E8239435E9000BC6E8 /* antoutline.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				0201027F79E94CA5AB53B4C5 /* Futura.ttf in Resources */,
 			);
