@@ -3,8 +3,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export const url = 'http://172.16.66.159:8001/';
 
-const getToken = () => {
-  const user = AsyncStorage.getItem('ygoargentina');
+const getToken = async () => {
+  const user = await AsyncStorage.getItem('ygoargentina');
 
   if (user !== null) {
     return JSON.parse(user).token;
@@ -16,7 +16,7 @@ const getToken = () => {
 const objectToQueryString = (obj) =>
   Object.keys(obj).map(key => key + '=' + obj[key]).join('&');
 
-const request = async (url, params, method = 'GET', config) => {
+const request = async (url, params, method = 'GET', config = {}) => {
   const options = {
     method,
     headers: {
@@ -25,7 +25,8 @@ const request = async (url, params, method = 'GET', config) => {
   };
 
   if (!config.public) {
-    options.headers.push({ Authorization: `Bearer ${getToken()}`});
+    const token = await getToken();
+    options.headers.Authorization = `Bearer ${token}`;
   }
 
   if (params) {
