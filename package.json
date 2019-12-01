@@ -1,6 +1,6 @@
 {
   "name": "ygoargentina",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "private": true,
   "scripts": {
     "start": "react-native start",
@@ -12,6 +12,7 @@
     "@ant-design/icons-react-native": "^1.0.2",
     "@ant-design/react-native": "^3.2.0",
     "@react-native-community/async-storage": "^1.6.3",
+    "moment-timezone": "^0.5.27",
     "prop-types": "^15.7.2",
     "react": "16.8.6",
     "react-native": "0.60.4",
