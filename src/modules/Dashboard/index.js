@@ -3,10 +3,10 @@ import React from 'react';
 // Components
 import Layout from '../../components/Layout';
 
-const Stores = () => {
+const Dashboard = () => {
   return (
-    <Layout header title="Locales" />
+    <Layout header title="Dashboard" />
   )
 }
 
-export default Stores;
+export default Dashboard;

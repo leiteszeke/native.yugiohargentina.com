@@ -3,10 +3,10 @@ import React from 'react';
 // Components
 import Layout from '../../components/Layout';
 
-const Stores = () => {
+const Account = () => {
   return (
-    <Layout header title="Locales" />
+    <Layout header title="Mi cuenta" />
   )
 }
 
-export default Stores;
+export default Account;
