@@ -1,7 +1,7 @@
 // Utils
-import { client, url } from './utils';
+import { client, url, handleSuccess, handleError } from './utils';
 
 export const all = () =>
 	client.get(`${url}events`)
-		.then(res => res.data)
-		.catch(err => err.response.data);
+		.then(handleSuccess)
+		.catch(handleError);
