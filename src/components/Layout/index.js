@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Dimensions, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 // Components
+import Header from '../Header';
 import Footer from '../Footer';
 
 const Content = ({ children, noScroll, onContentChange, scrollEnabled }) => {
@@ -23,7 +24,7 @@ const Content = ({ children, noScroll, onContentChange, scrollEnabled }) => {
   )
 }
 
-const Layout = ({ children, footer, noScroll, title }) => {
+const Layout = ({ children, footer, noScroll, header, title }) => {
   const [scrollEnabled, setScrollEnabled] = useState(false);
   const HEADER_HEIGHT = 50;
   const CONTENT_PADDING = 32;
@@ -36,14 +37,11 @@ const Layout = ({ children, footer, noScroll, title }) => {
 
   return (
     <SafeAreaView style={{ backgroundColor: '#f0f2f5', height: '100%', width: '100%' }}>
+      { header && <Header title={title} /> }
       <Content { ...contentProps }>
         { children }
       </Content>
-      { footer &&
-        <Footer>
-          { footer }
-        </Footer>
-      }
+      { footer && <Footer>{ footer }</Footer> }
     </SafeAreaView>
   )
 }

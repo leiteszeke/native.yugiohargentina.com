@@ -1,21 +1,27 @@
 // Dependencies
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
+import { createDrawerNavigator } from 'react-navigation-drawer';
 // Pages
 import AuthLoadingScreen from './AuthLoadingScreen';
 // Modules
+import Account from './modules/Account';
+import Dashboard from './modules/Dashboard';
 import Login from './modules/Login';
 import Register from './modules/Register';
 import Events from './modules/Events';
 import Stores from './modules/Stores';
+// Components
+import Sidebar from './components/Sidebar';
 
-const AppStack = createStackNavigator({
+const AppStack = createDrawerNavigator({
+  Dashboard: Dashboard,
   Events: Events,
   Stores: Stores,
+  Account: Account,
 }, {
-  defaultNavigationOptions: { header: null },
+  contentComponent: Sidebar,
 });
-
 
 const AuthStack = createStackNavigator(
   {

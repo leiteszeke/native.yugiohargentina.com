@@ -1,6 +1,6 @@
 {
   "name": "ygoargentina",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "start": "react-native start",
@@ -21,6 +21,7 @@
     "react-native-reanimated": "^1.4.0",
     "react-native-vector-icons": "^6.6.0",
     "react-navigation": "^4.0.10",
+    "react-navigation-drawer": "^2.3.3",
     "react-navigation-stack": "^1.10.3"
   },
   "devDependencies": {
