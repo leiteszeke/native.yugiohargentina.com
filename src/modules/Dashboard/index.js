@@ -1,7 +1,7 @@
 // Dependencies
 import React from 'react';
 // Components
-import Layout from '../../components/Layout';
+import Layout from '#components/Layout';
 
 const Dashboard = () => {
   return (

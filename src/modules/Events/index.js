@@ -4,13 +4,15 @@ import { View, Text, Image, Linking, TouchableOpacity } from 'react-native';
 import { Icon } from '@ant-design/react-native';
 import moment from 'moment-timezone';
 // Components
-import Layout from '../../components/Layout';
+import Layout from '#components/Layout';
 // Services
-import * as EventsService from '../../services/events';
+import * as EventsService from '#services/events';
 // Styles
 import styles from './styles';
 // Images
-import Logo from '../../images/logo.png';
+import Logo from '#images/logo.png';
+// Contexts
+import { useLoader } from '#contexts/Loader';
 
 const Event = event => {
   const image = event.image ? { uri: event.image } : Logo;
@@ -41,14 +43,20 @@ const Event = event => {
 }
 
 const Events = () => {
+  const { showLoader, hideLoader } = useLoader();
   const [events, setEvents] = React.useState([]);
 
   React.useEffect(() => {
-    EventsService.all().then(res => setEvents(res.data.sort((a, b) => {
-      if (a.dateFrom < b.dateFrom) return 1;
-      if (a.dateFrom > b.dateFrom) return -1;
-      return 0;
-    })));
+    showLoader();
+    EventsService.all()
+      .then(res => {
+        setEvents(res.data.sort((a, b) => {
+          if (a.dateFrom < b.dateFrom) return 1;
+          if (a.dateFrom > b.dateFrom) return -1;
+          return 0;
+        }));
+      })
+      .finally(() => hideLoader());
   }, []);
 
   return (

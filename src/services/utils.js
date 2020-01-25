@@ -1,7 +1,7 @@
 // Dependencies
 import AsyncStorage from '@react-native-community/async-storage';
 
-// export const url = 'http://172.16.66.159:8001/';
+// export const url = 'http://192.168.1.15:8001/';
 export const url = 'https://api.yugiohargentina.com/';
 
 const getToken = async () => {

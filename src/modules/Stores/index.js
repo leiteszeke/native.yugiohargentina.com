@@ -3,13 +3,15 @@ import React from 'react';
 import { View, Image, Text, TouchableOpacity, Linking } from 'react-native';
 import { Icon } from '@ant-design/react-native';
 // Components
-import Layout from '../../components/Layout';
+import Layout from '#components/Layout';
 // Services
-import * as StoresService from '../../services/stores';
+import * as StoresService from '#services/stores';
 // Images
-import Logo from '../../images/logo.png';
+import Logo from '#images/logo.png';
 // Styles
 import styles from './styles';
+// Contexts
+import { useLoader } from '#contexts/Loader';
 
 const Store = store => {
   const image = store.image ? { uri: store.image } : Logo;
@@ -37,16 +39,20 @@ const Store = store => {
 }
 
 const Stores = () => {
+  const { showLoader, hideLoader } = useLoader();
   const [stores, setStores] = React.useState([]);
 
   React.useEffect(() => {
-    StoresService.all().then(res => {
-      setStores(res.data.sort((a, b) => {
-        if (a.name < b.name) return -1;
-        if (a.name > b.name) return 1;
-        return 0;
-      }))
-    });
+    showLoader();
+    StoresService.all()
+      .then(res => {
+        setStores(res.data.sort((a, b) => {
+          if (a.name < b.name) return -1;
+          if (a.name > b.name) return 1;
+          return 0;
+        }))
+      })
+      .finally(() => hideLoader());
   }, []);
 
   return (
