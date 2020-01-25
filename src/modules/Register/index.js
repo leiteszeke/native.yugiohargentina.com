@@ -136,7 +136,7 @@ const Register = ({ navigation }) => {
       </View>
       <View style={ styles.buttons }>
         <Button onPress={registerUser} type="primary">CREAR CUENTA</Button>
-        <TouchableOpacity onPress={ () => goTo('Register') } style={ styles.flatButton }>
+        <TouchableOpacity onPress={ () => goTo('Login') } style={ styles.flatButton }>
           <Text style={styles.flatButtonText}>Ya tengo cuenta</Text>
         </TouchableOpacity>
       </View>
