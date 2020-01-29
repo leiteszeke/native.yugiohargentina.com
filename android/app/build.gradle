@@ -118,9 +118,13 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  * and the benefits of using Hermes will therefore be sharply reduced.
  */
 def enableHermes = project.ext.react.get("enableHermes", false);
+def isMin24 = false;
+def isMin26 = false;
+def isMin28 = false;
 
 android {
   compileSdkVersion rootProject.ext.compileSdkVersion
+  flavorDimensions "api"
 
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
@@ -131,8 +135,38 @@ android {
     applicationId "com.leiteszeke.ygoargentina"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 2
+    versionCode 3
     versionName "1.0"
+  }
+
+  productFlavors {
+    minApi22 {
+      dimension "api"
+      minSdkVersion 22
+      versionCode 20000 + android.defaultConfig.versionCode
+      versionNameSuffix "-minApi22"
+    }
+
+    minApi24 {
+      dimension "api"
+      minSdkVersion 24
+      versionCode 30000 + android.defaultConfig.versionCode
+      versionNameSuffix "-minApi24"
+    }
+
+    minApi26 {
+      dimension "api"
+      minSdkVersion 26
+      versionCode 40000  + android.defaultConfig.versionCode
+      versionNameSuffix "-minApi26"
+    }
+
+    minApi28 {
+      dimension "api"
+      minSdkVersion 28
+      versionCode 50000  + android.defaultConfig.versionCode
+      versionNameSuffix "-minApi28"
+    }
   }
 
   splits {
@@ -183,6 +217,22 @@ android {
         output.versionCodeOverride =
           versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
       }
+    }
+  }
+
+  variantFilter { variant ->
+    def names = variant.flavors*.name
+
+    if (names.contains("minApi24")) {
+      isMin24 = true;
+    }
+
+    if (names.contains("minApi26")) {
+      isMin26 = true;
+    }
+
+    if (names.contains("minApi28")) {
+      isMin28 = true;
     }
   }
 
