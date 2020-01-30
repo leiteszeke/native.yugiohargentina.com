@@ -3,7 +3,7 @@ import React from 'react';
 import { View } from 'react-native';
 import PropTypes from 'prop-types';
 // Helpers
-import { getSession } from './helpers/session';
+import { getSession } from '#helpers/session';
 
 class AuthLoadingScreen extends React.PureComponent {
   constructor(props) {

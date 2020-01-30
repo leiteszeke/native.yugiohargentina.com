@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { withNavigation } from 'react-navigation';
 
-const Header = ({ navigation, title }) => {
+const Header = ({ actions, navigation, title }) => {
   return (
     <>
       <View
@@ -20,6 +20,7 @@ const Header = ({ navigation, title }) => {
       >
         <Icon onPress={navigation.openDrawer} name="ios-menu" color="#000000" size={32} />
         <Text style={{flex: 1, fontWeight: 'bold', marginLeft: 20, fontSize: 30}}>{ title }</Text>
+        <>{actions}</>
       </View>
       <View
         style={{
