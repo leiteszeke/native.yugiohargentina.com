@@ -4,13 +4,17 @@ import { Image, View, TouchableOpacity, Text } from 'react-native';
 import { SafeAreaView, withNavigation } from 'react-navigation';
 import { Icon } from '@ant-design/react-native';
 // Images
-import Logo from '../../images/logo.png';
+import Logo from '#images/logo.png';
 // Styles
 import styles from './styles';
 // Helpers
-import { removeSession } from '../../helpers/session';
+import { removeSession } from '#helpers/session';
+// Hooks
+import { useUser } from '#contexts/User';
 
 const Sidebar = ({ navigation }) => {
+  const user = useUser()
+
   const logoutUser = React.useCallback(() => {
     removeSession();
     navigation.navigate('Auth');
@@ -27,10 +31,12 @@ const Sidebar = ({ navigation }) => {
           <Image style={styles.logo} resizeMode="contain" source={ Logo } />
         </View>
         <View style={styles.wrapper}>
-          <TouchableOpacity onPress={navigateTo('Dashboard')} style={styles.menuItem}>
-            <Icon name="home" size={20} color="#FFFFFF" />
-            <Text style={styles.menuItemText}>Dashboard</Text>
-          </TouchableOpacity>
+          {user.id > 0 && (
+            <TouchableOpacity onPress={navigateTo('Dashboard')} style={styles.menuItem}>
+              <Icon name="home" size={20} color="#FFFFFF" />
+              <Text style={styles.menuItemText}>Dashboard</Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity onPress={navigateTo('Events')} style={styles.menuItem}>
             <Icon name="calendar" size={20} color="#FFFFFF" />
             <Text style={styles.menuItemText}>Eventos</Text>
@@ -39,10 +45,12 @@ const Sidebar = ({ navigation }) => {
             <Icon name="shop" size={20} color="#FFFFFF" />
             <Text style={styles.menuItemText}>Locales</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={navigateTo('Account')} style={styles.menuItem}>
-            <Icon name="user" size={20} color="#FFFFFF" />
-            <Text style={styles.menuItemText}>Mi cuenta</Text>
-          </TouchableOpacity>
+          {user.id > 0 && (
+            <TouchableOpacity onPress={navigateTo('Account')} style={styles.menuItem}>
+              <Icon name="user" size={20} color="#FFFFFF" />
+              <Text style={styles.menuItemText}>Mi cuenta</Text>
+            </TouchableOpacity>
+          )}
         </View>
         <View style={styles.footer}>
           <TouchableOpacity onPress={logoutUser} style={styles.menuItem}>

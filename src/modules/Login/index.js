@@ -4,19 +4,18 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator, Button, InputItem, NoticeBar } from '@ant-design/react-native';
 import { withNavigation } from 'react-navigation';
 // Components
-import Layout from '../../components/Layout';
+import Layout from '#components/Layout';
 // Services
 import { goTo } from '../../NavigationService';
-import * as User from '../../services/users';
+import * as User from '#services/users';
 // Helpers
-import { setSession } from '../../helpers/session';
+import { setSession } from '#helpers/session';
 // Images
-import Logo from '../../images/logo.png';
+import Logo from '#images/logo.png';
 
 const styles = {
   container: {
     flex: 1,
-    paddingTop: 20,
   },
   logo: {
     height: 140,
@@ -24,8 +23,11 @@ const styles = {
     width: 'auto',
   },
   textInput: {
-    marginTop: 12,
+    color: '#FFFFFF',
     flex: 1,
+    fontWeight: 'bold',
+    marginTop: 12,
+    paddingLeft: 4,
   },
   inputError: {
     borderBottomColor: '#FF0000',
@@ -40,22 +42,31 @@ const styles = {
     marginTop: 12,
     paddingVertical: 4,
   },
+  separator: {
+    height: 12
+  },
   marquee: {
     color: '#000000',
     fontSize: 14,
   },
   buttons: {
-    height: 72,
+    height: 80,
     marginTop: 12
+  },
+  inlineButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 12,
   },
   flatButton: {
     alignItems: 'center',
+    color: '#FFFFFF',
     height: 20,
     justifyContent: 'center',
-    marginTop: 8,
   },
   flatButtonText: {
-    color: '#1890ff',
+    color: '#FFFFFF',
     fontSize: 16
   },
 };
@@ -67,12 +78,17 @@ const Login = ({ navigation }) => {
   const [showAlert, setShowAlert] = useState(false);
 
   const setValue = name => value => {
-    setData({ ...data, [name]: value });
+    setData(prev => ({ ...prev, [name]: value }));
 
     setErrors(prev => ({
       ...prev,
       [name]: false,
     }));
+  }
+
+  const loginAnonymous = () => {
+    setSession({ id: -1 })
+    navigation.navigate('App')
   }
 
   const loginUser = () => {
@@ -97,7 +113,7 @@ const Login = ({ navigation }) => {
   }
 
   return (
-    <Layout noScroll title="Ingresar">
+    <Layout background={true} noScroll title="Ingresar">
       {isLoading && <ActivityIndicator toast text="Cargando..." />}
       <View style={ styles.container }>
         <Image style={ styles.logo } resizeMode="contain" source={ Logo } />
@@ -106,13 +122,16 @@ const Login = ({ navigation }) => {
           style={[styles.textInput, errors.email ? styles.inputError : {}]}
           onChange={ setValue('email') }
           placeholder="Email"
+          placeholderTextColor="#FFFFFF"
         />
+        <View style={styles.separator} />
         <InputItem
           placeholderTextColor={ errors.password ? '#FF0000' : '#000000' }
           style={[styles.textInput, errors.password ? styles.inputError : {}]}
           type="password"
           onChange={ setValue('password') }
           placeholder="Contraseña"
+          placeholderTextColor="#FFFFFF"
         />
         {showAlert && (
           <NoticeBar
@@ -126,9 +145,15 @@ const Login = ({ navigation }) => {
       </View>
       <View style={ styles.buttons }>
         <Button onPress={loginUser} type="primary">INGRESAR</Button>
-        <TouchableOpacity onPress={ () => goTo('Register') } style={ styles.flatButton }>
-          <Text style={styles.flatButtonText}>CREAR CUENTA</Text>
-        </TouchableOpacity>
+        <View style={styles.inlineButtons}>
+          <TouchableOpacity onPress={ loginAnonymous } style={ styles.flatButton }>
+            <Text style={styles.flatButtonText}>ANÓNIMO</Text>
+          </TouchableOpacity>
+          <Text style={styles.flatButton}>&nbsp;&nbsp;|&nbsp;&nbsp;</Text>
+          <TouchableOpacity onPress={ goTo('Register') } style={ styles.flatButton }>
+            <Text style={styles.flatButtonText}>CREAR CUENTA</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </Layout>
   )

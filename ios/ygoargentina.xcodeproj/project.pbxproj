@@ -378,7 +378,7 @@
 			baseConfigurationReference = EDCB07726C22FDA40081347B /* Pods-Production.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconProduction;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = FQU3ME9YTV;
 				HEADER_SEARCH_PATHS = (
@@ -424,7 +424,7 @@
 			baseConfigurationReference = 43780A7BD0D4676FB07EC75E /* Pods-Production.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconProduction;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = FQU3ME9YTV;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",

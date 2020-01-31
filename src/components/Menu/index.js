@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 // Services
 import { goTo } from '../../NavigationService';
 // Helpers
-import { isLogged, removeSession } from '../../helpers/session';
+import { isLogged, removeSession } from '#helpers/session';
 
 const MenuItem = menuItem => (
     <TouchableOpacity
