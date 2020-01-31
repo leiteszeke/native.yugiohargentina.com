@@ -15,6 +15,7 @@
     "@ant-design/icons-react-native": "^1.0.2",
     "@ant-design/react-native": "^3.2.2",
     "@react-native-community/async-storage": "^1.7.1",
+    "@react-native-community/picker": "^1.2.0",
     "moment-timezone": "^0.5.27",
     "prop-types": "^15.7.2",
     "react": "16.8.6",

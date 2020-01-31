@@ -1,17 +1,12 @@
-// Dependencies
-import AsyncStorage from '@react-native-community/async-storage';
+// Utils
+import { getSession } from '#helpers/session';
 
-// export const url = 'http://192.168.1.15:8001/';
-export const url = 'https://api.yugiohargentina.com/';
+export const url = 'http://192.168.1.15:8001/';
+// export const url = 'https://api.yugiohargentina.com/';
 
 const getToken = async () => {
-  const user = await AsyncStorage.getItem('ygoargentina');
-
-  if (user !== null) {
-    return JSON.parse(user).token;
-  }
-
-  return '';
+  const user = await getSession();
+  return user.token;
 }
 
 const objectToQueryString = (obj) =>

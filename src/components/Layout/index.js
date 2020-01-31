@@ -9,7 +9,15 @@ import Loader from '#components/Loader';
 // Images
 import bgImage from '#images/bg.png'
 
-const Layout = ({ background = false, children, footer, noScroll, header, title }) => {
+const Layout = ({
+  background = false,
+  children,
+  footer,
+  noScroll,
+  header,
+  headerActions,
+  title,
+}) => {
   const [scrollEnabled, setScrollEnabled] = useState(false);
   const HEADER_HEIGHT = 50;
   const CONTENT_PADDING = 32;
@@ -24,6 +32,7 @@ const Layout = ({ background = false, children, footer, noScroll, header, title 
     return (
       <ImageBackground source={ bgImage } style={{ flex: 1 }}>
         <SafeAreaView
+          forceInset="always"
           style={{
             backgroundColor: background ? 'transparent' : '#f0f2f5',
             flex: 1,
@@ -50,12 +59,13 @@ const Layout = ({ background = false, children, footer, noScroll, header, title 
   return (
     <>
       <SafeAreaView
+        forceInset="always"
         style={{
           backgroundColor: background ? 'transparent' : '#f0f2f5',
           flex: 1,
         }}
       >
-        { header && <Header title={title} /> }
+        { header && <Header actions={headerActions || []} title={title} /> }
         <Content
           onContentSizeChange={ onContentChange }
           scrollEnabled={ scrollEnabled }

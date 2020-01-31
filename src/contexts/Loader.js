@@ -4,12 +4,14 @@ import React from 'react';
 const LoaderContext = React.createContext(null);
 
 const LoaderProvider = ({ children }) => {
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = React.useState(true);
   const showLoader = () => setShow(true);
   const hideLoader = () => setShow(false);
 
   return (
-    <LoaderContext.Provider value={{ show, showLoader, hideLoader }}>
+    <LoaderContext.Provider
+      value={{ isLoading: show, show, showLoader, hideLoader }}
+    >
       {children}
     </LoaderContext.Provider>
   )
