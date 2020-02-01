@@ -11,6 +11,8 @@ import Login from './modules/Login';
 import Register from './modules/Register';
 import Events from './modules/Events';
 import Stores from './modules/Stores';
+import Wanted from './modules/Wanted';
+import Card from './modules/Card';
 // Components
 import Sidebar from './components/Sidebar';
 
@@ -19,6 +21,8 @@ const AppStack = createDrawerNavigator({
   Events: Events,
   Stores: Stores,
   Account: Account,
+  Wanted: Wanted,
+  Card: Card,
 }, {
   contentComponent: Sidebar,
 });

@@ -9,12 +9,8 @@ import Logo from '#images/logo.png';
 import styles from './styles';
 // Helpers
 import { removeSession } from '#helpers/session';
-// Hooks
-import { useUser } from '#contexts/User';
 
 const Sidebar = ({ navigation }) => {
-  const user = useUser()
-
   const logoutUser = React.useCallback(() => {
     removeSession();
     navigation.navigate('Auth');
@@ -38,6 +34,10 @@ const Sidebar = ({ navigation }) => {
           <TouchableOpacity onPress={navigateTo('Events')} style={styles.menuItem}>
             <Icon name="calendar" size={20} color="#FFFFFF" />
             <Text style={styles.menuItemText}>Eventos</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={navigateTo('Wanted')} style={styles.menuItem}>
+            <Icon name="credit-card" size={20} color="#FFFFFF" />
+            <Text style={styles.menuItemText}>Lista de Deseos</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={navigateTo('Stores')} style={styles.menuItem}>
             <Icon name="shop" size={20} color="#FFFFFF" />

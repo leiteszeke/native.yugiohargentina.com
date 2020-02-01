@@ -1,7 +1,7 @@
 // Dependencies
 import React, { useState } from 'react';
-import { Dimensions, ImageBackground, ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
+import { Dimensions, ImageBackground, ScrollView, View, KeyboardAvoidingView } from 'react-native';
+import { NavigationEvents, SafeAreaView } from 'react-navigation';
 // Components
 import Header from '#components/Header';
 import Footer from '#components/Footer';
@@ -11,6 +11,7 @@ import bgImage from '#images/bg.png'
 
 const Layout = ({
   background = false,
+  events,
   children,
   footer,
   noScroll,
@@ -32,25 +33,32 @@ const Layout = ({
     return (
       <ImageBackground source={ bgImage } style={{ flex: 1 }}>
         <SafeAreaView
-          forceInset="always"
+          forceInset={{ bottom: 'always' }}
           style={{
             backgroundColor: background ? 'transparent' : '#f0f2f5',
             flex: 1,
           }}
         >
-          { header && <Header title={title} /> }
-          <Content
-            onContentSizeChange={ onContentChange }
-            scrollEnabled={ scrollEnabled }
-            style={{
-              flex: 1,
-              padding: 16,
-              width: '100%',
-            }}
+          <KeyboardAvoidingView
+          keyboardVerticalOffset={-100}
+            contentContainerStyle={{ flex: 1 }}
+            behavior="position"
+            style={{ flex: 1 }}
           >
-            { children }
-          </Content>
-          { footer && <Footer>{ footer }</Footer> }
+            { header && <Header title={title} /> }
+            <Content
+              onContentSizeChange={ onContentChange }
+              scrollEnabled={ scrollEnabled }
+              style={{
+                flex: 1,
+                padding: 16,
+                width: '100%',
+              }}
+            >
+              { children }
+            </Content>
+            { footer && <Footer>{ footer }</Footer> }
+          </KeyboardAvoidingView>
         </SafeAreaView>
       </ImageBackground>
     )
@@ -63,12 +71,17 @@ const Layout = ({
         style={{
           backgroundColor: background ? 'transparent' : '#f0f2f5',
           flex: 1,
+          paddingBottom: 16,
         }}
       >
+        <NavigationEvents {...events} />
         { header && <Header actions={headerActions || []} title={title} /> }
         <Content
           onContentSizeChange={ onContentChange }
           scrollEnabled={ scrollEnabled }
+          contentContainerStyle={{
+            paddingBottom: 16,
+          }}
           style={{
             flex: 1,
             padding: 16,

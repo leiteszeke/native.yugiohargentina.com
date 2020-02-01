@@ -1,7 +1,7 @@
 // Utils
 import { client, url, handleSuccess, handleError } from './utils';
 
-export const all = () =>
-	client.get(`${url}events`, { public: true })
+export const all = (params) =>
+	client.get(`${url}events`, { ...params, public: true })
 		.then(handleSuccess)
 		.catch(handleError);

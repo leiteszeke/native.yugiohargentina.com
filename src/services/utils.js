@@ -1,8 +1,9 @@
 // Utils
 import { getSession } from '#helpers/session';
+// Configs
+import { API_URL } from 'react-native-dotenv';
 
-export const url = 'http://192.168.1.15:8001/';
-// export const url = 'https://api.yugiohargentina.com/';
+export const url = API_URL;
 
 const getToken = async () => {
   const user = await getSession();
@@ -65,7 +66,7 @@ export const handleSuccess = res => res;
 
 export const handleError = err => {
   if (err.response) {
-    return err.response.data;
+    return err?.response?.data;
   }
 
   return err;

@@ -6,72 +6,19 @@ import { withNavigation } from 'react-navigation';
 // Components
 import Layout from '#components/Layout';
 // Services
-import { goTo } from '../../NavigationService';
+import { goTo } from '#navigation';
 import * as User from '#services/users';
 // Helpers
 import { setSession } from '#helpers/session';
 // Images
 import Logo from '#images/logo.png';
-
-const styles = {
-  container: {
-    flex: 1,
-  },
-  logo: {
-    height: 140,
-    marginBottom: 20,
-    width: 'auto',
-  },
-  textInput: {
-    color: '#FFFFFF',
-    flex: 1,
-    fontWeight: 'bold',
-    marginTop: 12,
-    paddingLeft: 4,
-  },
-  inputError: {
-    borderBottomColor: '#FF0000',
-    borderBottomWidth: 1,
-    color: '#FF0000',
-  },
-  alert: {
-    backgroundColor: '#fff1f0',
-    borderColor: '#ffa39e',
-    borderRadius: 4,
-    borderWidth: 1,
-    marginTop: 12,
-    paddingVertical: 4,
-  },
-  separator: {
-    height: 12
-  },
-  marquee: {
-    color: '#000000',
-    fontSize: 14,
-  },
-  buttons: {
-    height: 80,
-    marginTop: 12
-  },
-  inlineButtons: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 12,
-  },
-  flatButton: {
-    alignItems: 'center',
-    color: '#FFFFFF',
-    height: 20,
-    justifyContent: 'center',
-  },
-  flatButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16
-  },
-};
+// Hooks
+import { useUser } from '#contexts/User';
+// Styles
+import styles from './styles';
 
 const Login = ({ navigation }) => {
+  const { fetchUser } = useUser();
   const [data, setData] = useState({});
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -86,8 +33,9 @@ const Login = ({ navigation }) => {
     }));
   }
 
-  const loginAnonymous = () => {
-    setSession({ id: -1 })
+  const loginAnonymous = async () => {
+    await setSession({ id: -1 })
+    await fetchUser();
     navigation.navigate('App')
   }
 
@@ -99,6 +47,7 @@ const Login = ({ navigation }) => {
       .then(async res => {
         if (!res.error) {
           await setSession(res.data);
+          await fetchUser();
           return navigation.navigate('App');
         } else {
           if (res.message === 'user_not_found') {
@@ -113,9 +62,9 @@ const Login = ({ navigation }) => {
   }
 
   return (
-    <Layout background={true} noScroll title="Ingresar">
+    <Layout background noScroll title="Ingresar">
       {isLoading && <ActivityIndicator toast text="Cargando..." />}
-      <View style={ styles.container }>
+      <View>
         <Image style={ styles.logo } resizeMode="contain" source={ Logo } />
         <InputItem
           placeholderTextColor={ errors.email ? '#FF0000' : '#000000' }
@@ -143,6 +92,7 @@ const Login = ({ navigation }) => {
           </NoticeBar>
         )}
       </View>
+      <View style={ styles.container } />
       <View style={ styles.buttons }>
         <Button onPress={loginUser} type="primary">INGRESAR</Button>
         <View style={styles.inlineButtons}>
