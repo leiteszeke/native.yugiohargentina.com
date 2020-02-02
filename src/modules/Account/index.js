@@ -185,6 +185,7 @@ const Account = ({ navigation }) => {
       </View>
       {showPicker.countryId && (
         <Picker
+          mode="dialog"
           onValueChange={setValue('countryId')}
           selectedValue={data.countryId}
           style={styles.picker}

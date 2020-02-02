@@ -4,6 +4,8 @@ import { TextInput, View } from 'react-native';
 // Styles
 import styles from './styles';
 
+const MAX_INPUT_HEIGHT = 40;
+
 const Input = ({ containerStyle, style, ...props }) => (
   <View style={[styles.container, containerStyle]}>
     <TextInput
@@ -14,6 +16,6 @@ const Input = ({ containerStyle, style, ...props }) => (
       {...props}
     />
   </View>
-)
+);
 
 export default Input;
