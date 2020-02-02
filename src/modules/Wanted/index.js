@@ -1,10 +1,12 @@
 // Dependencies
 import React from 'react';
-import { FlatList, Modal, Text, TouchableOpacity } from 'react-native';
+import { Button } from '@ant-design/react-native';
+import { FlatList, Modal, Text, TouchableOpacity, View } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 // Components
 import CardListModal from '#components/CardListModal';
+import FeatureHide from '#components/FeatureHide';
 import Layout from '#components/Layout';
 // Services
 import * as WishlistService from '#services/wishlist-cards';
@@ -12,12 +14,21 @@ import * as WishlistService from '#services/wishlist-cards';
 import styles from './styles';
 // Contexts
 import { useLoader } from '#contexts/Loader';
+import { useUser } from '#contexts/User';
+// Helpers
+import { removeSession } from '#helpers/session';
 
 const Wanted = ({ navigation }) => {
+  const { user } = useUser();
   const { isLoading, showLoader, hideLoader } = useLoader();
   const [wishlist, setWishlist] = React.useState({});
   const [showModal, setShowModal] = React.useState(false);
   const [prev, setPrev] = React.useState(null);
+
+  const logout = () => {
+    removeSession();
+    navigation.navigate('Auth');
+  }
 
   const goTo = React.useCallback((route, params) => () => navigation.navigate(route, params), []);
   const openCard = (id, name) => goTo('Card', { id, name });
@@ -29,7 +40,9 @@ const Wanted = ({ navigation }) => {
   };
 
   React.useEffect(() => {
-    fetchCards();
+    if (user.id > 0) {
+      fetchCards();
+    }
   }, []);
 
   React.useEffect(() => {
@@ -47,6 +60,19 @@ const Wanted = ({ navigation }) => {
   }
 
   if (isLoading) return null
+
+  if (user.id <= 0) {
+    return (
+      <Layout header noScroll title="Lista de Deseos">
+        <View style={{ flex: 1 }}>
+          <FeatureHide style={{ height: '100%' }}>
+            <Text style={{ marginBottom: 20 }}>Para ver tu lista de deseos, primero debes iniciar sesión.</Text>
+            <Button onPress={logout} type="primary">INICIAR SESIÓN</Button>
+          </FeatureHide>
+        </View>
+      </Layout>
+    )
+  }
 
   const actions = (
     <Icon onPress={toggleModal} name="ios-add" color="#000000" size={32} />
