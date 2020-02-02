@@ -1,5 +1,5 @@
 module.exports = {
-  presets: ['module:metro-react-native-babel-preset'],
+  presets: ['module:metro-react-native-babel-preset', 'module:react-native-dotenv'],
   plugins: [
     ["module-resolver", {
       "root": ["./src"],
@@ -13,6 +13,7 @@ module.exports = {
         "#hooks": "./src/hooks",
         "#images": "./src/images",
         "#mocks": "./src/mocks",
+        "#navigation": "./src/NavigationService.js",
         "#services": "./src/services",
         "#types": "./src/types.js",
         "#utils": "./src/utils"

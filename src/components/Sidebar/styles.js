@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#001529',
     flex: 1,
     overflow: 'hidden',
+    paddingVertical: 12,
   },
 
   wrapper: {

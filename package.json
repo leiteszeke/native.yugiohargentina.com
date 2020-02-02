@@ -5,6 +5,7 @@
   "scripts": {
     "commit": "npx git-cz",
     "lint": "eslint .",
+    "postinstall": "npx jetify",
     "run:android:api24": "react-native run-android --deviceId emulator-5554 --variant minApi24Debug",
     "run:android:api26": "react-native run-android --deviceId emulator-5556 --variant minApi26Debug",
     "run:ios": "react-native run-ios --simulator='iPhone 11'",
@@ -18,11 +19,10 @@
     "@react-native-community/picker": "^1.2.0",
     "moment-timezone": "^0.5.27",
     "prop-types": "^15.7.2",
-    "react": "16.8.6",
-    "react-native": "0.60.4",
+    "react": "16.9.0",
+    "react-native": "^0.61.5",
     "react-native-drawer": "^2.5.1",
     "react-native-gesture-handler": "^1.5.3",
-    "react-native-maps": "0.25.0",
     "react-native-reanimated": "^1.7.0",
     "react-native-safe-area-context": "^0.6.2",
     "react-native-svg": "^11.0.1",
@@ -41,7 +41,9 @@
     "cz-conventional-changelog": "3.0.2",
     "eslint": "^6.8.0",
     "jest": "^24.9.0",
+    "jetifier": "^1.6.5",
     "metro-react-native-babel-preset": "^0.55.0",
+    "react-native-dotenv": "^0.2.0",
     "react-test-renderer": "16.8.6"
   },
   "jest": {

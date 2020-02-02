@@ -39,7 +39,7 @@ const Store = store => {
 }
 
 const Stores = () => {
-  const { showLoader, hideLoader } = useLoader();
+  const { isLoading, showLoader, hideLoader } = useLoader();
   const [stores, setStores] = React.useState([]);
 
   React.useEffect(() => {
@@ -54,6 +54,8 @@ const Stores = () => {
       })
       .finally(() => hideLoader());
   }, []);
+
+  if (isLoading) return null
 
   return (
     <Layout header title="Locales">
