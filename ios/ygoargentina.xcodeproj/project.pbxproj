@@ -382,7 +382,7 @@
 			baseConfigurationReference = EDCB07726C22FDA40081347B /* Pods-Production.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconProduction;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = FQU3ME9YTV;
 				HEADER_SEARCH_PATHS = (
@@ -411,7 +411,7 @@
 				);
 				INFOPLIST_FILE = ygoargentina/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -428,7 +428,7 @@
 			baseConfigurationReference = 43780A7BD0D4676FB07EC75E /* Pods-Production.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconProduction;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = FQU3ME9YTV;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -456,7 +456,7 @@
 				);
 				INFOPLIST_FILE = ygoargentina/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

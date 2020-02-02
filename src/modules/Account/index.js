@@ -2,9 +2,9 @@
 import React from 'react';
 import { Button } from '@ant-design/react-native';
 import { View, Text } from 'react-native';
-import { Picker } from '@react-native-community/picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { withNavigation } from 'react-navigation';
+import RNPickerSelect from 'react-native-picker-select';
 // Components
 import Input from '#components/Input';
 import Layout from '#components/Layout';
@@ -13,12 +13,11 @@ import FeatureHide from '#components/FeatureHide';
 import * as Countries from '#services/countries';
 import * as Users from '#services/users';
 import * as States from '#services/states';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 // Contexts
 import { useLoader } from '#contexts/Loader';
 import { useUser } from '#contexts/User';
 // Styles
-import styles from './styles';
+import styles, { dropdownStyle } from './styles';
 // Helpers
 import { removeSession } from '#helpers/session';
 
@@ -28,7 +27,6 @@ const Account = ({ navigation }) => {
   const [data, setData] = React.useState({});
   const [states, setStates] = React.useState(null);
   const [countries, setCountries] = React.useState(null);
-  const [showPicker, setShowPicker] = React.useState({});
 
   const logout = () => {
     removeSession();
@@ -70,17 +68,8 @@ const Account = ({ navigation }) => {
     });
   }
 
-  const togglePicker = name => e => {
-    setShowPicker(prev => ({
-      ...prev,
-      [name]: !prev[name]
-    }))
-  }
-
   const setValue = name => e => {
-    const value = e.nativeEvent ? e.nativeEvent.text : e;
-
-    togglePicker(name)()
+    const value = e?.nativeEvent?.text || e;
 
     setData(prev => ({
       ...prev,
@@ -155,26 +144,24 @@ const Account = ({ navigation }) => {
           placeholder="Challonge User"
           value={data.challongeId || ''} 
         />
-        <View>
-          <TouchableOpacity
-            onPress={togglePicker('countryId')}
-            style={styles.textInput}
-          >
-            <Text style={styles.placeholder}>
-              Pais: {countries && countries.find(c => c.id === data.countryId)?.name}
-            </Text>
-          </TouchableOpacity>
+        <View style={styles.dropdown}>
+          <RNPickerSelect
+            items={countries ? countries.map(country => ({ label: country.name, value: country.id })) : []}
+            onValueChange={setValue('countryId')}
+            placeholder={{ color: 'black', label: "Seleccione un Pais", value: null }}
+            style={dropdownStyle}
+            value={data.countryId}
+          />
         </View>
         {(typeof data.countryId === 'undefined' || data.countryId === 1) && (
-          <View>
-            <TouchableOpacity
-              onPress={togglePicker('stateId')}
-              style={styles.textInput}
-            >
-              <Text style={styles.placeholder}>
-                Provincia: {states && states.find(s => s.id === data.stateId)?.name}
-              </Text>
-            </TouchableOpacity>
+          <View style={styles.dropdown}>
+            <RNPickerSelect
+              items={states ? states.map(state => ({ label: state.name, value: state.id })) : []}
+              onValueChange={setValue('stateId')}
+              placeholder={{ color: 'black', label: "Seleccione una Provincia", value: null }}
+              style={dropdownStyle}
+              value={data.stateId}
+            />
           </View>
         )}
         <Input
@@ -183,29 +170,6 @@ const Account = ({ navigation }) => {
           value={data.city || ''} 
         />
       </View>
-      {showPicker.countryId && (
-        <Picker
-          mode="dialog"
-          onValueChange={setValue('countryId')}
-          selectedValue={data.countryId}
-          style={styles.picker}
-        >
-          {countries && countries.map(country =>
-            <Picker.Item label={country.name} key={country.id} value={country.id} />
-          )}
-        </Picker>
-      )}
-      {showPicker.stateId && (
-        <Picker
-          enabled={(typeof data.countryId === 'undefined' || data.countryId === 1)}
-          onValueChange={setValue('stateId')}
-          selectedValue={data.stateId}
-        >
-          {states && states.map(state =>
-            <Picker.Item label={state.name} key={state.id} value={state.id} />
-          )}
-        </Picker>
-      )}
     </Layout>
   )
 }

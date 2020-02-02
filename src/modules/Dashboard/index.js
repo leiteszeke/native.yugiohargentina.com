@@ -70,12 +70,12 @@ const Dashboard = ({ navigation }) => {
       <View>
         <Title>Mis estadísticas</Title>
         <View style={{ flexDirection: 'row', marginBottom: 16 }}>
-          <Card title="Cartas buscando" value={statistics.wanted} style={{ marginRight: 8 }} />
-          <Card title="Torneos jugando" value={statistics.playing} style={{ marginLeft: 8 }} />
+          <Card title="Cartas buscando" value={statistics.wanted || 0} style={{ marginRight: 8 }} />
+          <Card title="Torneos jugando" value={statistics.playing || 0} style={{ marginLeft: 8 }} />
         </View>
         <View style={{ flexDirection: 'row' }}>
-          <Card title="Ranking YGO Arg" value={statistics.ranking} style={{ marginRight: 8 }} />
-          <Card title="Partidos invicto" value={statistics.inbeated} style={{ marginLeft: 8 }} />
+          <Card title="Ranking YGO Arg" value={statistics.ranking || 0} style={{ marginRight: 8 }} />
+          <Card title="Partidos invicto" value={statistics.inbeated || 0} style={{ marginLeft: 8 }} />
         </View>
         {user.id <= 0 && (
           <FeatureHide>

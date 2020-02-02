@@ -1,6 +1,21 @@
 // Dependencies
 import { StyleSheet } from 'react-native';
 
+export const dropdownStyle = StyleSheet.create({
+  inputIOS: {
+    fontSize: 18,
+  },
+
+  inputAndroid: {
+    fontSize: 18,
+  },
+
+  placeholder: {
+    color: 'black',
+    fontSize: 18,
+  },
+});
+
 export default StyleSheet.create({
   title: {
     color: 'black',
@@ -23,6 +38,17 @@ export default StyleSheet.create({
     color: 'black',
     fontSize: 18,
     lineHeight: 38,
+  },
+
+  dropdown: {
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    borderStyle: 'solid',
+    height: 40,
+    justifyContent: 'center',
+    marginBottom: 4,
+    padding: 0,
+    paddingHorizontal: 4,
   },
 
   picker: {

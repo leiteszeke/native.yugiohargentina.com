@@ -1185,11 +1185,6 @@
     eslint-plugin-react-native "3.6.0"
     prettier "1.16.4"
 
-"@react-native-community/picker@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@react-native-community/picker/-/picker-1.2.0.tgz#c0df9a9c9c1b27528296c38a87d86c3d594ba6c1"
-  integrity sha512-xCFwVjSmSnQ5y4MiWcsqi80K67LZUnKTYHnJ9gBmd4FSbw2qkazayC0/I3jLFFD1fZjdODwRmcsIZfnOnNmvLw==
-
 "@react-native-community/viewpager@^1.1.7":
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/@react-native-community/viewpager/-/viewpager-1.1.7.tgz#7d3b1631f1ec91145db92a8e25c80d53027e96ba"
@@ -4774,6 +4769,11 @@ lodash.debounce@^4.0.8:
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
   integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
 
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
+
 lodash.map@^4.5.1:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.map/-/lodash.map-4.6.0.tgz#771ec7839e3473d9c4cde28b19394c3562f4f6d3"
@@ -6158,6 +6158,13 @@ react-native-modal-popover@^0.0.12:
     "@types/prop-types" "^15.5.5"
     lodash.debounce "^4.0.8"
     prop-types "^15.6.2"
+
+react-native-picker-select@^6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-picker-select/-/react-native-picker-select-6.4.0.tgz#f14a044e91ae5aaddba8b5043da087c87d26d955"
+  integrity sha512-SntLOt+UgAchh8GCoBitabhcWjyFBtYsweQHlPfca6UUNhfTuL+Oo85G43DpIXVfO3Xg2fb5kI051kuKXARc/g==
+  dependencies:
+    lodash.isequal "^4.5.0"
 
 react-native-reanimated@^1.7.0:
   version "1.7.0"
