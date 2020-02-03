@@ -58,7 +58,7 @@ const Stores = () => {
   if (isLoading) return null
 
   return (
-    <Layout header title="Locales">
+    <Layout header title="Locales" withBack style={{ padding: 16 }}>
       {stores.map(store => <Store key={store.id} {...store} />)}
     </Layout>
   )

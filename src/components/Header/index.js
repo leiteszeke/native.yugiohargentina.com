@@ -1,45 +1,64 @@
 // Dependencies
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Platform, View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { withNavigation } from 'react-navigation';
 
-const Header = ({ actions, navigation, title }) => {
-  return (
-    <>
+const shadowStyle = Platform.OS === 'ios' ? {} : {
+  shadowOffset:{
+    height: 3,
+    width: 0,
+  },
+  elevation: 10,
+  shadowColor: '#000000',
+  shadowOpacity: 1,
+  position: 'relative',
+  zIndex: -1
+}
+
+const Header = ({ actions, navigation, noIcon, onBack, title, withBack }) => (
+  <>
+    <View
+      style={{
+        alignItems: 'center',
+        backgroundColor: '#f0f2f5',
+        flexDirection: 'row',
+        height: 52,
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        width: '100%',
+        ...shadowStyle
+      }}
+    >
+      {!noIcon && (
+        withBack ? (
+          <Icon onPress={onBack} name="ios-arrow-back" color="#000000" size={32} />
+        ) : (
+          <Icon onPress={navigation.openDrawer} name="ios-menu" color="#000000" size={32} />
+        )
+      )}
+      <Text style={{flex: 1, fontWeight: 'bold', marginLeft: noIcon ? 0 : 20, fontSize: 30}}>{ title }</Text>
+      <>{actions}</>
+    </View>
+    {Platform.OS === 'ios' && (
       <View
         style={{
-          alignItems: 'center',
           backgroundColor: '#f0f2f5',
-          flexDirection: 'row',
-          height: 52,
-          paddingVertical: 6,
-          paddingHorizontal: 12,
-          width: '100%',
-        }}
-      >
-        <Icon onPress={navigation.openDrawer} name="ios-menu" color="#000000" size={32} />
-        <Text style={{flex: 1, fontWeight: 'bold', marginLeft: 20, fontSize: 30}}>{ title }</Text>
-        <>{actions}</>
-      </View>
-      <View
-        style={{
-          backgroundColor: '#f0f2f5',
+          elevation: 0,
           height: 2,
-          width: '100%',
-          shadowOffset:{
+          position: 'relative',
+          shadowOffset: {
             height: 3,
             width: 0,
           },
-          elevation: 0,
           shadowColor: '#000000',
           shadowOpacity: 1,
-          position: 'relative',
-          zIndex: -1
+          width: '100%',
+          zIndex: -1,
         }}
       />
-    </>
-  )
-}
+    )}
+  </>
+)
 
 export default withNavigation(Header);

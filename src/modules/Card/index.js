@@ -1,26 +1,21 @@
 // Dependencies
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import debounce from 'lodash.debounce';
-import { withNavigation } from 'react-navigation';
+import { Button, ActivityIndicator } from '@ant-design/react-native';
 // Components
 import Layout from '#components/Layout';
-import Input from '#components/Input';
 // Services
 import * as CardsService from '#services/cards';
 import * as WishlistService from '#services/wishlist-cards';
-import { goTo } from '#navigation';
-// Styles
-import styles from './styles';
 // Contexts
 import { useLoader } from '#contexts/Loader';
-import { Button } from '@ant-design/react-native';
 
 const Card = ({ navigation }) => {
   const { isLoading, showLoader, hideLoader } = useLoader();
   const { id, name } = navigation.state.params;
   const [wishlist, setWishlist] = React.useState([]);
   const [card, setCard] = React.useState({});
+  const [singles, setSingles] = React.useState({});
 
   const fetchWishlist = () => {
     WishlistService.all()
@@ -28,7 +23,9 @@ const Card = ({ navigation }) => {
       .finally(() => hideLoader());
   }
 
-  const addCard = item => () => {
+  const addCard = (item, index) => () => {
+    setSingles({ loading: true, index });
+
     WishlistService.add({
       wishlistId: wishlist.id,
       cardId: card.id,
@@ -41,7 +38,9 @@ const Card = ({ navigation }) => {
       });
   }
 
-  const removeCard = item => () => {
+  const removeCard = (item, index) => () => {
+    setSingles({ loading: true, index });
+
     WishlistService.remove(item.id)
       .then(() => {
         fetchWishlist();
@@ -51,7 +50,10 @@ const Card = ({ navigation }) => {
 
   const fetchCard = () => {
     CardsService.get(id)
-      .then(res => setCard(res));
+      .then(res => {
+        setCard(res);
+        setSingles({ loading: false, index: null });
+      });
   };
 
   React.useEffect(() => {
@@ -75,8 +77,8 @@ const Card = ({ navigation }) => {
   }
 
   return (
-    <Layout header events={events} title={name}>
-      {card?.singles?.map(single => (
+    <Layout header events={events} title={name} style={{ padding: 16 }} withBack>
+      {card?.singles?.map((single, index) => (
         <React.Fragment key={single.id}>
           <View style={{ flexDirection: 'row', marginTop: 12 }}>
             <View style={{ width: 85 }}>
@@ -95,9 +97,27 @@ const Card = ({ navigation }) => {
           </View>
           <View style={{ marginVertical: 20, width: '100%'}}>
             {wishlist?.cards?.includes(single.id) ? (
-              <Button onPress={removeCard(single)} type="warning">QUITAR</Button>
+              <Button
+                onPress={removeCard(single, index)}
+                type="warning"
+              >
+                {singles.index === index && singles.loading ? (
+                  <ActivityIndicator color="white" />
+                ) : (
+                  'QUITAR'
+                )}
+              </Button>
             ) : (
-              <Button onPress={addCard(single)} type="primary">AGREGAR</Button>
+              <Button
+                onPress={addCard(single, index)}
+                type="primary"
+              >
+                {singles.index === index && singles.loading ? (
+                  <ActivityIndicator color="white" />
+                ) : (
+                  'AGREGAR'
+                )}
+              </Button>
             )}
           </View>
         </React.Fragment>

@@ -5,7 +5,7 @@ export default StyleSheet.create({
   container: {
     backgroundColor: 'rgba(255, 255, 255, 0.85)',
     borderRadius: 4,
-    elevation: 0,
+    elevation: 8,
     height: '100%',
     justifyContent: 'space-between',
     padding: 12,

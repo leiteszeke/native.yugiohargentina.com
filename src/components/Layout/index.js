@@ -1,7 +1,7 @@
 // Dependencies
 import React, { useState } from 'react';
 import { Dimensions, ImageBackground, ScrollView, View, KeyboardAvoidingView } from 'react-native';
-import { NavigationEvents, SafeAreaView } from 'react-navigation';
+import { NavigationEvents, SafeAreaView, withNavigation } from 'react-navigation';
 // Components
 import Header from '#components/Header';
 import Footer from '#components/Footer';
@@ -11,13 +11,17 @@ import bgImage from '#images/bg.png'
 
 const Layout = ({
   background = false,
-  events,
   children,
+  events,
   footer,
-  noScroll,
   header,
   headerActions,
+  navigation,
+  noIcon,
+  noScroll,
+  style,
   title,
+  withBack,
 }) => {
   const [scrollEnabled, setScrollEnabled] = useState(false);
   const HEADER_HEIGHT = 50;
@@ -27,6 +31,7 @@ const Layout = ({
     setScrollEnabled(height > Dimensions.get('window').height - HEADER_HEIGHT - CONTENT_PADDING);
   }
 
+  const onBack = () => navigation.goBack();
   const Content = noScroll ? View : ScrollView;
 
   if (background) {
@@ -45,7 +50,7 @@ const Layout = ({
             behavior="position"
             style={{ flex: 1 }}
           >
-            { header && <Header title={title} /> }
+            { header && <Header {...{ noIcon, onBack, title, withBack }} /> }
             <Content
               onContentSizeChange={ onContentChange }
               scrollEnabled={ scrollEnabled }
@@ -53,6 +58,7 @@ const Layout = ({
                 flex: 1,
                 padding: 16,
                 width: '100%',
+                ...style
               }}
             >
               { children }
@@ -75,7 +81,7 @@ const Layout = ({
         }}
       >
         <NavigationEvents {...events} />
-        { header && <Header actions={headerActions || []} title={title} /> }
+        { header && <Header {...{ actions: headerActions || [], noIcon, onBack, title, withBack }} /> }
         <Content
           onContentSizeChange={ onContentChange }
           scrollEnabled={ scrollEnabled }
@@ -84,8 +90,8 @@ const Layout = ({
           }}
           style={{
             flex: 1,
-            padding: 16,
             width: '100%',
+            ...style
           }}
         >
           { children }
@@ -99,6 +105,7 @@ const Layout = ({
 
 Layout.defaultProps = {
   footer: false,
+  withBack: false,
 };
 
-export default Layout;
+export default withNavigation(Layout);

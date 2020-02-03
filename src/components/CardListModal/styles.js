@@ -2,8 +2,15 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+  searchInput: {
+    marginTop: 4,
+    paddingHorizontal: 16,
+  },
+
   list: {
     flex: 1,
+    paddingBottom: 16,
+    paddingHorizontal: 16,
   },
 
   card: {

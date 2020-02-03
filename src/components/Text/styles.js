@@ -18,7 +18,7 @@ export default StyleSheet.create({
 
   bigNumber: {
     color: 'black',
-    fontSize: 40,
+    fontSize: 36,
     fontWeight: 'bold',
   },
 });

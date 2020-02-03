@@ -63,11 +63,13 @@ const Dashboard = ({ navigation }) => {
 
   return (
     <Layout header events={events} title="Dashboard">
-      <View>
-        <Title>Próximo Evento</Title>
-        <Event {...event} />
-      </View>
-      <View>
+      {event?.id && (
+        <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
+          <Title>Próximo Evento</Title>
+          <Event {...event} />
+        </View>
+      )}
+      <View style={{ paddingBottom: 16, paddingHorizontal: 16 }}>
         <Title>Mis estadísticas</Title>
         <View style={{ flexDirection: 'row', marginBottom: 16 }}>
           <Card title="Cartas buscando" value={statistics.wanted || 0} style={{ marginRight: 8 }} />
@@ -78,7 +80,7 @@ const Dashboard = ({ navigation }) => {
           <Card title="Partidos invicto" value={statistics.inbeated || 0} style={{ marginLeft: 8 }} />
         </View>
         {user.id <= 0 && (
-          <FeatureHide>
+          <FeatureHide style={{ marginHorizontal: 16 }}>
             <Title>Mis estadísticas</Title>
             <Text style={{ marginBottom: 20 }}>Si quieres ver tus estadísticas debes iniciar sesión.</Text>
             <Button onPress={logout} type="primary">INICIAR SESIÓN</Button>
