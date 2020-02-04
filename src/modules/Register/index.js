@@ -55,6 +55,7 @@ const Register = ({ navigation }) => {
       <View>
         <Image style={ styles.logo } resizeMode="contain" source={ Logo } />
         <InputItem
+          autoCapitalize="none"
           placeholderTextColor={ errors.name ? '#FF0000' : '#000000' }
           style={[styles.textInput, errors.name ? styles.inputError : {}]}
           onChange={ setValue('name') }
@@ -63,6 +64,7 @@ const Register = ({ navigation }) => {
         />
         <View style={styles.separator} />
         <InputItem
+          autoCapitalize="none"
           placeholderTextColor={ errors.lastname ? '#FF0000' : '#000000' }
           style={[styles.textInput, errors.lastname ? styles.inputError : {}]}
           onChange={ setValue('lastname') }
@@ -71,6 +73,7 @@ const Register = ({ navigation }) => {
         />
         <View style={styles.separator} />
         <InputItem
+          autoCapitalize="none"
           placeholderTextColor={ errors.email ? '#FF0000' : '#000000' }
           style={[styles.textInput, errors.email ? styles.inputError : {}]}
           onChange={ setValue('email') }
@@ -79,6 +82,7 @@ const Register = ({ navigation }) => {
         />
         <View style={styles.separator} />
         <InputItem
+          autoCapitalize="none"
           placeholderTextColor={ errors.password ? '#FF0000' : '#000000' }
           style={[styles.textInput, errors.password ? styles.inputError : {}]}
           type="password"
@@ -100,7 +104,7 @@ const Register = ({ navigation }) => {
       <View style={ styles.buttons }>
         <Button onPress={registerUser} type="primary">CREAR CUENTA</Button>
         <TouchableOpacity onPress={ goTo('Login') } style={ styles.flatButton }>
-          <Text style={styles.flatButtonText}>Ya tengo cuenta</Text>
+          <Text style={styles.flatButtonText}>YA TENGO CUENTA</Text>
         </TouchableOpacity>
       </View>
     </Layout>

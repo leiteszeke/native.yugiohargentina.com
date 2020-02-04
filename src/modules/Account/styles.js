@@ -1,13 +1,18 @@
 // Dependencies
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 export const dropdownStyle = StyleSheet.create({
   inputIOS: {
     fontSize: 18,
+    height: 40,
+    margin: 0,
   },
 
   inputAndroid: {
-    fontSize: 18,
+    fontSize: 20,
+    height: 40,
+    margin: 0,
+    padding: 0,
   },
 
   placeholder: {
@@ -48,7 +53,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 4,
     padding: 0,
-    paddingHorizontal: 4,
+    paddingHorizontal: Platform.OS === 'ios' ? 4 : 0,
   },
 
   picker: {

@@ -101,9 +101,9 @@ const Account = ({ navigation }) => {
 
   if (user.id <= 0) {
     return (
-      <Layout header noScroll title="Mi cuenta">
-        <View style={{ flex: 1 }}>
-          <FeatureHide style={{ height: '100%' }}>
+      <Layout header noScroll title="Mi cuenta" withBack>
+        <View style={{ flex: 1, padding: 16 }}>
+          <FeatureHide style={{ height: '100%', margin: 16 }}>
             <Text style={{ marginBottom: 20 }}>Para ver tu cuenta, primero debes iniciar sesión.</Text>
             <Button onPress={logout} type="primary">INICIAR SESIÓN</Button>
           </FeatureHide>
@@ -113,11 +113,11 @@ const Account = ({ navigation }) => {
   }
 
   return (
-    <Layout header headerActions={actions} title="Mi cuenta">
-      <View>
+    <Layout header headerActions={actions} title="Mi cuenta" withBack>
+      <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
         <Text style={styles.title}>{data.name} {data.lastname}</Text>
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, paddingBottom: 16, paddingHorizontal: 16 }}>
         <Input
           onChange={setValue('cossyId')}
           maxLength={10}

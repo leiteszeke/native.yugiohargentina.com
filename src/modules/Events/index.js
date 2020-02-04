@@ -1,15 +1,10 @@
 // Dependencies
 import React from 'react';
-import { View, Text, Image, Linking, TouchableOpacity } from 'react-native';
-import { Icon } from '@ant-design/react-native';
-import moment from 'moment-timezone';
 // Components
 import Layout from '#components/Layout';
 import Event from '#components/Event';
 // Services
 import * as EventsService from '#services/events';
-// Images
-import Logo from '#images/logo.png';
 // Contexts
 import { useLoader } from '#contexts/Loader';
 
@@ -31,7 +26,7 @@ const Events = () => {
   }, []);
 
   return (
-    <Layout header title="Eventos">
+    <Layout header title="Eventos" withBack style={{ padding: 16 }}>
       {events.map(event => <Event key={event.id} {...event} />)}
     </Layout>
   )

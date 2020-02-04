@@ -7,16 +7,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     flexWrap: 'wrap',
     marginBottom: 12,
-    padding: 6
   },
 
   imageContainer: {
     height: 200,
-    width: Dimensions.get('screen').width - 44
+    position: 'relative',
+    width: '100%',
   },
 
   image: {
-    flex: 1,
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
 
   title: {
@@ -29,7 +33,8 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    paddingVertical: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 12,
     flex: 1
   }
 });

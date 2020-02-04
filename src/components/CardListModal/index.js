@@ -16,7 +16,6 @@ const CardListModal = ({ navigation, onClose }) => {
   const [cards, setCards] = React.useState([])
   const [q, setQ] = React.useState({ page: 0 });
 
-  const goTo = React.useCallback((route, params) => () => navigation.navigate(route, params), []);
   const searchFunction = value => setQ({ q: value, page: 0 });
   const search = React.useCallback(debounce(searchFunction, 2000), []);
   const onSearch = e => search(e.nativeEvent.text);
@@ -49,8 +48,9 @@ const CardListModal = ({ navigation, onClose }) => {
   )
 
   return (
-    <Layout header noScroll headerActions={actions} title="Lista de Deseos">
+    <Layout header noScroll headerActions={actions} title="Lista de Deseos" noIcon>
       <Input
+        containerStyle={styles.searchInput}
         onChange={onSearch}
         placeholder="Buscar carta"
       />

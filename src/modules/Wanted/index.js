@@ -1,7 +1,7 @@
 // Dependencies
 import React from 'react';
 import { Button } from '@ant-design/react-native';
-import { FlatList, Modal, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Modal, Text, TouchableOpacity, View } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 // Components
@@ -24,6 +24,13 @@ const Wanted = ({ navigation }) => {
   const [wishlist, setWishlist] = React.useState({});
   const [showModal, setShowModal] = React.useState(false);
   const [prev, setPrev] = React.useState(null);
+  const [scrollEnabled, setScrollEnabled] = React.useState(false);
+  const HEADER_HEIGHT = 50;
+  const CONTENT_PADDING = 32;
+
+  const onContentChange = (width, height) => {
+    setScrollEnabled(height > Dimensions.get('window').height - HEADER_HEIGHT - CONTENT_PADDING);
+  }
 
   const logout = () => {
     removeSession();
@@ -64,8 +71,8 @@ const Wanted = ({ navigation }) => {
   if (user.id <= 0) {
     return (
       <Layout header noScroll title="Lista de Deseos">
-        <View style={{ flex: 1 }}>
-          <FeatureHide style={{ height: '100%' }}>
+        <View style={{ flex: 1, padding: 16 }}>
+          <FeatureHide style={{ margin: 16, height: '100%' }}>
             <Text style={{ marginBottom: 20 }}>Para ver tu lista de deseos, primero debes iniciar sesión.</Text>
             <Button onPress={logout} type="primary">INICIAR SESIÓN</Button>
           </FeatureHide>
@@ -92,14 +99,30 @@ const Wanted = ({ navigation }) => {
 
   return (
     <>
-      <Layout events={events} header noScroll headerActions={actions} title="Lista de Deseos">
-        {wishlist?.cards?.length >= 0 && (
+      <Layout
+        {...{
+          events,
+          header: true,
+          headerActions: actions,
+          noScroll: true,
+          style: { padding: 16 },
+          title: "Lista de Deseos",
+          withBack: true
+        }}
+      >
+        {wishlist?.cards?.length > 0 ? (
           <FlatList
             data={wishlist.cards}
             keyExtractor={card => card.id.toString()}
             renderItem={renderItem}
             style={styles.list}
+            onContentSizeChange={ onContentChange }
+            scrollEnabled={scrollEnabled}
           />
+        ) : (
+          <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+            <Text style={{ fontSize: 20, textAlign: 'center' }}>Aún no tienes cartas en tu lista de deseos.</Text>
+          </View>
         )}
       </Layout>
       <Modal visible={showModal}>

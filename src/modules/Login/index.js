@@ -67,6 +67,7 @@ const Login = ({ navigation }) => {
       <View>
         <Image style={ styles.logo } resizeMode="contain" source={ Logo } />
         <InputItem
+          autoCapitalize="none"
           placeholderTextColor={ errors.email ? '#FF0000' : '#000000' }
           style={[styles.textInput, errors.email ? styles.inputError : {}]}
           onChange={ setValue('email') }
@@ -75,6 +76,7 @@ const Login = ({ navigation }) => {
         />
         <View style={styles.separator} />
         <InputItem
+          autoCapitalize="none"
           placeholderTextColor={ errors.password ? '#FF0000' : '#000000' }
           style={[styles.textInput, errors.password ? styles.inputError : {}]}
           type="password"
