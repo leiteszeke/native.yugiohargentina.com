@@ -27,8 +27,7 @@ const flagsImages = {
 
 const Card = ({ navigation }) => {
   const { isLoading, showLoader, hideLoader } = useLoader();
-  // const { id, name } = navigation.state.params;
-  const { id, name } = { id: 6, name: '1st Movement Solo' }
+  const { id, name } = navigation.state.params;
   const [wishlist, setWishlist] = React.useState([]);
   const [card, setCard] = React.useState({});
   const [singles, setSingles] = React.useState({});
