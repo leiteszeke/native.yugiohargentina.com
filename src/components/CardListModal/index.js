@@ -2,7 +2,6 @@
 import React from 'react';
 import { FlatList, Text, TouchableOpacity } from 'react-native';
 import debounce from 'lodash.debounce';
-import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 // Components
 import Layout from '#components/Layout';
@@ -12,7 +11,7 @@ import * as CardsService from '#services/cards';
 // Styles
 import styles from './styles';
 
-const CardListModal = ({ navigation, onClose }) => {
+const CardListModal = ({ onClose }) => {
   const [cards, setCards] = React.useState([])
   const [q, setQ] = React.useState({ page: 0 });
 
@@ -68,4 +67,4 @@ const CardListModal = ({ navigation, onClose }) => {
   )
 }
 
-export default withNavigation(CardListModal);
+export default CardListModal;

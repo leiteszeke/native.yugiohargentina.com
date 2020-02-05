@@ -2,7 +2,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { AnimatedSVGPath } from 'react-native-svg-animations';
-import { SafeAreaView } from 'react-navigation';
+import { SafeAreaView } from 'react-native-safe-area-context';
 // Contexts
 import { useLoader } from '#contexts/Loader';
 

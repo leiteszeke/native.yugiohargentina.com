@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@ant-design/react-native';
 import { View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
 // Components
 import Input from '#components/Input';
@@ -21,7 +21,8 @@ import styles, { dropdownStyle } from './styles';
 // Helpers
 import { removeSession } from '#helpers/session';
 
-const Account = ({ navigation }) => {
+const Account = () => {
+  const { navigate } = useNavigation();
   const { showLoader, isLoading, hideLoader } = useLoader();
   const { user } = useUser();
   const [data, setData] = React.useState({});
@@ -30,7 +31,7 @@ const Account = ({ navigation }) => {
 
   const logout = () => {
     removeSession();
-    navigation.navigate('Auth');
+    navigate('Auth');
   }
 
   const saveData = () => {
@@ -174,4 +175,4 @@ const Account = ({ navigation }) => {
   )
 }
 
-export default withNavigation(Account);
+export default Account;

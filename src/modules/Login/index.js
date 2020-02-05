@@ -2,11 +2,10 @@
 import React, { useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator, Button, InputItem, NoticeBar } from '@ant-design/react-native';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 // Components
 import Layout from '#components/Layout';
 // Services
-import { goTo } from '#navigation';
 import * as User from '#services/users';
 // Helpers
 import { setSession } from '#helpers/session';
@@ -17,7 +16,8 @@ import { useUser } from '#contexts/User';
 // Styles
 import styles from './styles';
 
-const Login = ({ navigation }) => {
+const Login = ({ onSession }) => {
+  const { navigate } = useNavigation();
   const { fetchUser } = useUser();
   const [data, setData] = useState({});
   const [errors, setErrors] = useState({});
@@ -36,7 +36,7 @@ const Login = ({ navigation }) => {
   const loginAnonymous = async () => {
     await setSession({ id: -1 })
     await fetchUser();
-    navigation.navigate('App')
+    onSession();
   }
 
   const loginUser = () => {
@@ -48,7 +48,7 @@ const Login = ({ navigation }) => {
         if (!res.error) {
           await setSession(res.data);
           await fetchUser();
-          return navigation.navigate('App');
+          return onSession();
         } else {
           if (res.message === 'user_not_found') {
             setShowAlert(true);
@@ -102,7 +102,7 @@ const Login = ({ navigation }) => {
             <Text style={styles.flatButtonText}>ANÓNIMO</Text>
           </TouchableOpacity>
           <Text style={styles.flatButton}>&nbsp;&nbsp;|&nbsp;&nbsp;</Text>
-          <TouchableOpacity onPress={ goTo('Register') } style={ styles.flatButton }>
+          <TouchableOpacity onPress={() => navigate('Register')} style={ styles.flatButton }>
             <Text style={styles.flatButtonText}>CREAR CUENTA</Text>
           </TouchableOpacity>
         </View>
@@ -111,4 +111,4 @@ const Login = ({ navigation }) => {
   )
 }
 
-export default withNavigation(Login);
+export default Login;

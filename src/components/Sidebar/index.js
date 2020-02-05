@@ -1,7 +1,7 @@
 // Dependencies
 import React from 'react';
 import { Image, View, TouchableOpacity, Text } from 'react-native';
-import { SafeAreaView, withNavigation } from 'react-navigation';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from '@ant-design/react-native';
 // Images
 import Logo from '#images/logo.png';
@@ -10,15 +10,13 @@ import styles from './styles';
 // Helpers
 import { removeSession } from '#helpers/session';
 
-const Sidebar = ({ navigation }) => {
+const Sidebar = ({ onSession, navigation }) => {
   const logoutUser = React.useCallback(() => {
     removeSession();
-    navigation.navigate('Auth');
+    onSession();
   }, []);
 
-  const navigateTo = React.useCallback(route => () => {
-    navigation.navigate(route);
-  }, []);
+  const navigateTo = React.useCallback(route => () => navigation.navigate(route), []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -59,4 +57,4 @@ const Sidebar = ({ navigation }) => {
   )
 };
 
-export default withNavigation(Sidebar);
+export default Sidebar;

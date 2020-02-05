@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@ant-design/react-native';
 import { View, Text } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 // Components
 import Layout from '#components/Layout';
 import { Title } from '#components/Text';
@@ -19,11 +19,12 @@ import { useUser } from '#contexts/User';
 // Helpers
 import { removeSession } from '#helpers/session';
 
-const Dashboard = ({ navigation }) => {
+const Dashboard = () => {
+  const { navigate } = useNavigation();
   const { user } = useUser()
   const { hideLoader, showLoader } = useLoader();
   const [event, setEvent] = React.useState(null);
-  const [statistics, setStatistics] = React.useState({});
+  const [statistics, setStatistics] = React.useState(null);
 
   const fetchEvent = () => {
     showLoader();
@@ -34,20 +35,23 @@ const Dashboard = ({ navigation }) => {
   const fetchStatistics = () => {
     if (user.id > 0) {
       StatisticsService.all()
-        .then(res => setStatistics(res.data))
+        .then(res => setStatistics(res.data));
     }
   }
 
   const logout = () => {
     removeSession();
-    navigation.navigate('Auth');
+    navigate('Auth');
   }
 
   React.useEffect(() => {
     showLoader();
     fetchEvent();
-    fetchStatistics();
   }, []);
+
+  React.useEffect(() => {
+    if (user !== null && statistics === null) fetchStatistics()
+  }, [user])
 
   React.useEffect(() => {
     if (event !== null && user !== null) hideLoader()
@@ -66,18 +70,18 @@ const Dashboard = ({ navigation }) => {
       {event?.id && (
         <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
           <Title>Próximo Evento</Title>
-          <Event {...event} />
+          <Event {...{...event, home: true }} />
         </View>
       )}
       <View style={{ paddingBottom: 16, paddingHorizontal: 16 }}>
         <Title>Mis estadísticas</Title>
         <View style={{ flexDirection: 'row', marginBottom: 16 }}>
-          <Card title="Cartas buscando" value={statistics.wanted || 0} style={{ marginRight: 8 }} />
-          <Card title="Torneos jugando" value={statistics.playing || 0} style={{ marginLeft: 8 }} />
+          <Card title="Cartas buscando" value={statistics?.wanted || 0} style={{ marginRight: 8 }} />
+          <Card title="Torneos jugando" value={statistics?.playing || 0} style={{ marginLeft: 8 }} />
         </View>
         <View style={{ flexDirection: 'row' }}>
-          <Card title="Ranking YGO Arg" value={statistics.ranking || 0} style={{ marginRight: 8 }} />
-          <Card title="Partidos invicto" value={statistics.inbeated || 0} style={{ marginLeft: 8 }} />
+          <Card title="Ranking YGO Arg" value={statistics?.ranking || 0} style={{ marginRight: 8 }} />
+          <Card title="Partidos invicto" value={statistics?.inbeated || 0} style={{ marginLeft: 8 }} />
         </View>
         {user.id <= 0 && (
           <FeatureHide style={{ marginHorizontal: 16 }}>
@@ -91,4 +95,4 @@ const Dashboard = ({ navigation }) => {
   )
 }
 
-export default withNavigation(Dashboard);
+export default Dashboard;

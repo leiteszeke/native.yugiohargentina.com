@@ -1,7 +1,8 @@
 // Dependencies
 import React, { useState } from 'react';
 import { Dimensions, ImageBackground, ScrollView, View, KeyboardAvoidingView } from 'react-native';
-import { NavigationEvents, SafeAreaView, withNavigation } from 'react-navigation';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 // Components
 import Header from '#components/Header';
 import Footer from '#components/Footer';
@@ -16,7 +17,6 @@ const Layout = ({
   footer,
   header,
   headerActions,
-  navigation,
   noIcon,
   noScroll,
   style,
@@ -26,12 +26,13 @@ const Layout = ({
   const [scrollEnabled, setScrollEnabled] = useState(false);
   const HEADER_HEIGHT = 50;
   const CONTENT_PADDING = 32;
+  const { goBack } = useNavigation();
 
   const onContentChange = (width, height) => {
     setScrollEnabled(height > Dimensions.get('window').height - HEADER_HEIGHT - CONTENT_PADDING);
   }
 
-  const onBack = () => navigation.goBack();
+  const onBack = () => goBack();
   const Content = noScroll ? View : ScrollView;
 
   if (background) {
@@ -80,7 +81,6 @@ const Layout = ({
           paddingBottom: 16,
         }}
       >
-        <NavigationEvents {...events} />
         { header && <Header {...{ actions: headerActions || [], noIcon, onBack, title, withBack }} /> }
         <Content
           onContentSizeChange={ onContentChange }
@@ -108,4 +108,4 @@ Layout.defaultProps = {
   withBack: false,
 };
 
-export default withNavigation(Layout);
+export default Layout;

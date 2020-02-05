@@ -1,9 +1,10 @@
 // Dependencies
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-import { createDrawerNavigator } from 'react-navigation-drawer';
-// Pages
-import AuthLoadingScreen from './AuthLoadingScreen';
+import React from 'react';
+import { View } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+// Helpers
+import { getSession } from '#helpers/session';
 // Modules
 import Account from './modules/Account';
 import Dashboard from './modules/Dashboard';
@@ -16,40 +17,53 @@ import Card from './modules/Card';
 // Components
 import Sidebar from './components/Sidebar';
 
-const AppStack = createDrawerNavigator({
-  Dashboard: Dashboard,
-  Events: Events,
-  Stores: Stores,
-  Account: Account,
-  Wanted: Wanted,
-  Card: Card,
-}, {
-  contentComponent: Sidebar,
-});
+const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
-const AuthStack = createStackNavigator(
-  {
-    Login: Login,
-    Register: Register,
-  },
-  {
-    defaultNavigationOptions: {
-      header: null,
-    },
-  },
-);
+const AppStack = ({ onSession }) => (
+  <Drawer.Navigator drawerContent={props => <Sidebar {...{...props, onSession }} />}>
+    <Drawer.Screen name="Dashboard" component={Dashboard} />
+    <Drawer.Screen name="Events" component={Events} />
+    <Drawer.Screen name="Stores" component={Stores} />
+    <Drawer.Screen name="Account" component={Account} />
+    <Drawer.Screen name="Wanted" component={Wanted} />
+    <Drawer.Screen name="Card" component={Card} />
+  </Drawer.Navigator>
+)
 
-const Stack = createAppContainer(
-  createSwitchNavigator(
-    {
-      AuthLoading: AuthLoadingScreen,
-      App: AppStack,
-      Auth: AuthStack,
-    },
-    {
-      initialRouteName: 'AuthLoading',
-    },
-  ),
-);
+const AuthStack = ({ onSession }) => (
+  <Stack.Navigator headerMode="none">
+    <Stack.Screen name="Login">
+      {props => <Login {...{...props, onSession }} />}
+    </Stack.Screen>
+    <Stack.Screen name="Register">
+      {props => <Register {...{...props, onSession }} />}
+    </Stack.Screen>
+  </Stack.Navigator>
+)
 
-export default Stack;
+const App = () => {
+  const [navigateTo, setNavigateTo] = React.useState(null);
+  const handleSession = async () => {
+    const session = await getSession();
+
+    if (session && session.id) {
+      return setNavigateTo('App');
+    }
+
+    return setNavigateTo('Auth');
+  }
+
+  React.useEffect(() => {
+    handleSession();
+  }, [])
+
+  if (navigateTo === null) return <View style={{ backgroundColor: 'green' }} />;
+
+  if (navigateTo === 'Auth') return <AuthStack onSession={handleSession} />;
+
+  return <AppStack onSession={handleSession} />;
+}
+
+
+export default App;

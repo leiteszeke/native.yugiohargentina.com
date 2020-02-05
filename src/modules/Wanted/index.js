@@ -1,8 +1,8 @@
 // Dependencies
 import React from 'react';
-import { Button } from '@ant-design/react-native';
-import { Dimensions, FlatList, Modal, Text, TouchableOpacity, View } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import { Button, Modal as AntModal } from '@ant-design/react-native';
+import { Dimensions, FlatList, Modal, Text, TouchableOpacity, View, Switch } from 'react-native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 // Components
 import CardListModal from '#components/CardListModal';
@@ -10,17 +10,23 @@ import FeatureHide from '#components/FeatureHide';
 import Layout from '#components/Layout';
 // Services
 import * as WishlistService from '#services/wishlist-cards';
+import * as UserService from '#services/users';
 // Styles
 import styles from './styles';
 // Contexts
 import { useLoader } from '#contexts/Loader';
 import { useUser } from '#contexts/User';
 // Helpers
+import { getDeviceInfo } from '#helpers/device';
 import { removeSession } from '#helpers/session';
+import { getToken } from '#helpers/messaging';
 
-const Wanted = ({ navigation }) => {
+const Wanted = () => {
+  const { navigate } = useNavigation();
   const { user } = useUser();
-  const { isLoading, showLoader, hideLoader } = useLoader();
+  const focused = useIsFocused();
+  const { isLoading, hideLoader } = useLoader();
+  const [notify, setNotify] = React.useState(false);
   const [wishlist, setWishlist] = React.useState({});
   const [showModal, setShowModal] = React.useState(false);
   const [prev, setPrev] = React.useState(null);
@@ -34,13 +40,11 @@ const Wanted = ({ navigation }) => {
 
   const logout = () => {
     removeSession();
-    navigation.navigate('Auth');
+    navigate('Auth');
   }
 
-  const goTo = React.useCallback((route, params) => () => navigation.navigate(route, params), []);
-  const openCard = (id, name) => goTo('Card', { id, name });
+  const openCard = (id, name) => () => { navigate('Card', { id, name }) };
   const fetchCards = () => {
-    showLoader();
     WishlistService.all()
       .then(res => setWishlist(res.data[0]))
       .finally(() => hideLoader());
@@ -51,6 +55,12 @@ const Wanted = ({ navigation }) => {
       fetchCards();
     }
   }, []);
+
+  React.useEffect(() => {
+    if (focused) {
+      fetchCards();
+    }
+  }, [focused]);
 
   React.useEffect(() => {
     if (prev?.id && prev?.name) openCard(prev.id, prev.name)();
@@ -65,6 +75,27 @@ const Wanted = ({ navigation }) => {
 
     setShowModal(prev => !prev);
   }
+
+  const handleNotification = async() => {
+    const token = await getToken();
+    const deviceInfo = await getDeviceInfo();
+
+    if (token && user.id > 0) {
+      UserService.updateDevice(user.id, { token, ...deviceInfo });
+    } else {
+      AntModal.alert('¡Oops!', 'Debes permitir las push notifications para poder activar esta opción', [
+        { text: 'OK' },
+      ]);
+
+      setNotify(false);
+    }
+  }
+
+  React.useEffect(() => {
+    if (notify) {
+      handleNotification();
+    }
+  }, [notify]);
 
   if (isLoading) return null
 
@@ -93,9 +124,13 @@ const Wanted = ({ navigation }) => {
     </TouchableOpacity>
   );
 
+  const toggleNotify = () => setNotify(prev => !prev);
+
   const events = {
     onWillFocus: () => fetchCards()
   }
+
+  const showFooter = true;
 
   return (
     <>
@@ -111,17 +146,25 @@ const Wanted = ({ navigation }) => {
         }}
       >
         {wishlist?.cards?.length > 0 ? (
-          <FlatList
-            data={wishlist.cards}
-            keyExtractor={card => card.id.toString()}
-            renderItem={renderItem}
-            style={styles.list}
-            onContentSizeChange={ onContentChange }
-            scrollEnabled={scrollEnabled}
-          />
+          <>
+            <FlatList
+              data={wishlist.cards}
+              keyExtractor={card => card.id.toString()}
+              renderItem={renderItem}
+              style={styles.list}
+              onContentSizeChange={ onContentChange }
+              scrollEnabled={scrollEnabled}
+            />
+            {showFooter && (
+              <View style={styles.listOptions}>
+                <Text style={styles.listOptionText}>Recibir notificaciones de mi lista</Text>
+                <Switch onValueChange={toggleNotify} value={notify} />
+              </View>
+            )}
+          </>
         ) : (
-          <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center', paddingHorizontal: 16 }}>
-            <Text style={{ fontSize: 20, textAlign: 'center' }}>Aún no tienes cartas en tu lista de deseos.</Text>
+          <View style={styles.emptyPage}>
+            <Text style={styles.emptyMessage}>Aún no tienes cartas en tu lista de deseos.</Text>
           </View>
         )}
       </Layout>
@@ -132,4 +175,4 @@ const Wanted = ({ navigation }) => {
   )
 }
 
-export default withNavigation(Wanted);
+export default Wanted;
