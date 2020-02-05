@@ -9,5 +9,5 @@ export const all = (params) =>
 
 export const get = id =>
   client.get(`${url}cards/${id}`)
-    .then(res => res.data)
-    .catch(err => err.response.data);
+    .then(handleSuccess)
+    .catch(handleError);

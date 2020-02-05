@@ -120,7 +120,7 @@ const Wanted = ({ navigation }) => {
             scrollEnabled={scrollEnabled}
           />
         ) : (
-          <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+          <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center', paddingHorizontal: 16 }}>
             <Text style={{ fontSize: 20, textAlign: 'center' }}>Aún no tienes cartas en tu lista de deseos.</Text>
           </View>
         )}
