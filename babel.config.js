@@ -13,7 +13,6 @@ module.exports = {
         "#hooks": "./src/hooks",
         "#images": "./src/images",
         "#mocks": "./src/mocks",
-        "#navigation": "./src/NavigationService.js",
         "#services": "./src/services",
         "#types": "./src/types.js",
         "#utils": "./src/utils"

@@ -2,11 +2,10 @@
 import React, { useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator, Button, InputItem, NoticeBar } from '@ant-design/react-native';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 // Components
 import Layout from '#components/Layout';
 // Services
-import { goTo } from '#navigation';
 import * as User from '#services/users';
 // Helpers
 import { setSession } from '#helpers/session';
@@ -15,7 +14,8 @@ import Logo from '#images/logo.png';
 // Styles
 import styles from './styles';
 
-const Register = ({ navigation }) => {
+const Register = () => {
+  const { navigate } = useNavigation();
   const [data, setData] = useState({});
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +38,7 @@ const Register = ({ navigation }) => {
       .then(async res => {
         if (!res.error) {
           await setSession(res.data);
-          return navigation.navigate('App');
+          return navigate('App');
         } else {
           if (res.message === 'email_in_use') {
             setShowAlert(true);
@@ -103,7 +103,7 @@ const Register = ({ navigation }) => {
       <View style={ styles.container } />
       <View style={ styles.buttons }>
         <Button onPress={registerUser} type="primary">CREAR CUENTA</Button>
-        <TouchableOpacity onPress={ goTo('Login') } style={ styles.flatButton }>
+        <TouchableOpacity onPress={() => navigate('Login')} style={ styles.flatButton }>
           <Text style={styles.flatButtonText}>YA TENGO CUENTA</Text>
         </TouchableOpacity>
       </View>
@@ -111,4 +111,4 @@ const Register = ({ navigation }) => {
   )
 }
 
-export default withNavigation(Register);
+export default Register;

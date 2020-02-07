@@ -6,6 +6,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  listOptions: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 40,
+    justifyContent: 'space-between',
+  },
+
+  listOptionText: {
+    fontSize: 20,
+  },
+
   card: {
     borderBottomColor: 'gray',
     borderBottomWidth: 1,
@@ -16,6 +27,18 @@ const styles = StyleSheet.create({
 
   cardName: {
     fontSize: 16,
+  },
+
+  emptyPage: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+  },
+
+  emptyMessage: {
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
 

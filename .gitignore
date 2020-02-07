@@ -63,3 +63,10 @@ buck-out/
 .env.local
 .env.development
 .env.production
+
+# Sentry
+sentry.properties
+
+# Google Services
+google-services.json
+GoogleService-Info.plist

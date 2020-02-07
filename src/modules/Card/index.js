@@ -1,8 +1,9 @@
 // Dependencies
 import React from 'react';
-import { Image, Text, View } from 'react-native';
-import { Button, ActivityIndicator } from '@ant-design/react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Button, ActivityIndicator, } from '@ant-design/react-native';
 import Modal from "react-native-modal";
+import { useNavigation, useRoute } from '@react-navigation/native';
 // Components
 import Layout from '#components/Layout';
 import { Title } from '#components/Text';
@@ -12,7 +13,6 @@ import * as LanguagesService from '#services/languages';
 import * as WishlistService from '#services/wishlist-cards';
 // Contexts
 import { useLoader } from '#contexts/Loader';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const flagsImages = {
   ES: require('#images/flags/es.png'),
@@ -25,9 +25,10 @@ const flagsImages = {
   KO: require('#images/flags/kr.png'),
 }
 
-const Card = ({ navigation }) => {
+const Card = () => {
+  const route = useRoute();
   const { isLoading, showLoader, hideLoader } = useLoader();
-  const { id, name } = navigation.state.params;
+  const { id, name } = route.params;
   const [wishlist, setWishlist] = React.useState([]);
   const [card, setCard] = React.useState({});
   const [singles, setSingles] = React.useState({});
@@ -69,7 +70,7 @@ const Card = ({ navigation }) => {
 
   const addCard = () => {
     setLoading(true);
-    console.log(wishlist, card);
+
     WishlistService.add({
       wishlistId: wishlist.id,
       cardId: card.id,
@@ -109,7 +110,6 @@ const Card = ({ navigation }) => {
   }
 
   const fetchCard = () => {
-    console.log('ID', id);
     CardsService.get(id)
       .then(res => {
         setCard(res.data);
@@ -182,7 +182,7 @@ const Card = ({ navigation }) => {
                   {singles.index === index && singles.loading ? (
                     <ActivityIndicator color="white" />
                   ) : (
-                    'QUITAR'
+                    <Text>QUITAR</Text>
                   )}
                 </Button>
                 <Button
@@ -190,7 +190,7 @@ const Card = ({ navigation }) => {
                   type="primary"
                   style={{ flex: 1, marginLeft: 8 }}
                 >
-                  MODIFICAR
+                  <Text>MODIFICAR</Text>
                 </Button>
               </View>
             ) : (
@@ -203,11 +203,11 @@ const Card = ({ navigation }) => {
         <View style={{ backgroundColor: 'white', borderRadius: 4, padding: 12 }}>
           <Title style={{ textAlign: 'center' }}>Selecciona el/los idiomas</Title>
           <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 20, flexWrap: 'wrap' }}>
-            {flags && flags.map(flag => (
+            {flags?.map(flag => (
               <TouchableOpacity
                 key={flag.id}
                 onPress={toggleLanguage(flag.code)}
-                style={{ borderColor: languages.includes(flag.code) ? 'black' : 'transparent', margin: 18, borderRadius: 4, padding: 4, borderWidth: 2 }}
+                style={{ borderColor: languages.includes(flag.code) ? 'black' : 'transparent', margin: 12, borderRadius: 4, padding: 4, borderWidth: 2 }}
               >
                 <Image
                   source={flagsImages[flag.code]}
@@ -230,7 +230,12 @@ const Card = ({ navigation }) => {
               type="primary"
               style={{ flex: 1, marginHorizontal: 8 }}
             >
-              {loading ? <ActivityIndicator color="white" /> : action === 'CREATE' ? 'AGREGAR' : 'GUARDAR' }
+              {loading ?
+                <ActivityIndicator color="white" />
+                : action === 'CREATE'
+                  ? <Text>AGREGAR</Text>
+                  : <Text>GUARDAR</Text>
+              }
             </Button>
           </View>
         </View>
