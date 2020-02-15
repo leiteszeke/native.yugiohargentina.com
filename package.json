@@ -25,6 +25,7 @@
     "@react-navigation/stack": "^5.0.0",
     "@sentry/react-native": "^1.2.2",
     "moment-timezone": "^0.5.27",
+    "numeral": "^2.0.6",
     "prop-types": "^15.7.2",
     "react": "16.9.0",
     "react-native": "^0.61.5",

@@ -5,6 +5,7 @@ import { Provider, theme } from '@ant-design/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as Sentry from '@sentry/react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import numeral from 'numeral';
 // Stack
 import Stack from './Stack';
 // Contexts
@@ -16,6 +17,27 @@ if (SENTRY_DSN !== "") {
     dsn: SENTRY_DSN,
   });
 }
+
+numeral.register('locale', 'es', {
+  delimiters: {
+    thousands: '',
+    decimal: ','
+  },
+  abbreviations: {
+    thousand: 'k',
+    million: 'm',
+    billion: 'b',
+    trillion: 't'
+  },
+  ordinal : function (number) {
+    return number === 1 ? 'er' : 'er';
+  },
+  currency: {
+    symbol: '$'
+  }
+});
+
+numeral.locale('es');
 
 const myTheme = {
   ...theme,

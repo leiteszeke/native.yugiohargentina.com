@@ -17,7 +17,7 @@ const Event = event => {
 
     await analytics().logEvent('go_to_fb_event', {
       id: event.id,
-      home: event.home,
+      home: !!event.home.toString(),
     });
   }, []);
 
