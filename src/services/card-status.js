@@ -2,6 +2,6 @@
 import { client, url, handleSuccess, handleError } from './utils';
 
 export const all = () =>
-	client.get(`${url}states`)
+	client.get(`${url}card-status`)
     .then(handleSuccess)
     .catch(handleError);

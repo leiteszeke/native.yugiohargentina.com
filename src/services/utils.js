@@ -1,7 +1,7 @@
 // Utils
 import { getSession } from '#helpers/session';
 // Configs
-import { API_URL } from 'react-native-dotenv';
+import { API_URL, DEBUG } from 'react-native-dotenv';
 
 export const url = API_URL;
 
@@ -35,6 +35,9 @@ const request = async (url, params, method = 'GET', config = {}) => {
   }
 
   let response = {};
+  const debug = !!DEBUG;
+
+  if (debug) console.debug('Debugging Request', url, options);
 
   try {
     response = await fetch(url, options);
@@ -44,13 +47,15 @@ const request = async (url, params, method = 'GET', config = {}) => {
     }
 
     const result = await response.json();
+    if (debug) console.debug('Debugging Response', result);
     return result;
   } catch (e) {
+    if (debug) console.debug('Debugging Response Error', e);
     return Promise.reject({ data: {}, error: true, message: 'error' });
   }
 };
 
-const get = (url, params) => request(url, params);
+const get = (url, params, options) => request(url, params, 'GET', options);
 const post = (url, params, options) => request(url, params, 'POST', options);
 const put = (url, params) => request(url, params, 'PUT');
 const _delete = (url, params) => request(url, params, 'DELETE');

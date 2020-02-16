@@ -25,7 +25,7 @@ const flagsImages = {
   KO: require('#images/flags/kr.png'),
 }
 
-const Card = () => {
+const WishlistCard = () => {
   const route = useRoute();
   const { isLoading, showLoader, hideLoader } = useLoader();
   const { id, name } = route.params;
@@ -199,6 +199,7 @@ const Card = () => {
           </View>
         </React.Fragment>
       ))}
+
       <Modal hasBackdrop={true} isVisible={showModal}>
         <View style={{ backgroundColor: 'white', borderRadius: 4, padding: 12 }}>
           <Title style={{ textAlign: 'center' }}>Selecciona el/los idiomas</Title>
@@ -244,4 +245,4 @@ const Card = () => {
   )
 }
 
-export default Card;
+export default WishlistCard;

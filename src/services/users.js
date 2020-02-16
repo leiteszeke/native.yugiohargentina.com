@@ -21,10 +21,7 @@ export const update = (id, data) =>
     .then(handleSuccess)
     .catch(handleError);
 
-export const updateDevice = (id, data) => {
-  console.log(`${url}users/${id}/device`, data)
-
-  return client.put(`${url}users/${id}/device`, data)
+export const updateDevice = (id, data) =>
+  client.put(`${url}users/${id}/device`, data)
     .then(handleSuccess)
     .catch(handleError);
-}

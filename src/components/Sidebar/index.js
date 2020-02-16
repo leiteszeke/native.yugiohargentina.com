@@ -41,6 +41,10 @@ const Sidebar = ({ onSession, navigation }) => {
             <Icon name="shop" size={20} color="#FFFFFF" />
             <Text style={styles.menuItemText}>Locales</Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={navigateTo('Inventary')} style={styles.menuItem}>
+            <Icon name="container" size={20} color="#FFFFFF" />
+            <Text style={styles.menuItemText}>Mi Inventario</Text>
+          </TouchableOpacity>
           <TouchableOpacity onPress={navigateTo('Account')} style={styles.menuItem}>
             <Icon name="user" size={20} color="#FFFFFF" />
             <Text style={styles.menuItemText}>Mi cuenta</Text>

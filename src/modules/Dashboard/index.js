@@ -77,7 +77,7 @@ const Dashboard = () => {
         <Title>Mis estadísticas</Title>
         <View style={{ flexDirection: 'row', marginBottom: 16 }}>
           <Card title="Cartas buscando" value={statistics?.wanted || 0} style={{ marginRight: 8 }} />
-          <Card title="Torneos jugando" value={statistics?.playing || 0} style={{ marginLeft: 8 }} />
+          <Card title="Cartas en inventario" value={statistics?.inventary || 0} style={{ marginLeft: 8 }} />
         </View>
         <View style={{ flexDirection: 'row' }}>
           <Card title="Ranking YGO Arg" value={statistics?.ranking || 0} style={{ marginRight: 8 }} />

@@ -6,7 +6,6 @@ export const all = (params) =>
 		.then(handleSuccess)
     .catch(handleError);
 
-
 export const get = id =>
   client.get(`${url}cards/${id}`)
     .then(handleSuccess)

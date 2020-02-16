@@ -1,7 +1,7 @@
 // Dependencies
 import React from 'react';
 import { Button, Modal as AntModal } from '@ant-design/react-native';
-import { Dimensions, FlatList, Modal, Text, TouchableOpacity, View, Switch } from 'react-native';
+import { Dimensions, FlatList, Modal, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 // Components
@@ -9,25 +9,21 @@ import CardListModal from '#components/CardListModal';
 import FeatureHide from '#components/FeatureHide';
 import Layout from '#components/Layout';
 // Services
-import * as WishlistService from '#services/wishlist-cards';
-import * as UserService from '#services/users';
+import * as InventaryCardService from '#services/inventary-cards';
 // Styles
 import styles from './styles';
 // Contexts
 import { useLoader } from '#contexts/Loader';
 import { useUser } from '#contexts/User';
 // Helpers
-import { getDeviceInfo } from '#helpers/device';
 import { removeSession } from '#helpers/session';
-import { getToken } from '#helpers/messaging';
 
-const Wanted = () => {
+const Inventary = () => {
   const { navigate } = useNavigation();
   const { user } = useUser();
   const focused = useIsFocused();
   const { isLoading, hideLoader } = useLoader();
-  const [notify, setNotify] = React.useState(false);
-  const [wishlist, setWishlist] = React.useState({});
+  const [cards, setCards] = React.useState({});
   const [showModal, setShowModal] = React.useState(false);
   const [prev, setPrev] = React.useState(null);
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
@@ -43,10 +39,10 @@ const Wanted = () => {
     navigate('Auth');
   }
 
-  const openCard = (id, name) => () => { navigate('WishlistCard', { id, name }) };
+  const openCard = (id, name) => () => { navigate('InventaryCard', { id, name }) };
   const fetchCards = () => {
-    WishlistService.all()
-      .then(res => setWishlist(res.data[0]))
+    InventaryCardService.all()
+      .then(res => setCards(res.data))
       .finally(() => hideLoader());
   };
 
@@ -76,35 +72,14 @@ const Wanted = () => {
     setShowModal(prev => !prev);
   }
 
-  const handleNotification = async() => {
-    const token = await getToken();
-    const deviceInfo = await getDeviceInfo();
-
-    if (token && user.id > 0) {
-      UserService.updateDevice(user.id, { token, ...deviceInfo });
-    } else {
-      AntModal.alert('¡Oops!', 'Debes permitir las push notifications para poder activar esta opción', [
-        { text: 'OK' },
-      ]);
-
-      setNotify(false);
-    }
-  }
-
-  React.useEffect(() => {
-    if (notify) {
-      handleNotification();
-    }
-  }, [notify]);
-
   if (isLoading) return null
 
   if (user.id <= 0) {
     return (
-      <Layout header noScroll title="Lista de Deseos">
+      <Layout header noScroll title="Mi inventario">
         <View style={{ flex: 1, padding: 16 }}>
           <FeatureHide style={{ margin: 16, height: '100%' }}>
-            <Text style={{ marginBottom: 20 }}>Para ver tu lista de deseos, primero debes iniciar sesión.</Text>
+            <Text style={{ marginBottom: 20 }}>Para ver tu inventario, primero debes iniciar sesión.</Text>
             <Button onPress={logout} type="primary">INICIAR SESIÓN</Button>
           </FeatureHide>
         </View>
@@ -124,13 +99,9 @@ const Wanted = () => {
     </TouchableOpacity>
   );
 
-  const toggleNotify = () => setNotify(prev => !prev);
-
   const events = {
     onWillFocus: () => fetchCards()
   }
-
-  const showFooter = true;
 
   return (
     <>
@@ -141,38 +112,32 @@ const Wanted = () => {
           headerActions: actions,
           noScroll: true,
           style: { padding: 16 },
-          title: "Lista de Deseos",
+          title: "Mi inventario",
           withBack: true
         }}
       >
-        {wishlist?.cards?.length > 0 ? (
+        {cards?.length > 0 ? (
           <>
             <FlatList
-              data={wishlist.cards}
+              data={cards}
               keyExtractor={card => card.id.toString()}
               renderItem={renderItem}
               style={styles.list}
               onContentSizeChange={ onContentChange }
               scrollEnabled={scrollEnabled}
             />
-            {showFooter && (
-              <View style={styles.listOptions}>
-                <Text style={styles.listOptionText}>Recibir notificaciones de mi lista</Text>
-                <Switch onValueChange={toggleNotify} value={notify} />
-              </View>
-            )}
           </>
         ) : (
           <View style={styles.emptyPage}>
-            <Text style={styles.emptyMessage}>Aún no tienes cartas en tu lista de deseos.</Text>
+            <Text style={styles.emptyMessage}>Aún no tienes cartas en tu inventario.</Text>
           </View>
         )}
       </Layout>
       <Modal visible={showModal}>
-        <CardListModal onClose={toggleModal} />
+        <CardListModal inventary onClose={toggleModal} />
       </Modal>
     </>
   )
 }
 
-export default Wanted;
+export default Inventary;
