@@ -20,9 +20,10 @@ const styles = StyleSheet.create({
   card: {
     borderBottomColor: 'gray',
     borderBottomWidth: 1,
-    height: 40,
+    minHeight: 40,
     justifyContent: 'center',
     paddingHorizontal: 6,
+    paddingVertical: 8,
   },
 
   cardName: {

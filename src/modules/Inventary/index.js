@@ -40,20 +40,13 @@ const Inventary = () => {
   }
 
   const openCard = (id, name) => () => { navigate('InventaryCard', { id, name }) };
-  const fetchCards = () => {
-    InventaryCardService.all()
+  const fetchCards = () =>
+    InventaryCardService.all({ flatten: true })
       .then(res => setCards(res.data))
       .finally(() => hideLoader());
-  };
 
   React.useEffect(() => {
-    if (user.id > 0) {
-      fetchCards();
-    }
-  }, []);
-
-  React.useEffect(() => {
-    if (focused) {
+    if (focused && user.id > 0) {
       fetchCards();
     }
   }, [focused]);
@@ -93,8 +86,8 @@ const Inventary = () => {
 
   const renderItem = ({ item: { card, single } }) => (
     <TouchableOpacity onPress={openCard(card.id, card.name)} style={styles.card}>
-      <Text style={styles.cardName}>
-        {card.name} - {single.expansion.code}-{single.number?.toString().padStart(4, '0')}
+      <Text numberOfLines={2} style={styles.cardName}>
+        {card.name} - {single.rarity} - {single.expansion.code}-{single?.number?.toString().padStart(4, '0')}
       </Text>
     </TouchableOpacity>
   );
@@ -120,7 +113,7 @@ const Inventary = () => {
           <>
             <FlatList
               data={cards}
-              keyExtractor={card => card.id.toString()}
+              keyExtractor={c => c?.id?.toString()}
               renderItem={renderItem}
               style={styles.list}
               onContentSizeChange={ onContentChange }

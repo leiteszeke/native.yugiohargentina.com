@@ -187,7 +187,7 @@ const InventarySingle = () => {
       ...card,
       single: card?.singles?.find(f => f.id === single.id)
     }
-  }, [card]);
+  }, [card, single]);
 
   const inventaryCards = React.useMemo(() =>
     inventary?.filter(f => f.singleId === single.id)
