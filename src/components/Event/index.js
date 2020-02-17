@@ -3,7 +3,6 @@ import React from 'react';
 import { View, Text, Image, Linking, TouchableOpacity } from 'react-native';
 import { Icon } from '@ant-design/react-native';
 import moment from 'moment-timezone';
-import analytics from '@react-native-firebase/analytics';
 // Styles
 import styles from './styles';
 // Images
@@ -14,11 +13,6 @@ const Event = event => {
 
   const goToEvent = React.useCallback(async () => {
     Linking.openURL(`https://facebook.com/events/${event.fbuid}`);
-
-    await analytics().logEvent('go_to_fb_event', {
-      id: event.id,
-      home: !!event.home.toString(),
-    });
   }, []);
 
   return (
