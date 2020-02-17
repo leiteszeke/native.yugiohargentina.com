@@ -3,6 +3,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import * as Sentry from '@sentry/react-native';
 // Helpers
 import { getSession } from '#helpers/session';
 // Modules
@@ -61,6 +62,13 @@ const App = () => {
     const session = await getSession();
 
     if (session && session.id) {
+      if (session.id > 0) {
+        Sentry.configureScope(scope => scope.setUser({
+          id: session?.id,
+          email: session?.email,
+        }))
+      }
+
       return setNavigateTo('App');
     }
 
