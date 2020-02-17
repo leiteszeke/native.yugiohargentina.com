@@ -82,8 +82,8 @@ const Account = () => {
   React.useEffect(() => {
     showLoader();
     Users.me().then(user => setData(user));
-    States.all().then(data => setStates(data));
-    Countries.all().then(data => setCountries(data.sort((a, b) => {
+    States.all().then(({ data }) => setStates(data));
+    Countries.all().then(({ data }) => setCountries(data.sort((a, b) => {
       if (a.name > b.name) return 1;
       if (b.name > a.name) return -1;
       return 0;

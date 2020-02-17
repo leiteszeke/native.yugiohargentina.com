@@ -11,11 +11,15 @@ import Stack from './Stack';
 // Contexts
 import { LoaderProvider } from '#contexts/Loader';
 import { UserProvider } from '#contexts/User';
+// Versioning
+import { version } from '../package.json'
 
 if (SENTRY_DSN !== "") {
   Sentry.init({
     dsn: SENTRY_DSN,
   });
+
+  Sentry.configureScope(scope => scope.setExtra('app_version', version))
 }
 
 numeral.register('locale', 'es', {
