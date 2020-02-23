@@ -169,7 +169,7 @@ const Wanted = () => {
         )}
       </Layout>
       <Modal visible={showModal}>
-        <CardListModal onClose={toggleModal} />
+        <CardListModal title="Lista de Deseos" onClose={toggleModal} />
       </Modal>
     </>
   )

@@ -15,14 +15,12 @@ const Events = () => {
   React.useEffect(() => {
     showLoader();
     EventsService.all()
-      .then(res => {
-        setEvents(res.data.sort((a, b) => {
-          if (a.dateFrom < b.dateFrom) return 1;
-          if (a.dateFrom > b.dateFrom) return -1;
-          return 0;
-        }));
-      })
-      .finally(() => hideLoader());
+      .then(({ data }) => setEvents(data?.sort((a, b) => {
+        if (a.dateFrom < b.dateFrom) return 1;
+        if (a.dateFrom > b.dateFrom) return -1;
+        return 0;
+      }) || []))
+    .finally(() => hideLoader());
   }, []);
 
   return (

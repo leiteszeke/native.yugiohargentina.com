@@ -47,7 +47,7 @@ const CardListModal = ({ onClose }) => {
   )
 
   return (
-    <Layout header noScroll headerActions={actions} title="Lista de Deseos" noIcon>
+    <Layout header noScroll headerActions={actions} title={title} noIcon>
       <Input
         containerStyle={styles.searchInput}
         onChange={onSearch}
