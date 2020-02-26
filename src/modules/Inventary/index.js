@@ -127,7 +127,7 @@ const Inventary = () => {
         )}
       </Layout>
       <Modal visible={showModal}>
-        <CardListModal inventary onClose={toggleModal} />
+        <CardListModal title="Mi inventario" onClose={toggleModal} />
       </Modal>
     </>
   )
