@@ -11,7 +11,7 @@ import * as CardsService from '#services/cards';
 // Styles
 import styles from './styles';
 
-const CardListModal = ({ onClose }) => {
+const CardListModal = ({ title, onClose }) => {
   const [cards, setCards] = React.useState([])
   const [q, setQ] = React.useState({ page: 0 });
 
