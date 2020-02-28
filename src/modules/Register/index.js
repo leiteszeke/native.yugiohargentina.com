@@ -11,11 +11,14 @@ import * as User from '#services/users';
 import { setSession } from '#helpers/session';
 // Images
 import Logo from '#images/logo.png';
+// Hooks
+import { useUser } from '#contexts/User';
 // Styles
 import styles from './styles';
 
-const Register = () => {
+const Register = ({ onSession }) => {
   const { navigate } = useNavigation();
+  const { fetchUser } = useUser();
   const [data, setData] = useState({});
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -38,12 +41,15 @@ const Register = () => {
       .then(async res => {
         if (!res.error) {
           await setSession(res.data);
-          return navigate('App');
+          await fetchUser();
+          return onSession();
         } else {
           if (res.message === 'email_in_use') {
             setShowAlert(true);
           }
+
           setErrors(res.data);
+          return;
         }
       })
       .finally(() => setIsLoading(false));
