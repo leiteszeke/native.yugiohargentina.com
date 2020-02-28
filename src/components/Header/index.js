@@ -40,7 +40,7 @@ const Header = ({ actions, noIcon, onBack, title, withBack }) => {
             <Icon onPress={openDrawer} name="ios-menu" color="#000000" size={32} />
           )
         )}
-        <Text style={{flex: 1, fontWeight: 'bold', marginLeft: noIcon ? 0 : 20, fontSize: 30}}>{ title }</Text>
+        <Text numberOfLines={1} style={{flex: 1, fontWeight: 'bold', marginLeft: noIcon ? 0 : 20, fontSize: 30}}>{ title }</Text>
         <>{actions}</>
       </View>
       {Platform.OS === 'ios' && (

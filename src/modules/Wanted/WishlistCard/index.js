@@ -179,11 +179,7 @@ const WishlistCard = () => {
                   type="warning"
                   style={{ flex: 1, marginRight: 8 }}
                 >
-                  {singles.index === index && singles.loading ? (
-                    <ActivityIndicator color="white" />
-                  ) : (
-                    <Text>QUITAR</Text>
-                  )}
+                  <Text>QUITAR</Text>
                 </Button>
                 <Button
                   onPress={handleModify(single)}
@@ -194,7 +190,9 @@ const WishlistCard = () => {
                 </Button>
               </View>
             ) : (
-              <Button onPress={handleAddCard(single)} type="primary">AGREGAR</Button>
+              <Button onPress={handleAddCard(single)} type="primary">
+                <Text>AGREGAR</Text>
+              </Button>
             )}
           </View>
         </React.Fragment>
@@ -231,11 +229,9 @@ const WishlistCard = () => {
               type="primary"
               style={{ flex: 1, marginHorizontal: 8 }}
             >
-              {loading ?
-                <ActivityIndicator color="white" />
-                : action === 'CREATE'
-                  ? <Text>AGREGAR</Text>
-                  : <Text>GUARDAR</Text>
+              {action === 'CREATE'
+                ? <Text>AGREGAR</Text>
+                : <Text>GUARDAR</Text>
               }
             </Button>
           </View>

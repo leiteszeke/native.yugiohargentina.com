@@ -199,7 +199,9 @@ const InventaryCard = () => {
               </View>
             ) : (
               <View style={{ width: '100%'}}>
-                <Button onPress={handleAddCard(single)} type="primary">AGREGAR</Button>
+                <Button onPress={handleAddCard(single)} type="primary">
+                  <Text>AGREGAR</Text>
+                </Button>
               </View>
             )}
           </View>
