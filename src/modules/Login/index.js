@@ -1,15 +1,11 @@
 // Dependencies
 import React, {useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-import {
-  ActivityIndicator,
-  Button,
-  InputItem,
-  NoticeBar,
-} from '@ant-design/react-native';
+import {ActivityIndicator, Button, NoticeBar} from '@ant-design/react-native';
 import {useNavigation} from '@react-navigation/native';
 // Components
 import Layout from '#components/Layout';
+import Input from '#components/Input';
 // Services
 import * as User from '#services/users';
 // Helpers
@@ -29,7 +25,8 @@ const Login = ({onSession}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  const setValue = name => value => {
+  const setValue = name => e => {
+    const value = e.nativeEvent.text;
     setData(prev => ({...prev, [name]: value}));
 
     setErrors(prev => ({
@@ -43,6 +40,8 @@ const Login = ({onSession}) => {
     await fetchUser();
     onSession();
   };
+
+  const goRecover = () => navigate('Recover');
 
   const loginUser = () => {
     setIsLoading(true);
@@ -70,22 +69,22 @@ const Login = ({onSession}) => {
       {isLoading && <ActivityIndicator toast text="Cargando..." />}
       <View>
         <Image style={styles.logo} resizeMode="contain" source={Logo} />
-        <InputItem
-          autoCapitalize="none"
+        <Input
           placeholderTextColor={errors.email ? '#FF0000' : '#000000'}
           style={[styles.textInput, errors.email ? styles.inputError : {}]}
           onChange={setValue('email')}
           placeholder="Email"
           placeholderTextColor="#FFFFFF"
+          value={data?.email}
         />
         <View style={styles.separator} />
-        <InputItem
-          autoCapitalize="none"
-          placeholderTextColor={errors.password ? '#FF0000' : '#000000'}
-          style={[styles.textInput, errors.password ? styles.inputError : {}]}
-          type="password"
+        <Input
           onChange={setValue('password')}
           placeholder="Contraseña"
+          placeholderTextColor={errors.password ? '#FF0000' : '#000000'}
+          style={[styles.textInput, errors.password ? styles.inputError : {}]}
+          secureTextEntry={true}
+          value={data?.password}
           placeholderTextColor="#FFFFFF"
         />
         {showAlert && (
@@ -111,6 +110,11 @@ const Login = ({onSession}) => {
             onPress={() => navigate('Register')}
             style={styles.flatButton}>
             <Text style={styles.flatButtonText}>CREAR CUENTA</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.inlineButtons}>
+          <TouchableOpacity onPress={goRecover} style={styles.flatButton}>
+            <Text style={styles.flatButtonText}>RECUPERAR CONTRASEÑA</Text>
           </TouchableOpacity>
         </View>
       </View>

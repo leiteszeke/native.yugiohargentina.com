@@ -67,8 +67,11 @@ const Account = () => {
   };
 
   const setValue = name => e => {
-    e?.persist();
-    const value = e?.nativeEvent.text || e;
+    if (typeof e?.persist === 'function') {
+      e?.persist();
+    }
+
+    const value = e?.nativeEvent?.text || e;
 
     setData(prev => ({
       ...prev,

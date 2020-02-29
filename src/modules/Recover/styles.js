@@ -39,8 +39,9 @@ export default StyleSheet.create({
     fontSize: 14,
   },
   buttons: {
-    height: 120,
-    marginTop: 12,
+    height: 150,
+    justifyContent: 'space-between',
+    marginTop: 12
   },
   inlineButtons: {
     display: 'flex',

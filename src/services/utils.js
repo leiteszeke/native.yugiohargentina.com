@@ -9,8 +9,8 @@ export const url = API_URL;
 
 const getToken = async () => {
   const user = await getSession();
-  return user.token;
-};
+  return user?.token || null;
+}
 
 const objectToQueryString = obj =>
   Object.keys(obj)
