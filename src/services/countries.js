@@ -1,7 +1,4 @@
 // Utils
-import { client, url, handleSuccess, handleError } from './utils';
+import {basicClient} from './utils';
 
-export const all = () =>
-	client.get(`${url}countries`)
-    .then(handleSuccess)
-    .catch(handleError);
+export const all = () => basicClient.get(`countries`);

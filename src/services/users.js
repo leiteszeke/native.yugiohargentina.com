@@ -1,27 +1,19 @@
 // Utils
-import { client, url, handleSuccess, handleError } from './utils';
+import {basicClient} from './utils';
 
 export const login = (email, password) =>
-  client.post(`${url}users/login`, { email, password }, { public: true })
-    .then(handleSuccess)
-    .catch(handleError);
+  basicClient.post(`users/login`, {email, password}, {public: true});
 
 export const register = (name, lastname, email, password) =>
-  client.post(`${url}users/register`, { name, lastname, email, password }, { public: true })
-    .then(handleSuccess)
-    .catch(handleError);
+  basicClient.post(
+    `users/register`,
+    {name, lastname, email, password},
+    {public: true},
+  );
 
-export const me = () =>
-  client.get(`${url}users/me`)
-    .then(handleSuccess)
-    .catch(handleError);
+export const me = () => basicClient.get(`users/me`);
 
-export const update = (id, data) =>
-  client.put(`${url}users/${id}`, data)
-    .then(handleSuccess)
-    .catch(handleError);
+export const update = (id, data) => basicClient.put(`users/${id}`, data);
 
 export const updateDevice = (id, data) =>
-  client.put(`${url}users/${id}/device`, data)
-    .then(handleSuccess)
-    .catch(handleError);
+  basicClient.put(`users/${id}/device`, data);

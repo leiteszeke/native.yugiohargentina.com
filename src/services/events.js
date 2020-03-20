@@ -1,7 +1,5 @@
 // Utils
-import { client, url, handleSuccess, handleError } from './utils';
+import {basicClient} from './utils';
 
-export const all = (params) =>
-	client.get(`${url}events`, { ...params, public: true })
-		.then(handleSuccess)
-		.catch(handleError);
+export const all = params =>
+  basicClient.get(`events`, {...params, public: true});

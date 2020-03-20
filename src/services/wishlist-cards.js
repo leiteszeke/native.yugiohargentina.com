@@ -1,22 +1,11 @@
 // Utils
-import { client, url, handleSuccess, handleError } from './utils';
+import {basicClient} from './utils';
 
-export const all = (params) =>
-	client.get(`${url}wishlists`, { ...params, limit: 1 })
-		.then(handleSuccess)
-    .catch(handleError);
+export const all = params =>
+  basicClient.get(`wishlists`, {...params, limit: 1});
 
-export const add = data =>
-  client.post(`${url}wishlist-cards`, data)
-    .then(handleSuccess)
-    .catch(handleError);
+export const add = data => basicClient.post(`wishlist-cards`, data);
 
-export const remove = id =>
-  client.delete(`${url}wishlist-cards/${id}`)
-    .then(handleSuccess)
-    .catch(handleError);
+export const remove = id => basicClient.delete(`wishlist-cards/${id}`);
 
-export const update = data =>
-  client.put(`${url}wishlist-cards`, data)
-    .then(handleSuccess)
-    .catch(handleError);
+export const update = data => basicClient.put(`wishlist-cards`, data);

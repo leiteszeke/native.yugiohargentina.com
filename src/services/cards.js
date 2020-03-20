@@ -1,12 +1,6 @@
 // Utils
-import { client, url, handleSuccess, handleError } from './utils';
+import {basicClient} from './utils';
 
-export const all = (params) =>
-	client.get(`${url}cards`, { ...params })
-		.then(handleSuccess)
-    .catch(handleError);
+export const all = params => basicClient.get(`cards`, {...params});
 
-export const get = id =>
-  client.get(`${url}cards/${id}`)
-    .then(handleSuccess)
-    .catch(handleError);
+export const get = id => basicClient.get(`cards/${id}`);
