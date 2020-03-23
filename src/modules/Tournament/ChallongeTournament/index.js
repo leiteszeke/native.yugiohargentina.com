@@ -1,6 +1,6 @@
 // Dependencies
 import React from 'react';
-import {Text, View, TouchableOpacity} from 'react-native';
+import {Alert, Text, View, TouchableOpacity} from 'react-native';
 import {Button} from '@ant-design/react-native';
 import {
   CommonActions,
@@ -8,53 +8,58 @@ import {
   useIsFocused,
   useRoute,
 } from '@react-navigation/native';
+import RNPickerSelect from 'react-native-picker-select';
 // Services
 import {create} from '#services/players';
 import {get} from '#services/tournaments';
 // Contexts
 import {useUser} from '#contexts/User';
 import {useLoader} from '#contexts/Loader'; // TODO: Remove
-// Components
-import Input from '#components/Input';
 // Styles
-import styles from './styles';
+import styles, {dropdownStyle} from './styles';
 // Utils
 import {parseTournamentState, getMatches, getPlayers} from '#utils/challonge';
 
-const TournamentLanding = initialTournament => {
+const TournamentLanding = ({decklists, ...initialTournament}) => {
   const {user} = useUser();
   const isFocused = useIsFocused();
   const {params} = useRoute();
   const navigation = useNavigation();
   const {hideLoader} = useLoader();
-  const [formData, setFormData] = React.useState({});
   const [tournament, setTournament] = React.useState(initialTournament);
+  const [decklistId, setDecklistId] = React.useState(null);
 
   const goAccount = () => navigation.navigate('Account');
   const goToMatch = match => () =>
     navigation.navigate('TournamentMatch', {match, tournament});
 
   const fetchTournament = () =>
-    get(tournament.id).then(() => setTournament(res.data));
+    get(tournament.id).then(res => setTournament(res.data));
 
   const registerPlayer = () => {
+    if (!decklistId) {
+      return Alert.alert(
+        'Oops!',
+        'Debes seleccionar una decklist para poder continuar',
+      );
+    }
     create({
       tournamentId: tournament.id,
       userId: user.id,
-      ...formData,
+      decklistId,
     }).then(() => fetchTournament());
   };
 
-  const setValue = name => e => {
-    e.persist();
-    setFormData(prev => ({...prev, [name]: e?.nativeEvent?.text}));
+  const setDecklist = e => {
+    setDecklistId(e);
   };
 
   const player = tournament.players.find(p => p.userId === user.id);
 
   const pageData = React.useMemo(
     () => ({
-      canRegister: tournament?.gameTypeId === 4 && user?.duelingBookId,
+      canRegister:
+        tournament?.gameTypeId === 4 && user?.cossyId && user?.duelingBookId,
       isRegistered: !!tournament?.players?.find(p => p.userId === user.id),
       matches: getMatches(
         tournament?.matchesByRound,
@@ -79,6 +84,20 @@ const TournamentLanding = initialTournament => {
     hideLoader();
   }, []);
 
+  const UserHeader = React.useCallback(
+    () => (
+      <>
+        <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 12}}>
+          {user.name} {user.lastname} ({user.cossyId})
+        </Text>
+        <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 12}}>
+          {user.duelingBookId}
+        </Text>
+      </>
+    ),
+    [user],
+  );
+
   if (!pageData.canRegister) {
     return (
       <View style={{flex: 1}}>
@@ -101,23 +120,12 @@ const TournamentLanding = initialTournament => {
     );
   }
 
-  const UserHeader = React.useCallback(
-    () => (
-      <>
-        <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 12}}>
-          {user.name} {user.lastname} ({user.cossyId})
-        </Text>
-        <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 12}}>
-          {user.duelingBookId}
-        </Text>
-      </>
-    ),
-    [user],
-  );
-
   if (pageData.isRegistered) {
     return (
       <View style={{flex: 1}}>
+        <Text style={{fontSize: 24, fontWeight: 'bold', marginBottom: 12}}>
+          {tournament.title}
+        </Text>
         <UserHeader />
         <Text style={{fontSize: 18, marginBottom: 12}}>
           Estado del Torneo: {pageData.state}
@@ -173,11 +181,27 @@ const TournamentLanding = initialTournament => {
     <View style={{flex: 1}}>
       <View style={{flex: 1}}>
         <UserHeader />
-        <Input
-          onChange={setValue('deckName')}
-          placeholder="Nombre del Mazo"
-          value={formData?.deckName}
-        />
+        <View style={styles.dropdown}>
+          <Text style={{fontSize: 18, marginRight: 4}}>Decklist:</Text>
+          <RNPickerSelect
+            items={
+              decklists
+                ? decklists.map(decklist => ({
+                    label: decklist.name,
+                    value: decklist.id,
+                  }))
+                : []
+            }
+            onValueChange={setDecklist}
+            placeholder={{
+              color: 'black',
+              label: 'Seleccione una Decklist',
+              value: null,
+            }}
+            style={dropdownStyle}
+            value={decklistId}
+          />
+        </View>
       </View>
       <View style={{justifyContent: 'flex-end', height: 60}}>
         <Button onPress={registerPlayer} type="primary">

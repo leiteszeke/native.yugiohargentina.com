@@ -7,12 +7,15 @@ import {useNavigation} from '@react-navigation/native';
 import Layout from '#components/Layout';
 import {Title} from '#components/Text';
 import HomeAdvertise from '#components/HomeAdvertise';
+import Event from '#components/Event';
 import FeatureHide from '#components/FeatureHide';
 import Card from '#components/Card';
 // Contexts
 import {useLoader} from '#contexts/Loader';
 // Services
-import {all} from '#services/statistics';
+import Advertising from '#services/advertisings';
+import Events from '#services/events';
+import Statistics from '#services/statistics';
 // Hooks
 import {useUser} from '#contexts/User';
 // Helpers
@@ -22,15 +25,23 @@ const Dashboard = () => {
   const {navigate} = useNavigation();
   const {user} = useUser();
   const {hideLoader, showLoader} = useLoader();
-  const [statistics, setStatistics] = React.useState(null);
+  const [stats, setStats] = React.useState(null);
+  const [advertising, setAdvertising] = React.useState(null);
+  const [event, setEvent] = React.useState(null);
+
+  const fetchEvent = () =>
+    Events.all({limit: 1}).then(res => setEvent(res.data));
 
   const fetchStatistics = () => {
     if (user.id > 0) {
-      all()
-        .then(res => setStatistics(res))
+      Statistics.all()
+        .then(res => setStats(res.data))
         .finally(() => hideLoader());
     }
   };
+
+  const fetchAdvertising = () =>
+    Advertising.all().then(res => setAdvertising(res.data || {}));
 
   const logout = () => {
     removeSession();
@@ -39,11 +50,17 @@ const Dashboard = () => {
 
   React.useEffect(() => {
     showLoader();
+    fetchAdvertising();
+    fetchEvent();
   }, []);
 
   React.useEffect(() => {
-    if (user !== null && statistics === null) fetchStatistics();
+    if (user !== null && stats === null) fetchStatistics();
   }, [user]);
+
+  React.useEffect(() => {
+    if (event !== null && advertising !== null && user !== null) hideLoader();
+  }, [advertising, event, user]);
 
   if (user === null) return null;
 
@@ -53,44 +70,44 @@ const Dashboard = () => {
     },
   };
 
-  const yacsEvent = {
-    image:
-      'https://s3-us-west-2.amazonaws.com/yugiohargentina.com/images/advertise/yacs-dueling-book.jpg',
-    title: 'Yu-Gi-Oh! Argentina Championship Series - Crush Corona Virus',
-    subtitle:
-      'Se parte del 1er torneo online organizado por Yu-Gi-Oh! Argentina y enfrentemos al Corona Virus jugando desde casa.',
-    tournamentId: 97,
-  };
-
   return (
     <Layout header events={events} title="Dashboard">
-      <View style={{paddingHorizontal: 16, paddingTop: 16}}>
-        <Title>YACS is back bitches</Title>
-        <HomeAdvertise {...{...yacsEvent}} />
-      </View>
-      <View style={{paddingBottom: 16, paddingHorizontal: 16}}>
+      {advertising?.id && (
+        <View style={{paddingHorizontal: 16, paddingTop: 16}}>
+          <Title>{advertising.title}</Title>
+          <HomeAdvertise {...{...advertising}} />
+        </View>
+      )}
+
+      {event?.length > 0 && advertising && !advertising?.id && (
+        <View style={{paddingHorizontal: 16, paddingTop: 16}}>
+          <Event {...event} />
+        </View>
+      )}
+
+      <View style={{paddingBottom: 16, marginTop: 16, paddingHorizontal: 16}}>
         <Title>Mis estadísticas</Title>
         <View style={{flexDirection: 'row', marginBottom: 16}}>
           <Card
             title="Cartas buscando"
-            value={statistics?.wanted || 0}
+            value={stats?.wanted || 0}
             style={{marginRight: 8}}
           />
           <Card
             title="Cartas en inventario"
-            value={statistics?.inventary || 0}
+            value={stats?.inventary || 0}
             style={{marginLeft: 8}}
           />
         </View>
         <View style={{flexDirection: 'row'}}>
           <Card
             title="Ranking YGO Arg"
-            value={statistics?.ranking || 0}
+            value={stats?.ranking || 0}
             style={{marginRight: 8}}
           />
           <Card
             title="Partidos invicto"
-            value={statistics?.inbeated || 0}
+            value={stats?.inbeated || 0}
             style={{marginLeft: 8}}
           />
         </View>

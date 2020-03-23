@@ -95,7 +95,7 @@ PODS:
     - nanopb/encode (= 0.3.9011)
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
-  - Permission-Notifications (2.0.9):
+  - Permission-Notifications (2.0.10):
     - RNPermissions
   - Protobuf (3.11.3)
   - RCTRequired (0.61.5)
@@ -263,6 +263,8 @@ PODS:
   - React-jsinspector (0.61.5)
   - react-native-safe-area-context (0.6.4):
     - React
+  - react-native-webview (9.0.1):
+    - React
   - React-RCTActionSheet (0.61.5):
     - React-Core/RCTActionSheetHeaders (= 0.61.5)
   - React-RCTAnimation (0.61.5):
@@ -298,32 +300,32 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
     - ReactCommon/jscallinvoker (= 0.61.5)
-  - RNCAsyncStorage (1.7.1):
+  - RNCAsyncStorage (1.8.1):
     - React
-  - RNCMaskedView (0.1.6):
+  - RNCMaskedView (0.1.7):
     - React
-  - RNDeviceInfo (5.5.1):
+  - RNDeviceInfo (5.5.3):
     - React
-  - RNFBAnalytics (6.3.1):
+  - RNFBAnalytics (6.3.4):
     - Firebase/Core (~> 6.13.0)
     - React
     - RNFBApp
-  - RNFBApp (6.3.1):
+  - RNFBApp (6.3.4):
     - Firebase/Core (~> 6.13.0)
     - React
-  - RNFBMessaging (6.3.1):
+  - RNFBMessaging (6.3.4):
     - Firebase/Messaging (~> 6.13.0)
     - React
     - RNFBApp
-  - RNGestureHandler (1.5.6):
+  - RNGestureHandler (1.6.1):
     - React
-  - RNPermissions (2.0.9):
+  - RNPermissions (2.0.10):
     - React
-  - RNReanimated (1.7.0):
+  - RNReanimated (1.7.1):
     - React
-  - RNScreens (2.0.0-beta.2):
+  - RNScreens (2.4.0):
     - React
-  - RNSentry (1.2.2):
+  - RNSentry (1.3.3):
     - React
     - Sentry (~> 4.4.0)
   - RNSVG (11.0.1):
@@ -354,6 +356,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -432,6 +435,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -501,7 +506,7 @@ SPEC CHECKSUMS:
   GoogleDataTransportCCTSupport: 202d7cdf9c4a7d81a2bb7f7e7e1ba6faa421b1f2
   GoogleUtilities: 29bd0d8f850efbd28cff6d99e8b7da1f8d236bcf
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
-  Permission-Notifications: 1e03f5c43612ac4f9cdcaf6504695fc4e15f33d9
+  Permission-Notifications: c9eb3a2da68dc0f37a8dc67d37bd28d150c5041d
   Protobuf: 0e94afe3b47cb11876eb6aee296638711a24bf75
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTTypeSafety: 9aa1b91d7f9310fc6eadc3cf95126ffe818af320
@@ -513,6 +518,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-safe-area-context: 52342d2d80ea8faadd0ffa76d83b6051f20c5329
+  react-native-webview: 3f2f9934ba8633a170d209cb84045b6cbc5e5f48
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72
@@ -523,17 +529,17 @@ SPEC CHECKSUMS:
   React-RCTText: 9ccc88273e9a3aacff5094d2175a605efa854dbe
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
-  RNCAsyncStorage: 44395cb9c7c1523104c2b499eb426ef7aff82bca
-  RNCMaskedView: a88953beefbd347a29072d9eba90e42945fe291e
-  RNDeviceInfo: 017aa2fd29a437fba26807cbe2fa51a149da70cd
-  RNFBAnalytics: 48a97c6e4bd8a9ad173990e95ef1311c486630d8
-  RNFBApp: 279ec5c4bb43b8fc7b8031eed90ad7d2bea7a048
-  RNFBMessaging: 29971efd7fd939ff2053f30f5c337d6ca78fd215
-  RNGestureHandler: 911d3b110a7a233a34c4f800e7188a84b75319c6
-  RNPermissions: 2f74237e97b08beda01e914301e12524ddddf5b8
-  RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
-  RNScreens: 5e4758109c6d35f9a009ce72af873df907548020
-  RNSentry: 9cfa3717b1e6bf9ad4b124683e78e3b98b01d3af
+  RNCAsyncStorage: e0dd7c8a36543b4ef84969acd9f8aceba3a92dc2
+  RNCMaskedView: 76c40a1d41c3e2535df09246a2b5487f04de0814
+  RNDeviceInfo: 310c1f43d418d950a193c7650de2f9559c906048
+  RNFBAnalytics: b8bad44e6653af73219b1a7af24bf3452cb02c1b
+  RNFBApp: 7d4006751de8bb5cafa2e8d2e7d94ee250df81db
+  RNFBMessaging: 51cc7f6beaf4c4feac6f18ea941bba5854e3d9c6
+  RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
+  RNPermissions: 1008d3511fee0e25739cf81c4af0d1b2248f1053
+  RNReanimated: 4e102df74a9674fa943e05f97f3362b6e44d0b48
+  RNScreens: b5c0e1b2b04512919e78bd3898e144a157ce2363
+  RNSentry: 86baf0c87120cd5eb491d073989f8cbc1a2174c6
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Sentry: 14bdd673870e8cf64932b149fad5bbbf39a9b390

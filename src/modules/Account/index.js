@@ -25,7 +25,7 @@ const Account = () => {
   const {navigate} = useNavigation();
   const {showLoader, isLoading, hideLoader} = useLoader();
   const {user, updateUser} = useUser();
-  const [data, setData] = React.useState({});
+  const [data, setData] = React.useState(null);
   const [states, setStates] = React.useState(null);
   const [countries, setCountries] = React.useState(null);
 
@@ -48,7 +48,7 @@ const Account = () => {
 
     showLoader();
 
-    Users.update(data.id, {
+    Users.update(data?.id, {
       challongeId,
       city,
       countryId,
@@ -57,9 +57,9 @@ const Account = () => {
       duelingBookId,
       duelLinksId,
       stateId,
-    }).then(({data: user}) => {
+    }).then(res => {
       hideLoader();
-      setData(user);
+      setData(res.data);
       updateUser();
 
       Alert.alert('Actualizar Usuario', 'Se han actualizado tus datos.');
@@ -67,7 +67,8 @@ const Account = () => {
   };
 
   const setValue = name => e => {
-    const value = e?.nativeEvent?.text || e;
+    e?.persist();
+    const value = e?.nativeEvent.text || e;
 
     setData(prev => ({
       ...prev,
@@ -78,7 +79,7 @@ const Account = () => {
 
   React.useEffect(() => {
     showLoader();
-    Users.me().then(user => setData(user));
+    Users.me().then(res => setData(res.data));
     States.all().then(({data}) => setStates(data));
     Countries.all().then(({data}) =>
       setCountries(
@@ -122,7 +123,7 @@ const Account = () => {
     <Layout header headerActions={actions} title="Mi cuenta" withBack>
       <View style={{paddingHorizontal: 16, paddingTop: 16}}>
         <Text style={styles.title}>
-          {data.name} {data.lastname}
+          {data?.name} {data?.lastname}
         </Text>
       </View>
       <View style={{flex: 1, paddingBottom: 16, paddingHorizontal: 16}}>
@@ -130,27 +131,27 @@ const Account = () => {
           onChange={setValue('cossyId')}
           maxLength={10}
           placeholder="COSSY ID"
-          value={data.cossyId || ''}
+          value={data?.cossyId || ''}
         />
         <Input
           onChange={setValue('duelLinksId')}
           placeholder="Duel Links ID"
-          value={data.duelLinksId || ''}
+          value={data?.duelLinksId || ''}
         />
         <Input
           onChange={setValue('duelingBookId')}
           placeholder="Dueling Book User"
-          value={data.duelingBookId || ''}
+          value={data?.duelingBookId || ''}
         />
         <Input
           onChange={setValue('discordId')}
           placeholder="Discord User"
-          value={data.discordId || ''}
+          value={data?.discordId || ''}
         />
         <Input
           onChange={setValue('challongeId')}
           placeholder="Challonge User"
-          value={data.challongeId || ''}
+          value={data?.challongeId || ''}
         />
         <View style={styles.dropdown}>
           <RNPickerSelect
@@ -169,10 +170,10 @@ const Account = () => {
               value: null,
             }}
             style={dropdownStyle}
-            value={data.countryId}
+            value={data?.countryId}
           />
         </View>
-        {(typeof data.countryId === 'undefined' || data.countryId === 1) && (
+        {(typeof data?.countryId === 'undefined' || data?.countryId === 1) && (
           <View style={styles.dropdown}>
             <RNPickerSelect
               items={
@@ -187,14 +188,14 @@ const Account = () => {
                 value: null,
               }}
               style={dropdownStyle}
-              value={data.stateId}
+              value={data?.stateId}
             />
           </View>
         )}
         <Input
           onChange={setValue('city')}
           placeholder="Ciudad"
-          value={data.city || ''}
+          value={data?.city || ''}
         />
       </View>
     </Layout>
