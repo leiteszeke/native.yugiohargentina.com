@@ -59,7 +59,7 @@ const Dashboard = () => {
     title: 'Yu-Gi-Oh! Argentina Championship Series - Crush Corona Virus',
     subtitle:
       'Se parte del 1er torneo online organizado por Yu-Gi-Oh! Argentina y enfrentemos al Corona Virus jugando desde casa.',
-    tournamentId: 12,
+    tournamentId: 97,
   };
 
   return (

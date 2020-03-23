@@ -14,7 +14,7 @@ const TournamentLanding = () => {
   const [tournament, setTournament] = React.useState(null);
 
   const fetchTournament = () => {
-    get(params?.tournamentId || 12).then(({data}) => setTournament(data));
+    get(params?.tournamentId || 97).then(({data}) => setTournament(data));
   };
 
   React.useEffect(() => {
