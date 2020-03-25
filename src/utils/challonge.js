@@ -11,6 +11,9 @@ export const parseMatchState = state => {
   return 'Desconocido';
 };
 
+export const getMatch = (matches, match) =>
+  matches.find(m => m.matchId === match.id);
+
 export const getMatches = (rounds, playerId) => {
   const matches = [];
 
@@ -26,6 +29,17 @@ export const getMatches = (rounds, playerId) => {
 
   return matches;
 };
+
+export const isPlaying = players => {
+  const userId = getUser().id;
+  if (userId <= 0) return false;
+  if (userId === players.player1.userId) return true;
+  if (userId === players.player2.userId) return true;
+  return false;
+};
+
+export const getCurrentRound = tournament =>
+  tournament.matchesByRound[tournament.matchesByRound.length - 1].round;
 
 export const getPlayers = (players, match) => {
   if (!players || !match) return {};

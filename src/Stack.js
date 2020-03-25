@@ -1,11 +1,13 @@
 // Dependencies
 import React from 'react';
-import {View} from 'react-native';
+import {ImageBackground} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import * as Sentry from '@sentry/react-native';
 // Helpers
 import {getSession} from '#helpers/session';
+// Services
+import {navigate} from '#services/navigation';
 // Modules
 import Account from './modules/Account';
 import Dashboard from './modules/Dashboard';
@@ -26,6 +28,8 @@ import Sidebar from './components/Sidebar';
 // Contexts
 import {CardStatusProvider} from '#contexts/CardStatus';
 import {LanguageProvider} from '#contexts/Language';
+// Images
+import bgImage from '#images/bg.png';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -35,10 +39,6 @@ const AppStack = ({onSession}) => (
     <CardStatusProvider>
       <Drawer.Navigator
         drawerContent={props => <Sidebar {...{...props, onSession}} />}>
-        <Drawer.Screen
-          name="TournamentInscription"
-          component={TournamentInscription}
-        />
         <Drawer.Screen name="Dashboard" component={Dashboard} />
         <Drawer.Screen name="Events" component={Events} />
         <Drawer.Screen name="Stores" component={Stores} />
@@ -50,13 +50,17 @@ const AppStack = ({onSession}) => (
         <Drawer.Screen name="WishlistCard" component={WishlistCard} />
         <Drawer.Screen name="TournamentLanding" component={TournamentLanding} />
         <Drawer.Screen name="TournamentMatch" component={TournamentMatch} />
+        <Drawer.Screen
+          name="TournamentInscription"
+          component={TournamentInscription}
+        />
       </Drawer.Navigator>
     </CardStatusProvider>
   </LanguageProvider>
 );
 
 const AuthStack = ({onSession}) => (
-  <Stack.Navigator headerMode="none">
+  <Stack.Navigator name="Auth" headerMode="none">
     <Stack.Screen name="Login">
       {props => <Login {...{...props, onSession}} />}
     </Stack.Screen>
@@ -67,7 +71,6 @@ const AuthStack = ({onSession}) => (
 );
 
 const App = () => {
-  const [navigateTo, setNavigateTo] = React.useState(null);
   const handleSession = async () => {
     const session = await getSession();
 
@@ -81,21 +84,29 @@ const App = () => {
         );
       }
 
-      return setNavigateTo('App');
+      return navigate('App');
     }
 
-    return setNavigateTo('Auth');
+    return navigate('Auth');
   };
 
   React.useEffect(() => {
     handleSession();
   }, []);
 
-  if (navigateTo === null) return <View style={{backgroundColor: 'green'}} />;
-
-  if (navigateTo === 'Auth') return <AuthStack onSession={handleSession} />;
-
-  return <AppStack onSession={handleSession} />;
+  return (
+    <Stack.Navigator headerMode="none">
+      <Stack.Screen name="Loading">
+        {props => <ImageBackground source={bgImage} style={{flex: 1}} />}
+      </Stack.Screen>
+      <Stack.Screen name="Auth">
+        {props => <AuthStack {...props} onSession={handleSession} />}
+      </Stack.Screen>
+      <Stack.Screen name="App">
+        {props => <AppStack {...props} onSession={handleSession} />}
+      </Stack.Screen>
+    </Stack.Navigator>
+  );
 };
 
 export default App;

@@ -1,7 +1,7 @@
 // Dependencies
 import React from 'react';
 // Helpers
-import {getSession} from '#helpers/session';
+import {getSession, setSession} from '#helpers/session';
 // Services
 import {me} from '#services/users';
 
@@ -15,7 +15,11 @@ const UserProvider = ({children}) => {
     setUser(session);
   };
 
-  const updateUser = () => me().then(u => setUser(u));
+  const updateUser = () =>
+    me().then(async res => {
+      await setSession(res.data);
+      fetchUser();
+    });
 
   React.useEffect(() => {
     fetchUser();

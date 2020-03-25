@@ -1,7 +1,9 @@
 // Utils
-import {getSession} from '#helpers/session';
+import {getSession, removeSession} from '#helpers/session';
 // Configs
 import {API_URL, DEBUG} from 'react-native-dotenv';
+// Services
+import {navigate} from '#services/navigation';
 
 export const url = API_URL;
 
@@ -16,6 +18,7 @@ const objectToQueryString = obj =>
     .join('&');
 
 const request = async (initialUrl, params, method = 'GET', config = {}) => {
+  const randomNumber = Math.floor(Math.random() * 100);
   let url = `${API_URL}${initialUrl}`;
   const options = {
     method,
@@ -40,7 +43,7 @@ const request = async (initialUrl, params, method = 'GET', config = {}) => {
   let response = {};
   const debug = !!DEBUG;
 
-  if (debug) console.debug('Debugging Request', url, options);
+  if (debug) console.debug(`Debugging Request ${randomNumber}`, url, options);
 
   try {
     response = await fetch(url, options);
@@ -48,14 +51,24 @@ const request = async (initialUrl, params, method = 'GET', config = {}) => {
 
     if (errorStatus.includes(response.status)) {
       const errorResponse = await response.json();
+
+      if (response.status === 401) {
+        removeSession();
+        navigate('Auth');
+      }
+
       throw new Error(JSON.stringify(errorResponse));
     }
 
     const result = await response.json();
-    if (debug) console.debug('Debugging Response', result);
+    if (debug) console.debug(`Debugging Response ${randomNumber}`, result);
     return Promise.resolve(result);
   } catch (e) {
-    if (debug) console.debug('Debugging Response Error', JSON.parse(e.message));
+    if (debug)
+      console.debug(
+        `Debugging Response Error ${randomNumber}`,
+        JSON.parse(e.message),
+      );
     return Promise.reject(JSON.parse(e.message));
   }
 };

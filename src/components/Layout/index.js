@@ -19,6 +19,7 @@ import bgImage from '#images/bg.png';
 const Layout = ({
   background = false,
   children,
+  containerStyle,
   footer,
   header,
   headerActions,
@@ -93,17 +94,17 @@ const Layout = ({
         <Content
           onContentSizeChange={onContentChange}
           scrollEnabled={scrollEnabled}
-          contentContainerStyle={[
+          contentContainerStyle={{
+            paddingBottom: 16,
+            ...containerStyle,
+          }}
+          style={[
+            scrollEnabled && {marginBottom: 16},
             {
-              paddingBottom: 16,
+              width: '100%',
+              ...style,
             },
-            !scrollEnabled && {flex: 1},
-          ]}
-          style={{
-            flex: 1,
-            width: '100%',
-            ...style,
-          }}>
+          ]}>
           {children}
         </Content>
         {footer && <Footer>{footer}</Footer>}
