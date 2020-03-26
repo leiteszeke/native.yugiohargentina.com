@@ -42,22 +42,21 @@ const Register = ({onSession}) => {
     setIsLoading(true);
     setShowAlert(false);
 
-    User.register(data.name, data.lastname, data.email, data.password).then(
-      async res => {
-        if (!res.error) {
-          await setSession(res.data);
-          await fetchUser();
-          return onSession();
-        } else {
-          if (res.message === 'email_in_use') {
-            setShowAlert(true);
-          }
-
-          setErrors(res.data);
-          return;
+    User.register(data.name, data.lastname, data.email, data.password)
+      .then(async res => {
+        await setSession(res.data);
+        await fetchUser();
+        setIsLoading(false);
+        return onSession();
+      })
+      .catch(res => {
+        if (res.message === 'email_in_use') {
+          setShowAlert(true);
         }
-      },
-    );
+
+        setErrors(res.data);
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (

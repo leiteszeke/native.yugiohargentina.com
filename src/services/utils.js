@@ -52,7 +52,7 @@ const request = async (initialUrl, params, method = 'GET', config = {}) => {
     if (errorStatus.includes(response.status)) {
       const errorResponse = await response.json();
 
-      if (response.status === 401) {
+      if (response.status === 401 && !config.public) {
         removeSession();
         navigate('Auth');
       }
