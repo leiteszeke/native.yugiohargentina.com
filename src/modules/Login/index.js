@@ -48,20 +48,21 @@ const Login = ({onSession}) => {
     setIsLoading(true);
     setShowAlert(false);
 
-    User.login(data.email, data.password).then(async res => {
-      if (!res.error) {
+    User.login(data.email, data.password)
+      .then(async res => {
         await setSession(res.data);
         await fetchUser();
+        setIsLoading(false);
         return onSession();
-      } else {
+      })
+      .catch(res => {
         if (res.message === 'user_not_found') {
           setShowAlert(true);
         }
 
         setErrors(res.data);
-        return;
-      }
-    });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
