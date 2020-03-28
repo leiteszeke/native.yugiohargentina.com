@@ -1,7 +1,8 @@
 // Dependencies
 import React from 'react';
-import {View, Image, Text, TouchableOpacity, Linking} from 'react-native';
+import { View, Image, Text, TouchableOpacity, Linking } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { SITE_URL } from 'react-native-dotenv';
 // Components
 import Layout from '#components/Layout';
 // Services
@@ -14,7 +15,8 @@ import styles from './styles';
 import {useLoader} from '#contexts/Loader';
 
 const Store = store => {
-  const image = store.image ? {uri: store.image} : Logo;
+  const imagesUrl = `${SITE_URL}/images/stores/`;
+  const image = store.image ? { uri: `${imagesUrl}${store.image}` } : Logo;
 
   const goTo = React.useCallback(
     link => () => {

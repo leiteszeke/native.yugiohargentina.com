@@ -1,15 +1,11 @@
 // Dependencies
 import React, {useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-import {
-  ActivityIndicator,
-  Button,
-  InputItem,
-  NoticeBar,
-} from '@ant-design/react-native';
+import {ActivityIndicator, Button, NoticeBar} from '@ant-design/react-native';
 import {useNavigation} from '@react-navigation/native';
 // Components
 import Layout from '#components/Layout';
+import Input from '#components/Input';
 // Services
 import * as User from '#services/users';
 // Helpers
@@ -29,7 +25,8 @@ const Register = ({onSession}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  const setValue = name => value => {
+  const setValue = name => e => {
+    const value = e.nativeEvent.text;
     setData({...data, [name]: value});
 
     setErrors(prev => ({
@@ -64,41 +61,41 @@ const Register = ({onSession}) => {
       {isLoading && <ActivityIndicator toast text="Cargando..." />}
       <View>
         <Image style={styles.logo} resizeMode="contain" source={Logo} />
-        <InputItem
-          autoCapitalize="none"
+        <Input
           placeholderTextColor={errors.name ? '#FF0000' : '#000000'}
           style={[styles.textInput, errors.name ? styles.inputError : {}]}
           onChange={setValue('name')}
           placeholder="Nombre"
           placeholderTextColor="#FFFFFF"
+          value={data?.name}
         />
         <View style={styles.separator} />
-        <InputItem
-          autoCapitalize="none"
+        <Input
           placeholderTextColor={errors.lastname ? '#FF0000' : '#000000'}
           style={[styles.textInput, errors.lastname ? styles.inputError : {}]}
           onChange={setValue('lastname')}
           placeholder="Apellido"
           placeholderTextColor="#FFFFFF"
+          value={data?.lastname}
         />
         <View style={styles.separator} />
-        <InputItem
-          autoCapitalize="none"
+        <Input
           placeholderTextColor={errors.email ? '#FF0000' : '#000000'}
           style={[styles.textInput, errors.email ? styles.inputError : {}]}
           onChange={setValue('email')}
           placeholder="Email"
           placeholderTextColor="#FFFFFF"
+          value={data?.email}
         />
         <View style={styles.separator} />
-        <InputItem
-          autoCapitalize="none"
+        <Input
           placeholderTextColor={errors.password ? '#FF0000' : '#000000'}
           style={[styles.textInput, errors.password ? styles.inputError : {}]}
-          type="password"
+          secureTextEntry={true}
           onChange={setValue('password')}
           placeholder="Contraseña"
           placeholderTextColor="#FFFFFF"
+          value={data?.password}
         />
         {showAlert && (
           <NoticeBar

@@ -21,7 +21,7 @@ import { getDeviceInfo } from '#helpers/device';
 import { removeSession } from '#helpers/session';
 import { getToken } from '#helpers/messaging';
 
-const Wanted = () => {
+const Wanted = ({ onSession }) => {
   const { navigate } = useNavigation();
   const { user } = useUser();
   const focused = useIsFocused();
@@ -34,30 +34,22 @@ const Wanted = () => {
   const HEADER_HEIGHT = 50;
   const CONTENT_PADDING = 32;
 
-  const onContentChange = (width, height) => {
+  const onContentChange = (width, height) =>
     setScrollEnabled(height > Dimensions.get('window').height - HEADER_HEIGHT - CONTENT_PADDING);
-  }
 
   const logout = () => {
     removeSession();
-    navigate('Auth');
+    onSession();
   }
 
   const openCard = (id, name) => () => { navigate('WishlistCard', { id, name }) };
-  const fetchCards = () => {
+  const fetchCards = () =>
     WishlistService.all()
       .then(res => setWishlist(res.data[0]))
       .finally(() => hideLoader());
-  };
 
   React.useEffect(() => {
-    if (user.id > 0) {
-      fetchCards();
-    }
-  }, []);
-
-  React.useEffect(() => {
-    if (focused) {
+    if (focused && user.id > 0) {
       fetchCards();
     }
   }, [focused]);
@@ -126,17 +118,12 @@ const Wanted = () => {
 
   const toggleNotify = () => setNotify(prev => !prev);
 
-  const events = {
-    onWillFocus: () => fetchCards()
-  }
-
   const showFooter = true;
 
   return (
     <>
       <Layout
         {...{
-          events,
           header: true,
           headerActions: actions,
           noScroll: true,

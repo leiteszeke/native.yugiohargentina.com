@@ -13,6 +13,7 @@ import Account from './modules/Account';
 import Dashboard from './modules/Dashboard';
 import Login from './modules/Login';
 import Register from './modules/Register';
+import Recover from './modules/Recover';
 import Events from './modules/Events';
 import Stores from './modules/Stores';
 import Inventary from './modules/Inventary';
@@ -66,6 +67,9 @@ const AuthStack = ({onSession}) => (
     </Stack.Screen>
     <Stack.Screen name="Register">
       {props => <Register {...{...props, onSession}} />}
+    </Stack.Screen>
+    <Stack.Screen name="Recover">
+      {props => <Recover {...{...props}} />}
     </Stack.Screen>
   </Stack.Navigator>
 );

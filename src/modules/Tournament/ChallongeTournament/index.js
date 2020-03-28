@@ -1,6 +1,6 @@
 // Dependencies
 import React from 'react';
-import {Alert, Text, View, TouchableOpacity} from 'react-native';
+import {Alert, Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import {Button} from '@ant-design/react-native';
 import {
   CommonActions,
@@ -10,7 +10,7 @@ import {
 } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
 // Services
-import {create} from '#services/players';
+import {create, remove} from '#services/players';
 import {get} from '#services/tournaments';
 // Contexts
 import {useUser} from '#contexts/User';
@@ -18,7 +18,14 @@ import {useLoader} from '#contexts/Loader'; // TODO: Remove
 // Styles
 import styles, {dropdownStyle} from './styles';
 // Utils
-import {parseTournamentState, getMatches, getPlayers} from '#utils/challonge';
+import {
+  parseTournamentState,
+  getCurrentRound,
+  getMatches,
+  getPlayers,
+  isRegistered,
+  canUnregister,
+} from '#utils/challonge';
 
 const TournamentLanding = ({decklists, ...initialTournament}) => {
   const {user} = useUser();
@@ -28,7 +35,9 @@ const TournamentLanding = ({decklists, ...initialTournament}) => {
   const {hideLoader} = useLoader();
   const [tournament, setTournament] = React.useState(initialTournament);
   const [decklistId, setDecklistId] = React.useState(null);
+  const [activeTab, setActiveTab] = React.useState(1);
 
+  const setTab = index => () => setActiveTab(index);
   const goAccount = () => navigation.navigate('Account');
   const goToMatch = match => () =>
     navigation.navigate('TournamentMatch', {match, tournament});
@@ -55,17 +64,38 @@ const TournamentLanding = ({decklists, ...initialTournament}) => {
   };
 
   const player = tournament.players.find(p => p.userId === user.id);
+  const currentRound = getCurrentRound(tournament);
+
+  const leaveTournament = () =>
+    remove({userId: user.id, tournamentId: tournament.id}).finally(() => {
+      fetchTournament();
+      navigation.dispatch(CommonActions.setParams({refresh: true}));
+      navigation.navigate('Dashboard');
+    });
+
+  const handleUnsuscribe = () => {
+    Alert.alert('Desuscripción', '¿Estas seguro que queres salir del torneo?', [
+      {
+        text: 'Cancalar',
+        style: 'cancel',
+      },
+      {text: 'Acepto', onPress: leaveTournament},
+    ]);
+  };
 
   const pageData = React.useMemo(
     () => ({
       canRegister:
-        tournament?.gameTypeId === 4 && user?.cossyId && user?.duelingBookId,
-      isRegistered: !!tournament?.players?.find(p => p.userId === user.id),
+        tournament?.gameTypeId === 4 &&
+        !!user?.cossyId &&
+        !!user?.duelingBookId,
+      isRegistered: isRegistered(user.id, tournament),
       matches: getMatches(
         tournament?.matchesByRound,
         player?.challongePlayerId,
       ),
-      state: parseTournamentState(tournament?.challonge.state),
+      canUnregister: canUnregister(user.id, tournament),
+      state: parseTournamentState(tournament?.challonge.state, tournament),
       playersCount: tournament?.players.length,
       currentRound: tournament?.matchesByRound.length,
       totalRounds: tournament?.challonge.swiss_rounds,
@@ -98,6 +128,127 @@ const TournamentLanding = ({decklists, ...initialTournament}) => {
     [user],
   );
 
+  const Tabs = () => (
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        height: 40,
+        marginBottom: 12,
+      }}>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={[
+          {
+            flex: 1,
+            marginRight: 6,
+            height: 40,
+            borderWidth: 1,
+            borderColor: 'gray',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          activeTab === 1 && {backgroundColor: '#cacaca'},
+        ]}
+        onPress={setTab(1)}>
+        <Text style={{fontSize: 16}}>Rondas</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={[
+          {
+            flex: 1,
+            marginLeft: 6,
+            height: 40,
+            borderWidth: 1,
+            borderColor: 'gray',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          activeTab === 2 && {backgroundColor: '#cacaca'},
+        ]}
+        onPress={setTab(2)}>
+        <Text style={{fontSize: 16}}>Tabla de Posiciones</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const Player = player => (
+    <View
+      style={{
+        alignItems: 'center',
+        flexDirection: 'row',
+        height: 40,
+        borderColor: '#cacaca',
+        borderWidth: player.user.id ? 1 : 0,
+        marginBottom: 12,
+      }}>
+      <Text
+        style={{
+          fontSize: 18,
+          textAlign: 'center',
+          backgroundColor: player.user.id ? '#cacaca' : 'transparent',
+          height: 40,
+          justifyContent: 'center',
+          lineHeight: 40,
+          width: 32,
+        }}>
+        {player.position || 0}
+      </Text>
+      <Text style={{fontSize: 18, flex: 1, marginLeft: 6}}>
+        {player.user.name} {player.user.lastname}
+      </Text>
+      <Text
+        style={{
+          fontSize: 18,
+          textAlign: 'center',
+          backgroundColor: player.user.id ? '#cacaca' : 'transparent',
+          height: 40,
+          justifyContent: 'center',
+          lineHeight: 40,
+          width: 32,
+        }}>
+        {player.plays || 0}
+      </Text>
+      <Text
+        style={{
+          fontSize: 18,
+          textAlign: 'center',
+          backgroundColor: player.user.id ? '#bfbfbf' : 'transparent',
+          height: 40,
+          justifyContent: 'center',
+          lineHeight: 40,
+          width: 32,
+        }}>
+        {player.wins || 0}
+      </Text>
+      <Text
+        style={{
+          fontSize: 18,
+          textAlign: 'center',
+          backgroundColor: player.user.id ? '#cacaca' : 'transparent',
+          height: 40,
+          justifyContent: 'center',
+          lineHeight: 40,
+          width: 32,
+        }}>
+        {player.draws || 0}
+      </Text>
+      <Text
+        style={{
+          fontSize: 18,
+          textAlign: 'center',
+          backgroundColor: player.user.id ? '#bfbfbf' : 'transparent',
+          height: 40,
+          justifyContent: 'center',
+          lineHeight: 40,
+          width: 32,
+        }}>
+        {player.loses || 0}
+      </Text>
+    </View>
+  );
+
   if (!pageData.canRegister) {
     return (
       <View style={{flex: 1}}>
@@ -123,7 +274,7 @@ const TournamentLanding = ({decklists, ...initialTournament}) => {
   if (pageData.isRegistered) {
     return (
       <View style={{flex: 1}}>
-        <Text style={{fontSize: 24, fontWeight: 'bold', marginBottom: 12}}>
+        <Text style={{fontSize: 28, fontWeight: 'bold', marginBottom: 12}}>
           {tournament.title}
         </Text>
         <UserHeader />
@@ -141,38 +292,83 @@ const TournamentLanding = ({decklists, ...initialTournament}) => {
             </Text>
           </>
         )}
-        {pageData.matches.map(match => {
-          const matchPlayers = getPlayers(tournament?.players, match);
+        <Tabs />
+        <ScrollView style={{flex: 1}}>
+          {activeTab === 1 && (
+            <View style={{flex: 1}}>
+              {!currentRound ? (
+                <View
+                  style={{
+                    flex: 1,
+                    padding: 12,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={{fontSize: 20, textAlign: 'center'}}>
+                    El torneo aún no ha comenzado
+                  </Text>
+                </View>
+              ) : (
+                pageData.matches.map(match => {
+                  const matchPlayers = getPlayers(tournament?.players, match);
 
-          return (
-            <View key={match.id} style={{marginBottom: 12}}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginBottom: 8,
-                }}>
-                <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-                  Ronda {match?.round}
-                </Text>
-                {pageData.currentRound === match.round &&
-                  match.state === 'open' && (
-                    <TouchableOpacity onPress={goToMatch(match)}>
-                      <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-                        REPORTAR RESULTADO
+                  return (
+                    <View key={match.id} style={{marginBottom: 12}}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          marginBottom: 8,
+                        }}>
+                        <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                          Ronda {match?.round}
+                        </Text>
+                        {pageData.currentRound === match.round &&
+                          match.state === 'open' && (
+                            <TouchableOpacity onPress={goToMatch(match)}>
+                              <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                                REPORTAR RESULTADO
+                              </Text>
+                            </TouchableOpacity>
+                          )}
+                      </View>
+                      <Text style={{fontSize: 16, marginBottom: 4}}>
+                        {matchPlayers.player1.name} ({matchPlayers.player1.wins}
+                        )
                       </Text>
-                    </TouchableOpacity>
-                  )}
-              </View>
-              <Text style={{fontSize: 16, marginBottom: 4}}>
-                {matchPlayers.player1.name} ({matchPlayers.player1.wins})
-              </Text>
-              <Text style={{fontSize: 16, marginBottom: 4}}>
-                {matchPlayers.player2.name} ({matchPlayers.player2.wins})
-              </Text>
+                      <Text style={{fontSize: 16, marginBottom: 4}}>
+                        {matchPlayers.player2.name} ({matchPlayers.player2.wins}
+                        )
+                      </Text>
+                    </View>
+                  );
+                })
+              )}
             </View>
-          );
-        })}
+          )}
+          {activeTab === 2 && (
+            <View>
+              <Player
+                {...{
+                  user: {name: 'Nombre y', lastname: 'Apellido'},
+                  plays: 'PJ',
+                  wins: 'PG',
+                  draws: 'PE',
+                  loses: 'PP',
+                  position: ' ',
+                }}
+              />
+              {tournament?.players?.map(player => (
+                <Player key={player.id} {...player} />
+              ))}
+            </View>
+          )}
+        </ScrollView>
+        {pageData.isRegistered && pageData.canUnregister && (
+          <Button onPress={handleUnsuscribe} type="warning">
+            DESINSCRIBIRME
+          </Button>
+        )}
       </View>
     );
   }

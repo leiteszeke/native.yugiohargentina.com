@@ -1,4 +1,29 @@
-export const parseTournamentState = state => {
+// Dependencies
+import dayjs from 'dayjs';
+// Helpers
+import {getUser} from '#helpers/session';
+
+export const parseTournamentState = (state, tournament) => {
+  const now = dayjs();
+
+  if (tournament.preInscriptionDateFrom) {
+    if (
+      now.isAfter(dayjs(tournament.preInscriptionDateFrom)) &&
+      now.isBefore(dayjs(tournament.preInscriptionDateTo))
+    ) {
+      return 'En preinscripción';
+    }
+  }
+
+  if (tournament.inscriptionDateFrom) {
+    if (
+      now.isAfter(dayjs(tournament.inscriptionDateFrom)) &&
+      now.isBefore(dayjs(tournament.inscriptionDateTo))
+    ) {
+      return 'En inscripción';
+    }
+  }
+
   if (state === 'pending') return 'En inscripción';
   if (state === 'in_progress' || state === 'underway') return 'Jugando';
   if (state === 'ended') return 'Finalizado';
@@ -9,6 +34,22 @@ export const parseMatchState = state => {
   if (state === 'open') return 'En juego';
   if (state === 'complete') return 'Finalizado';
   return 'Desconocido';
+};
+
+export const isRegistered = (userId, tournament) => {
+  if (userId <= 0) return false;
+  return !!tournament.players.find(p => p.userId === userId);
+};
+
+export const canUnregister = (userId, tournament) => {
+  if (userId <= 0) return false;
+
+  const now = dayjs();
+  const isPlaying = !!tournament.players.find(p => p.userId === userId);
+
+  if (!isPlaying) return false;
+
+  return now.isBefore(tournament.dateFrom);
 };
 
 export const getMatch = (matches, match) =>
@@ -38,8 +79,10 @@ export const isPlaying = players => {
   return false;
 };
 
-export const getCurrentRound = tournament =>
-  tournament.matchesByRound[tournament.matchesByRound.length - 1].round;
+export const getCurrentRound = tournament => {
+  if (!tournament?.matchesByRound) return null;
+  return tournament.matchesByRound[tournament.matchesByRound.length - 1]?.round;
+};
 
 export const getPlayers = (players, match) => {
   if (!players || !match) return {};

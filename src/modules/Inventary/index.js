@@ -18,7 +18,7 @@ import { useUser } from '#contexts/User';
 // Helpers
 import { removeSession } from '#helpers/session';
 
-const Inventary = () => {
+const Inventary = ({ onSession }) => {
   const { navigate } = useNavigation();
   const { user } = useUser();
   const focused = useIsFocused();
@@ -36,7 +36,7 @@ const Inventary = () => {
 
   const logout = () => {
     removeSession();
-    navigate('Auth');
+    onSession();
   }
 
   const openCard = (id, name) => () => { navigate('InventaryCard', { id, name }) };

@@ -16,7 +16,7 @@ import {parseMatchState, getPlayers} from '#utils/challonge';
 
 const MATCH_OPEN = 'open';
 
-const TournamentMatch = () => {
+const TournamentMatch = async () => {
   const navigation = useNavigation();
   const {
     params: {tournament, match},

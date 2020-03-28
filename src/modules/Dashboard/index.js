@@ -2,7 +2,12 @@
 import React from 'react';
 import {Button} from '@ant-design/react-native';
 import {View, Text} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {
+  CommonActions,
+  useNavigation,
+  useRoute,
+  useIsFocused,
+} from '@react-navigation/native';
 // Components
 import Layout from '#components/Layout';
 import {Title} from '#components/Text';
@@ -22,12 +27,14 @@ import {useUser} from '#contexts/User';
 import {removeSession} from '#helpers/session';
 
 const Dashboard = () => {
-  const {navigate} = useNavigation();
+  const navigation = useNavigation();
   const {user} = useUser();
+  const isFocused = useIsFocused();
   const {hideLoader, showLoader} = useLoader();
   const [stats, setStats] = React.useState(null);
   const [advertising, setAdvertising] = React.useState(null);
   const [event, setEvent] = React.useState(null);
+  const {params} = useRoute();
 
   const fetchEvent = () =>
     Events.all({limit: 1}).then(res => setEvent(res.data));
@@ -45,7 +52,7 @@ const Dashboard = () => {
 
   const logout = () => {
     removeSession();
-    navigate('Auth');
+    navigation.navigate('Auth');
   };
 
   React.useEffect(() => {
@@ -53,6 +60,15 @@ const Dashboard = () => {
     fetchAdvertising();
     fetchEvent();
   }, []);
+
+  React.useEffect(() => {
+    if (params?.refresh) {
+      showLoader();
+      fetchAdvertising();
+      fetchEvent();
+      navigation.dispatch(CommonActions.setParams({}));
+    }
+  }, [isFocused]);
 
   React.useEffect(() => {
     if (user !== null && stats === null) fetchStatistics();

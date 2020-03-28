@@ -17,3 +17,9 @@ export const update = (id, data) => basicClient.put(`users/${id}`, data);
 
 export const updateDevice = (id, data) =>
   basicClient.put(`users/${id}/device`, data);
+
+  export const recover = data => basicClient.post(`users/recover`, data, { public: true })
+
+  export const validateCode = code => basicClient.get(`users/recover/${code}`, {}, { public: true })
+
+  export const updatePassword = data => basicClient.put(`users/password`, data, { public: true })
