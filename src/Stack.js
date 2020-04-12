@@ -21,6 +21,7 @@ import InventaryCard from './modules/Inventary/InventaryCard';
 import InventarySingle from './modules/Inventary/InventarySingle';
 import Wanted from './modules/Wanted';
 import WishlistCard from './modules/Wanted/WishlistCard';
+import Tournaments from './modules/Tournaments';
 import TournamentLanding from './modules/Tournament/TournamentLanding';
 import TournamentInscription from './modules/Tournament/TournamentInscription';
 import TournamentMatch from './modules/Tournament/TournamentMatch';
@@ -40,6 +41,7 @@ const AppStack = ({onSession}) => (
     <CardStatusProvider>
       <Drawer.Navigator
         drawerContent={props => <Sidebar {...{...props, onSession}} />}>
+        <Drawer.Screen name="Tournaments" component={Tournaments} />
         <Drawer.Screen name="Dashboard" component={Dashboard} />
         <Drawer.Screen name="Events" component={Events} />
         <Drawer.Screen name="Stores" component={Stores} />

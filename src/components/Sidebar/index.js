@@ -64,6 +64,12 @@ const Sidebar = ({onSession, navigation}) => {
             <Icon name="ios-contact" size={20} color="#FFFFFF" />
             <Text style={styles.menuItemText}>Mi cuenta</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={navigateTo('Tournaments')}
+            style={styles.menuItem}>
+            <Icon name="logo-game-controller-b" size={20} color="#FFFFFF" />
+            <Text style={styles.menuItemText}>Torneos</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.footer}>
           <TouchableOpacity onPress={logoutUser} style={styles.menuItem}>

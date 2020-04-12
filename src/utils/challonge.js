@@ -7,6 +7,10 @@ export const parseTournamentState = (state, tournament) => {
   const now = dayjs();
 
   if (tournament.preInscriptionDateFrom) {
+    if (now.isBefore(dayjs(tournament.preInscriptionDateFrom))) {
+      return 'En preparación';
+    }
+
     if (
       now.isAfter(dayjs(tournament.preInscriptionDateFrom)) &&
       now.isBefore(dayjs(tournament.preInscriptionDateTo))
@@ -16,6 +20,10 @@ export const parseTournamentState = (state, tournament) => {
   }
 
   if (tournament.inscriptionDateFrom) {
+    if (now.isBefore(dayjs(tournament.inscriptionDateFrom))) {
+      return 'En preparación';
+    }
+
     if (
       now.isAfter(dayjs(tournament.inscriptionDateFrom)) &&
       now.isBefore(dayjs(tournament.inscriptionDateTo))
@@ -24,9 +32,16 @@ export const parseTournamentState = (state, tournament) => {
     }
   }
 
+  if (tournament?.top) {
+    if (now.isBefore(dayjs(tournament?.top?.dateTo))) {
+      return 'Jugando Top';
+    }
+    return 'Finalizado';
+  }
+
   if (state === 'pending') return 'En inscripción';
   if (state === 'in_progress' || state === 'underway') return 'Jugando';
-  if (state === 'ended') return 'Finalizado';
+  if (state === 'complete') return 'Finalizado';
   return 'Desconocido';
 };
 

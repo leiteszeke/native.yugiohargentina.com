@@ -1,8 +1,15 @@
 // Dependencies
 import React from 'react';
-import { Button, Modal as AntModal } from '@ant-design/react-native';
-import { Dimensions, FlatList, Modal, Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import {Button, Modal as AntModal} from '@ant-design/react-native';
+import {
+  Dimensions,
+  FlatList,
+  Modal,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 // Components
 import CardListModal from '#components/CardListModal';
@@ -13,16 +20,16 @@ import * as InventaryCardService from '#services/inventary-cards';
 // Styles
 import styles from './styles';
 // Contexts
-import { useLoader } from '#contexts/Loader';
-import { useUser } from '#contexts/User';
+import {useLoader} from '#contexts/Loader';
+import {useUser} from '#contexts/User';
 // Helpers
-import { removeSession } from '#helpers/session';
+import {removeSession} from '#helpers/session';
 
-const Inventary = ({ onSession }) => {
-  const { navigate } = useNavigation();
-  const { user } = useUser();
+const Inventary = ({onSession}) => {
+  const {navigate} = useNavigation();
+  const {user} = useUser();
   const focused = useIsFocused();
-  const { isLoading, hideLoader } = useLoader();
+  const {isLoading, hideLoader} = useLoader();
   const [cards, setCards] = React.useState({});
   const [showModal, setShowModal] = React.useState(false);
   const [prev, setPrev] = React.useState(null);
@@ -31,19 +38,27 @@ const Inventary = ({ onSession }) => {
   const CONTENT_PADDING = 32;
 
   const onContentChange = (width, height) => {
-    setScrollEnabled(height > Dimensions.get('window').height - HEADER_HEIGHT - CONTENT_PADDING);
-  }
+    setScrollEnabled(
+      height >
+        Dimensions.get('window').height - HEADER_HEIGHT - CONTENT_PADDING,
+    );
+  };
 
   const logout = () => {
     removeSession();
     onSession();
-  }
+  };
 
-  const openCard = (id, name) => () => { navigate('InventaryCard', { id, name }) };
-  const fetchCards = () =>
-    InventaryCardService.all({ flatten: true })
-      .then(res => setCards(res.data))
+  const openCard = (id, name) => () => {
+    navigate('InventaryCard', {id, name});
+  };
+  const fetchCards = () => {
+    InventaryCardService.all({flatten: true})
+      .then(res => {
+        setCards(res.data);
+      })
       .finally(() => hideLoader());
+  };
 
   React.useEffect(() => {
     if (focused && user.id > 0) {
@@ -57,44 +72,51 @@ const Inventary = ({ onSession }) => {
 
   const toggleModal = (id, name) => {
     if (id && name) {
-      setPrev({ id, name });
+      setPrev({id, name});
     } else {
-      setPrev(null)
+      setPrev(null);
     }
 
     setShowModal(prev => !prev);
-  }
+  };
 
-  if (isLoading) return null
+  if (isLoading) return null;
 
   if (user.id <= 0) {
     return (
       <Layout header noScroll title="Mi inventario">
-        <View style={{ flex: 1, padding: 16 }}>
-          <FeatureHide style={{ margin: 16, height: '100%' }}>
-            <Text style={{ marginBottom: 20 }}>Para ver tu inventario, primero debes iniciar sesión.</Text>
-            <Button onPress={logout} type="primary">INICIAR SESIÓN</Button>
+        <View style={{flex: 1, padding: 16}}>
+          <FeatureHide style={{margin: 16, height: '100%'}}>
+            <Text style={{marginBottom: 20}}>
+              Para ver tu inventario, primero debes iniciar sesión.
+            </Text>
+            <Button onPress={logout} type="primary">
+              INICIAR SESIÓN
+            </Button>
           </FeatureHide>
         </View>
       </Layout>
-    )
+    );
   }
 
   const actions = (
     <Icon onPress={toggleModal} name="ios-add" color="#000000" size={32} />
-  )
+  );
 
-  const renderItem = ({ item: { card, single } }) => (
-    <TouchableOpacity onPress={openCard(card.id, card.name)} style={styles.card}>
+  const renderItem = ({item: {card, single}}) => (
+    <TouchableOpacity
+      onPress={openCard(card.id, card.name)}
+      style={styles.card}>
       <Text numberOfLines={2} style={styles.cardName}>
-        {card.name} - {single.rarity} - {single.expansion.code}-{single?.number?.toString().padStart(4, '0')}
+        {card.name} - {single.rarity} - {single.expansion.code}-
+        {single?.number?.toString().padStart(4, '0')}
       </Text>
     </TouchableOpacity>
   );
 
   const events = {
-    onWillFocus: () => fetchCards()
-  }
+    onWillFocus: () => fetchCards(),
+  };
 
   return (
     <>
@@ -104,11 +126,10 @@ const Inventary = ({ onSession }) => {
           header: true,
           headerActions: actions,
           noScroll: true,
-          style: { padding: 16 },
-          title: "Mi inventario",
-          withBack: true
-        }}
-      >
+          style: {padding: 16, flex: 1},
+          title: 'Mi inventario',
+          withBack: true,
+        }}>
         {cards?.length > 0 ? (
           <>
             <FlatList
@@ -116,13 +137,15 @@ const Inventary = ({ onSession }) => {
               keyExtractor={c => c?.id?.toString()}
               renderItem={renderItem}
               style={styles.list}
-              onContentSizeChange={ onContentChange }
+              onContentSizeChange={onContentChange}
               scrollEnabled={scrollEnabled}
             />
           </>
         ) : (
           <View style={styles.emptyPage}>
-            <Text style={styles.emptyMessage}>Aún no tienes cartas en tu inventario.</Text>
+            <Text style={styles.emptyMessage}>
+              Aún no tienes cartas en tu inventario.
+            </Text>
           </View>
         )}
       </Layout>
@@ -130,7 +153,7 @@ const Inventary = ({ onSession }) => {
         <CardListModal title="Mi inventario" onClose={toggleModal} />
       </Modal>
     </>
-  )
-}
+  );
+};
 
 export default Inventary;
