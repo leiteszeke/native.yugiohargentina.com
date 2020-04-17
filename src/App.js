@@ -15,6 +15,8 @@ import {LoaderProvider} from '#contexts/Loader';
 import {UserProvider} from '#contexts/User';
 // Versioning
 import {version} from '../package.json';
+// Theme
+import appTheme from './theme';
 
 if (SENTRY_DSN !== '') {
   Sentry.init({
@@ -47,6 +49,7 @@ numeral.locale('es');
 
 const myTheme = {
   ...theme,
+  ...appTheme,
   border_color_base: '#FFFFFF',
 };
 

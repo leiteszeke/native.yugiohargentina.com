@@ -96,6 +96,17 @@ export const isPlaying = players => {
 
 export const getCurrentRound = tournament => {
   if (!tournament?.matchesByRound) return null;
+
+  if (tournament?.top) {
+    if (!tournament?.top?.matchesByRound) return null;
+
+    return (
+      tournament.rounds +
+      tournament.top.matchesByRound[tournament.top.matchesByRound.length - 1]
+        ?.round
+    );
+  }
+
   return tournament.matchesByRound[tournament.matchesByRound.length - 1]?.round;
 };
 
