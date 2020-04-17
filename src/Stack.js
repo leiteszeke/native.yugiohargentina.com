@@ -41,7 +41,6 @@ const AppStack = ({onSession}) => (
     <CardStatusProvider>
       <Drawer.Navigator
         drawerContent={props => <Sidebar {...{...props, onSession}} />}>
-        <Drawer.Screen name="Tournaments" component={Tournaments} />
         <Drawer.Screen name="Dashboard" component={Dashboard} />
         <Drawer.Screen name="Events" component={Events} />
         <Drawer.Screen name="Stores" component={Stores} />
@@ -51,6 +50,7 @@ const AppStack = ({onSession}) => (
         <Drawer.Screen name="InventarySingle" component={InventarySingle} />
         <Drawer.Screen name="Wanted" component={Wanted} />
         <Drawer.Screen name="WishlistCard" component={WishlistCard} />
+        <Drawer.Screen name="Tournaments" component={Tournaments} />
         <Drawer.Screen name="TournamentLanding" component={TournamentLanding} />
         <Drawer.Screen name="TournamentMatch" component={TournamentMatch} />
         <Drawer.Screen

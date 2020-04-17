@@ -1,7 +1,8 @@
 // Dependencies
 import React from 'react';
 import dayjs from 'dayjs';
-import {Text, Image, View} from 'react-native';
+import {Linking, Text, TouchableOpacity, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 // Components
 import TextBadge from '#components/TextBadge';
@@ -20,13 +21,15 @@ import Logo from '#images/logo.png';
 const Tournaments = () => {
   const [tournaments, setTournaments] = React.useState(null);
   const {isLoading, showLoader, hideLoader} = useLoader();
-  const currentRound = tournament => getCurrentRound(tournament);
 
   const fetchTournaments = () => {
     all()
       .then(res => setTournaments(res.data))
       .finally(() => hideLoader());
   };
+
+  const openTournament = id => () =>
+    Linking.openURL(`https://yugiohargentina.com/tournaments/${id}`);
 
   React.useEffect(() => {
     fetchTournaments();
@@ -35,11 +38,23 @@ const Tournaments = () => {
   return (
     <Layout header title="Torneos" withBack style={styles.layout}>
       {tournaments?.map(tournament => (
-        <View
+        <TouchableOpacity
           key={tournament.id}
+          onPress={openTournament(tournament.id)}
           style={{
+            alignItems: 'flex-start',
+            backgroundColor: 'white',
             flexDirection: 'row',
-            marginBottom: 14,
+            borderRadius: 8,
+            marginBottom: 20,
+            paddingHorizontal: 4,
+            shadowColor: 'rgba(0, 0, 0, 0.6)',
+            elevation: 4,
+            shadowOffset: {
+              height: 3,
+              width: 0,
+            },
+            shadowOpacity: 1,
           }}>
           <View
             style={{
@@ -47,13 +62,13 @@ const Tournaments = () => {
               justifyContent: 'center',
               width: 100,
             }}>
-            <Image
+            <FastImage
               source={tournament.image ? {uri: tournament.image} : Logo}
-              style={{height: 90, width: 90}}
+              style={{height: 90, width: 90, borderRadius: 8, marginTop: 8}}
               resizeMode="contain"
             />
           </View>
-          <View style={{flex: 1, padding: 4}}>
+          <View style={{flex: 1, padding: 4, marginTop: 4}}>
             <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 8}}>
               {tournament.title}
             </Text>
@@ -124,7 +139,7 @@ const Tournaments = () => {
               </View>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       ))}
     </Layout>
   );
