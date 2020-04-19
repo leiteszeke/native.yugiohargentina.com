@@ -117,8 +117,8 @@ const Dashboard = () => {
         </View>
         <View style={{flexDirection: 'row'}}>
           <Card
-            title="Ranking YGO Arg"
-            value={stats?.ranking || 0}
+            title="Créditos"
+            value={stats?.credits || 0}
             style={{marginRight: 8}}
           />
           <Card

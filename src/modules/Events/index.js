@@ -8,6 +8,8 @@ import Event from '#components/Event';
 import * as EventsService from '#services/events';
 // Contexts
 import {useLoader} from '#contexts/Loader';
+// Styles
+import styles from './styles';
 
 const Events = () => {
   const {showLoader, hideLoader} = useLoader();
@@ -35,7 +37,7 @@ const Events = () => {
       ) : (
         <View style={styles.emptyPage}>
           <Text style={styles.emptyMessage}>
-            Aún no tienes cartas en tu lista de deseos.
+            En este momento no hay eventos futuros reportados.
           </Text>
         </View>
       )}
