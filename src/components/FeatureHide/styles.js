@@ -11,7 +11,7 @@ export default StyleSheet.create({
     padding: 12,
     position: 'absolute',
     shadowColor: '#000000',
-    shadowOffset:{
+    shadowOffset: {
       height: 3,
       width: 0,
     },

@@ -1,6 +1,6 @@
 // Utils
-import {basicClient} from './utils';
+import { basicClient } from './utils';
 
-export const all = () => basicClient.get(`statistics`);
+export const all = () => basicClient.get('statistics');
 
-export default {all};
+export default { all };

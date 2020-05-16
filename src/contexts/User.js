@@ -1,13 +1,13 @@
 // Dependencies
 import React from 'react';
 // Helpers
-import {getSession, setSession} from '#helpers/session';
+import { getSession, setSession } from '#helpers/session';
 // Services
-import {me} from '#services/users';
+import { me } from '#services/users';
 
 const UserContext = React.createContext(null);
 
-const UserProvider = ({children}) => {
+const UserProvider = ({ children }) => {
   const [user, setUser] = React.useState({});
 
   const fetchUser = async () => {
@@ -26,7 +26,7 @@ const UserProvider = ({children}) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{user, updateUser, fetchUser}}>
+    <UserContext.Provider value={{ user, updateUser, fetchUser }}>
       {children}
     </UserContext.Provider>
   );
@@ -37,4 +37,4 @@ const useUser = () => {
   return userContext;
 };
 
-export {UserProvider, useUser};
+export { UserProvider, useUser };

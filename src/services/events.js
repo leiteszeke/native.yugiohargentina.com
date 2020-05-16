@@ -1,7 +1,7 @@
 // Utils
-import {basicClient} from './utils';
+import { basicClient } from './utils';
 
 export const all = params =>
-  basicClient.get(`events`, {...params, public: true});
+  basicClient.get('events', { ...params, public: true });
 
-export default {all};
+export default { all };

@@ -32,7 +32,7 @@ export default StyleSheet.create({
     paddingVertical: 4,
   },
   separator: {
-    height: 12
+    height: 12,
   },
   marquee: {
     color: '#000000',
@@ -40,7 +40,7 @@ export default StyleSheet.create({
   },
   buttons: {
     height: 80,
-    marginTop: 12
+    marginTop: 12,
   },
   flatButton: {
     alignItems: 'center',
@@ -50,6 +50,6 @@ export default StyleSheet.create({
   },
   flatButtonText: {
     color: '#FFFFFF',
-    fontSize: 16
+    fontSize: 16,
   },
 });

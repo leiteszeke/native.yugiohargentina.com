@@ -1,4 +1,10 @@
-export default {
+export type ThemeProps = {
+  colors: {
+    [key: string]: string;
+  };
+};
+
+export const Theme: ThemeProps = {
   colors: {
     main: '#874d00',
 
@@ -15,3 +21,5 @@ export default {
     black: '#000000',
   },
 };
+
+export default Theme;

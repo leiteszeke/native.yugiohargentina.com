@@ -1,10 +1,10 @@
 // Dependencies
 import React from 'react';
-import {TextInput, View} from 'react-native';
+import { TextInput, View } from 'react-native';
 // Styles
 import styles from './styles';
 
-const Input = ({containerStyle, style, ...props}) => (
+const Input = ({ containerStyle, style, ...props }) => (
   <View style={[styles.container, containerStyle]}>
     <TextInput
       se

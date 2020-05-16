@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
 
   switchButton: {
-    fontSize: 20, 
+    fontSize: 20,
     fontWeight: 'bold',
   },
 

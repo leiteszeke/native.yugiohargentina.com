@@ -1,7 +1,7 @@
 // Dependencies
 import dayjs from 'dayjs';
 // Helpers
-import {getUser} from '#helpers/session';
+import { getUser } from '#helpers/session';
 
 export const parseTournamentState = (state, tournament) => {
   const now = dayjs();
@@ -39,30 +39,46 @@ export const parseTournamentState = (state, tournament) => {
     return 'Finalizado';
   }
 
-  if (state === 'pending') return 'En inscripción';
-  if (state === 'in_progress' || state === 'underway') return 'Jugando';
-  if (state === 'complete') return 'Finalizado';
+  if (state === 'pending') {
+    return 'En inscripción';
+  }
+  if (state === 'in_progress' || state === 'underway') {
+    return 'Jugando';
+  }
+  if (state === 'complete') {
+    return 'Finalizado';
+  }
   return 'Desconocido';
 };
 
 export const parseMatchState = state => {
-  if (state === 'open') return 'En juego';
-  if (state === 'complete') return 'Finalizado';
+  if (state === 'open') {
+    return 'En juego';
+  }
+  if (state === 'complete') {
+    return 'Finalizado';
+  }
   return 'Desconocido';
 };
 
 export const isRegistered = (userId, tournament) => {
-  if (userId <= 0) return false;
+  if (userId <= 0) {
+    return false;
+  }
   return !!tournament.players.find(p => p.userId === userId);
 };
 
 export const canUnregister = (userId, tournament) => {
-  if (userId <= 0) return false;
+  if (userId <= 0) {
+    return false;
+  }
 
   const now = dayjs();
   const isPlaying = !!tournament.players.find(p => p.userId === userId);
 
-  if (!isPlaying) return false;
+  if (!isPlaying) {
+    return false;
+  }
 
   return now.isBefore(tournament.dateFrom);
 };
@@ -88,17 +104,27 @@ export const getMatches = (rounds, playerId) => {
 
 export const isPlaying = players => {
   const userId = getUser().id;
-  if (userId <= 0) return false;
-  if (userId === players.player1.userId) return true;
-  if (userId === players.player2.userId) return true;
+  if (userId <= 0) {
+    return false;
+  }
+  if (userId === players.player1.userId) {
+    return true;
+  }
+  if (userId === players.player2.userId) {
+    return true;
+  }
   return false;
 };
 
 export const getCurrentRound = tournament => {
-  if (!tournament?.matchesByRound) return null;
+  if (!tournament?.matchesByRound) {
+    return null;
+  }
 
   if (tournament?.top) {
-    if (!tournament?.top?.matchesByRound) return null;
+    if (!tournament?.top?.matchesByRound) {
+      return null;
+    }
 
     return (
       tournament.rounds +
@@ -111,7 +137,9 @@ export const getCurrentRound = tournament => {
 };
 
 export const getPlayers = (players, match) => {
-  if (!players || !match) return {};
+  if (!players || !match) {
+    return {};
+  }
 
   const player1 = players.find(p => p.challongePlayerId === match.player1_id);
   const player2 = players.find(p => p.challongePlayerId === match.player2_id);

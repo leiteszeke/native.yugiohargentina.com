@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // Dependencies
-import React from 'react';
-import {Button, Modal as AntModal} from '@ant-design/react-native';
+import * as React from 'react';
+import { Button, Modal as AntModal } from '@ant-design/react-native';
 import {
   Dimensions,
   FlatList,
@@ -9,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useNavigation, useIsFocused} from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 // Components
 import CardListModal from '#components/CardListModal';
@@ -20,16 +21,16 @@ import * as InventaryCardService from '#services/inventary-cards';
 // Styles
 import styles from './styles';
 // Contexts
-import {useLoader} from '#contexts/Loader';
-import {useUser} from '#contexts/User';
+import { useLoader } from '#contexts/Loader';
+import { useUser } from '#contexts/User';
 // Helpers
-import {removeSession} from '#helpers/session';
+import { removeSession } from '#helpers/session';
 
-const Inventary = ({onSession}) => {
-  const {navigate} = useNavigation();
-  const {user} = useUser();
+const Inventary = ({ onSession }) => {
+  const { navigate } = useNavigation();
+  const { user } = useUser();
   const focused = useIsFocused();
-  const {isLoading, hideLoader} = useLoader();
+  const { isLoading, hideLoader } = useLoader();
   const [cards, setCards] = React.useState({});
   const [showModal, setShowModal] = React.useState(false);
   const [prev, setPrev] = React.useState(null);
@@ -50,10 +51,11 @@ const Inventary = ({onSession}) => {
   };
 
   const openCard = (id, name) => () => {
-    navigate('InventaryCard', {id, name});
+    navigate('InventaryCard', { id, name });
   };
+
   const fetchCards = () => {
-    InventaryCardService.all({flatten: true})
+    InventaryCardService.all({ flatten: true })
       .then(res => {
         setCards(res.data);
       })
@@ -64,15 +66,17 @@ const Inventary = ({onSession}) => {
     if (focused && user.id > 0) {
       fetchCards();
     }
-  }, [focused]);
+  }, [fetchCards, focused, user.id]);
 
   React.useEffect(() => {
-    if (prev?.id && prev?.name) openCard(prev.id, prev.name)();
-  }, [prev]);
+    if (prev?.id && prev?.name) {
+      openCard(prev.id, prev.name)();
+    }
+  }, [openCard, prev]);
 
   const toggleModal = (id, name) => {
     if (id && name) {
-      setPrev({id, name});
+      setPrev({ id, name });
     } else {
       setPrev(null);
     }
@@ -80,14 +84,16 @@ const Inventary = ({onSession}) => {
     setShowModal(prev => !prev);
   };
 
-  if (isLoading) return null;
+  if (isLoading) {
+    return null;
+  }
 
   if (user.id <= 0) {
     return (
       <Layout header noScroll title="Mi inventario">
-        <View style={{flex: 1, padding: 16}}>
-          <FeatureHide style={{margin: 16, height: '100%'}}>
-            <Text style={{marginBottom: 20}}>
+        <View style={{ flex: 1, padding: 16 }}>
+          <FeatureHide style={{ margin: 16, height: '100%' }}>
+            <Text style={{ marginBottom: 20 }}>
               Para ver tu inventario, primero debes iniciar sesión.
             </Text>
             <Button onPress={logout} type="primary">
@@ -103,7 +109,7 @@ const Inventary = ({onSession}) => {
     <Icon onPress={toggleModal} name="ios-add" color="#000000" size={32} />
   );
 
-  const renderItem = ({item: {card, single}}) => (
+  const renderItem = ({ item: { card, single } }) => (
     <TouchableOpacity
       onPress={openCard(card.id, card.name)}
       style={styles.card}>
@@ -126,7 +132,7 @@ const Inventary = ({onSession}) => {
           header: true,
           headerActions: actions,
           noScroll: true,
-          style: {padding: 16, flex: 1},
+          style: { padding: 16, flex: 1 },
           title: 'Mi inventario',
           withBack: true,
         }}>

@@ -1,16 +1,16 @@
 // Utils
-import {getSession, removeSession} from '#helpers/session';
+import { getSession, removeSession } from '#helpers/session';
 // Configs
-import {API_URL, DEBUG} from 'react-native-dotenv';
+import { API_URL, IS_DEBUG } from 'react-native-dotenv';
 // Services
-import {navigate} from '#services/navigation';
+import { navigate } from '#services/navigation';
 
 export const url = API_URL;
 
 const getToken = async () => {
   const user = await getSession();
-  return user?.token || null;
-}
+  return user?.token || null;
+};
 
 const objectToQueryString = obj =>
   Object.keys(obj)
@@ -41,9 +41,11 @@ const request = async (initialUrl, params, method = 'GET', config = {}) => {
   }
 
   let response = {};
-  const debug = !!DEBUG;
+  const debug = !!IS_DEBUG;
 
-  if (debug) console.debug(`Debugging Request ${randomNumber}`, url, options);
+  if (debug) {
+    console.debug(`Debugging Request ${randomNumber}`, url, options);
+  }
 
   try {
     response = await fetch(url, options);
@@ -61,15 +63,23 @@ const request = async (initialUrl, params, method = 'GET', config = {}) => {
     }
 
     const result = await response.json();
-    if (debug) console.debug(`Debugging Response ${randomNumber}`, result);
+    if (debug) {
+      console.debug(`Debugging Response ${randomNumber}`, result);
+    }
     return Promise.resolve(result);
   } catch (e) {
-    if (debug)
-      console.debug(
-        `Debugging Response Error ${randomNumber}`,
-        JSON.parse(e.message),
-      );
-    return Promise.reject(JSON.parse(e.message));
+    if (debug) {
+      try {
+        console.debug(
+          `Debugging Response Error ${randomNumber}`,
+          JSON.parse(e.message),
+        );
+        return Promise.reject(JSON.parse(e.message));
+      } catch (err) {
+        console.debug(`Debugging Response Error ${randomNumber}`, e);
+        return Promise.reject(e);
+      }
+    }
   }
 };
 
@@ -87,7 +97,9 @@ export const client = {
 };
 
 export const handleSuccess = res => {
-  if (res.error) throw res;
+  if (res.error) {
+    throw res;
+  }
   return res;
 };
 

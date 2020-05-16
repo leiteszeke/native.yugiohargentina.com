@@ -18,6 +18,6 @@ export default StyleSheet.create({
     height: 40,
     margin: 0,
     paddingHorizontal: 4,
-    paddingVertical: 0
+    paddingVertical: 0,
   },
 });

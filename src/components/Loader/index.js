@@ -7,9 +7,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLoader } from '#contexts/Loader';
 
 const Loader = () => {
-  const { show } = useLoader();
+  const { show } = useLoader();
 
-  if (!show) return null;
+  if (!show) {
+    return null;
+  }
 
   return (
     <View
@@ -20,16 +22,14 @@ const Loader = () => {
         left: 0,
         position: 'absolute',
         top: 0,
-        width: '100%'
-      }}
-    >
+        width: '100%',
+      }}>
       <SafeAreaView
         style={{
           alignItems: 'center',
           flex: 1,
-          justifyContent: 'center'
-        }}
-      >
+          justifyContent: 'center',
+        }}>
         <AnimatedSVGPath
           fill="none"
           strokeColor="#000000"
@@ -41,7 +41,7 @@ const Loader = () => {
         />
       </SafeAreaView>
     </View>
-  )
-}
+  );
+};
 
 export default Loader;

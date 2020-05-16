@@ -1,18 +1,18 @@
 // Dependencies
 import React from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 // Contexts
-import {useUser} from '#contexts/User';
+import { useUser } from '#contexts/User';
 // Styles
 import styles from './styles';
 // Images
 import Logo from '#images/logo.png';
 
 const HomeAdvertise = advertise => {
-  const {navigate} = useNavigation();
-  const {user} = useUser();
-  const image = advertise.image ? {uri: advertise.image} : Logo;
+  const { navigate } = useNavigation();
+  const { user } = useUser();
+  const image = advertise.image ? { uri: advertise.image } : Logo;
 
   const goToEntity = () => {
     if (advertise.entityType === 'Tournament') {

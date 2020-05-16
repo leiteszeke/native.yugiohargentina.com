@@ -1,24 +1,24 @@
 // Dependencies
 import React from 'react';
-import {Image, View, TouchableOpacity, Text} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { Image, View, TouchableOpacity, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 // Images
 import Logo from '#images/logo.png';
 // Styles
 import styles from './styles';
 // Helpers
-import {removeSession} from '#helpers/session';
+import { removeSession } from '#helpers/session';
 
-const Sidebar = ({onSession, navigation}) => {
+const Sidebar = ({ onSession, navigation }) => {
   const logoutUser = React.useCallback(() => {
     removeSession();
     onSession();
-  }, []);
+  }, [onSession]);
 
   const navigateTo = React.useCallback(
     route => () => navigation.navigate(route),
-    [],
+    [navigation],
   );
 
   return (
@@ -33,6 +33,12 @@ const Sidebar = ({onSession, navigation}) => {
             style={styles.menuItem}>
             <Icon name="ios-home" size={20} color="#FFFFFF" />
             <Text style={styles.menuItemText}>Dashboard</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={navigateTo('Cards')}
+            style={styles.menuItem}>
+            <Icon name="ios-calendar" size={20} color="#FFFFFF" />
+            <Text style={styles.menuItemText}>Cartas</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={navigateTo('Events')}

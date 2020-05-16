@@ -1,6 +1,6 @@
 // Dependencies
 import React from 'react';
-import {FlatList, Text, TouchableOpacity} from 'react-native';
+import { FlatList, Text, TouchableOpacity } from 'react-native';
 import debounce from 'lodash.debounce';
 import Icon from 'react-native-vector-icons/Ionicons';
 // Components
@@ -11,14 +11,15 @@ import * as CardsService from '#services/cards';
 // Styles
 import styles from './styles';
 
-const CardListModal = ({title, onClose}) => {
+const CardListModal = ({ title, onClose }) => {
   const [cards, setCards] = React.useState([]);
-  const [q, setQ] = React.useState({page: 0});
+  const [q, setQ] = React.useState({ page: 0 });
 
-  const searchFunction = value => setQ({q: value, page: 0});
+  const searchFunction = value => setQ({ q: value, page: 0 });
   const search = React.useCallback(debounce(searchFunction, 2000), []);
   const onSearch = e => search(e.nativeEvent.text);
-  const nextPage = () => setQ(prev => ({...prev, page: (prev.page || 0) + 1}));
+  const nextPage = () =>
+    setQ(prev => ({ ...prev, page: (prev.page || 0) + 1 }));
   const openCard = (id, name) => () => onClose(id, name);
 
   const fetchCards = () => {
@@ -33,9 +34,9 @@ const CardListModal = ({title, onClose}) => {
 
   React.useEffect(() => {
     fetchCards();
-  }, [q]);
+  }, [fetchCards, q]);
 
-  const renderItem = ({item: card}) => (
+  const renderItem = ({ item: card }) => (
     <TouchableOpacity
       onPress={openCard(card.id, card.name)}
       style={styles.card}>
@@ -51,10 +52,10 @@ const CardListModal = ({title, onClose}) => {
     <Layout
       header
       noScroll
-      containerStyle={{flex: 1, backgroundColor: 'red'}}
+      containerStyle={{ flex: 1, backgroundColor: 'red' }}
       headerActions={actions}
       title={title}
-      style={{flex: 1}}
+      style={{ flex: 1 }}
       noIcon>
       <Input
         containerStyle={styles.searchInput}

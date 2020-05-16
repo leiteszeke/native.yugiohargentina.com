@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const dropdownStyle = StyleSheet.create({
   inputIOS: {
@@ -31,7 +31,7 @@ export const dropdownStyle = StyleSheet.create({
 });
 
 export default StyleSheet.create({
-  layout: {padding: 16},
+  layout: { padding: 16 },
 
   dropdown: {
     alignItems: 'center',

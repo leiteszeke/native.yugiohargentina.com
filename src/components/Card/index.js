@@ -11,6 +11,6 @@ const Card = ({ style, title, value }) => (
     <Subtitle style={styles.title}>{title}</Subtitle>
     <BigNumber style={styles.number}>{value}</BigNumber>
   </View>
-)
+);
 
-  export default Card;
+export default Card;

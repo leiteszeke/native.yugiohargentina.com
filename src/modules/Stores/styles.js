@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 20,
     marginTop: 12,
-    width: '100%'
-  }
+    width: '100%',
+  },
 });
 
 export default styles;

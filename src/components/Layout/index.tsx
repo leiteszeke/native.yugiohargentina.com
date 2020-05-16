@@ -1,20 +1,39 @@
 // Dependencies
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
   ImageBackground,
   ScrollView,
   View,
   KeyboardAvoidingView,
+  ViewStyle,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 // Components
 import Header from '#components/Header';
 import Footer from '#components/Footer';
 import Loader from '#components/Loader';
 // Images
 import bgImage from '#images/bg.png';
+// Types
+import { MyObject } from '#types';
+// Styles
+import styles from './Layout.styles';
+
+type LayoutProps = {
+  background?: boolean;
+  children?: React.FC<React.ReactNode> | null | any;
+  containerStyle?: ViewStyle;
+  footer?: React.FC<React.ReactNode>;
+  header?: boolean;
+  headerActions?: MyObject;
+  noIcon?: boolean;
+  noScroll?: boolean;
+  style?: ViewStyle;
+  title?: string;
+  withBack?: boolean;
+};
 
 const Layout = ({
   background = false,
@@ -28,13 +47,13 @@ const Layout = ({
   style,
   title,
   withBack,
-}) => {
+}: LayoutProps) => {
   const [scrollEnabled, setScrollEnabled] = useState(false);
   const HEADER_HEIGHT = 50;
-  const CONTENT_PADDING = 32;
-  const {goBack} = useNavigation();
+  const CONTENT_PADDING = 50;
+  const { goBack } = useNavigation();
 
-  const onContentChange = (width, height) => {
+  const onContentChange = (width: number, height: number) => {
     setScrollEnabled(
       height >
         Dimensions.get('window').height - HEADER_HEIGHT - CONTENT_PADDING,
@@ -46,28 +65,19 @@ const Layout = ({
 
   if (background) {
     return (
-      <ImageBackground source={bgImage} style={{flex: 1}}>
+      <ImageBackground source={bgImage} style={styles.flex}>
         <SafeAreaView
-          forceInset={{bottom: 'always'}}
-          style={{
-            backgroundColor: background ? 'transparent' : '#f0f2f5',
-            flex: 1,
-          }}>
+          style={[styles.safeArea, !background && styles.safeAreaBackground]}>
           <KeyboardAvoidingView
             keyboardVerticalOffset={-100}
-            contentContainerStyle={{flex: 1}}
+            contentContainerStyle={styles.flex}
             behavior="position"
-            style={{flex: 1}}>
-            {header && <Header {...{noIcon, onBack, title, withBack}} />}
+            style={styles.flex}>
+            {header && <Header {...{ noIcon, onBack, title, withBack }} />}
             <Content
               onContentSizeChange={onContentChange}
               scrollEnabled={scrollEnabled}
-              style={{
-                flex: 1,
-                padding: 16,
-                width: '100%',
-                ...style,
-              }}>
+              style={[styles.content, style]}>
               {children}
             </Content>
             {footer && <Footer>{footer}</Footer>}
@@ -80,30 +90,29 @@ const Layout = ({
   return (
     <>
       <SafeAreaView
-        forceInset="always"
-        style={{
-          backgroundColor: background ? 'transparent' : '#f0f2f5',
-          flex: 1,
-          paddingBottom: 16,
-        }}>
+        style={[
+          styles.safeAreaWithPadding,
+          !background && styles.safeAreaBackground,
+        ]}>
         {header && (
           <Header
-            {...{actions: headerActions || [], noIcon, onBack, title, withBack}}
+            {...{
+              actions: headerActions || [],
+              noIcon,
+              onBack,
+              title,
+              withBack,
+            }}
           />
         )}
         <Content
           onContentSizeChange={onContentChange}
           scrollEnabled={scrollEnabled}
-          contentContainerStyle={{
-            paddingBottom: 16,
-            ...containerStyle,
-          }}
+          contentContainerStyle={[styles.container, containerStyle]}
           style={[
-            scrollEnabled && {marginBottom: 16},
-            {
-              width: '100%',
-              ...style,
-            },
+            styles.fullWidth,
+            scrollEnabled && styles.contentWithScroll,
+            style,
           ]}>
           {children}
         </Content>
@@ -112,11 +121,6 @@ const Layout = ({
       <Loader />
     </>
   );
-};
-
-Layout.defaultProps = {
-  footer: false,
-  withBack: false,
 };
 
 export default Layout;

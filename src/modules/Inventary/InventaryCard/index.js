@@ -8,20 +8,20 @@ import {
   View,
   KeyboardAvoidingView,
 } from 'react-native';
-import {Button} from '@ant-design/react-native';
+import { Button } from '@ant-design/react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 // Components
 import Layout from '#components/Layout';
-import {Title} from '#components/Text';
+import { Title } from '#components/Text';
 // Services
 import * as CardsService from '#services/cards';
 import * as CardStatusService from '#services/card-status';
 import * as LanguagesService from '#services/languages';
 import * as InventaryCardService from '#services/inventary-cards';
 // Contexts
-import {useLoader} from '#contexts/Loader';
+import { useLoader } from '#contexts/Loader';
 // Styles
 import styles from './styles';
 
@@ -48,9 +48,9 @@ const statusIcon = {
 
 const InventaryCard = () => {
   const route = useRoute();
-  const {navigate} = useNavigation();
-  const {isLoading, showLoader, hideLoader} = useLoader();
-  const {id, name} = route.params || {};
+  const { navigate } = useNavigation();
+  const { isLoading, showLoader, hideLoader } = useLoader();
+  const { id, name } = route.params || {};
   const [card, setCard] = React.useState({});
   const [selected, setSelected] = React.useState(null);
   const [quantity, setQuantity] = React.useState(0);
@@ -125,11 +125,13 @@ const InventaryCard = () => {
   const fetchStatuses = () =>
     CardStatusService.all().then(res => setStatuses(res.data));
   const showSingle = single => () =>
-    navigate('InventarySingle', {card, inventary, single});
+    navigate('InventarySingle', { card, inventary, single });
 
   React.useEffect(() => {
-    if (card && flags && inventary && statuses) hideLoader();
-  }, [card, flags, statuses]);
+    if (card && flags && inventary && statuses) {
+      hideLoader();
+    }
+  }, [card, flags, hideLoader, inventary, statuses]);
 
   React.useEffect(() => {
     showLoader();
@@ -137,7 +139,7 @@ const InventaryCard = () => {
     fetchInventary();
     fetchLanguages();
     fetchStatuses();
-  }, [id]);
+  }, [fetchCard, fetchInventary, id, showLoader]);
 
   React.useEffect(() => {
     if (!sell) {
@@ -172,7 +174,9 @@ const InventaryCard = () => {
     [language, quantity, currentStatus, sell, price],
   );
 
-  if (isLoading) return null;
+  if (isLoading) {
+    return null;
+  }
 
   const events = {
     onWillFocus: () => {
@@ -182,47 +186,55 @@ const InventaryCard = () => {
   };
 
   return (
-    <Layout header events={events} title={name} style={{padding: 16}} withBack>
+    <Layout
+      header
+      events={events}
+      title={name}
+      style={{ padding: 16 }}
+      withBack>
       {card?.singles?.map((single, index) => (
         <React.Fragment key={single.id}>
-          <View style={{flexDirection: 'row', marginTop: 12}}>
-            <View style={{width: 85}}>
+          <View style={{ flexDirection: 'row', marginTop: 12 }}>
+            <View style={{ width: 85 }}>
               <Image
                 resizeMode="contain"
-                source={{uri: single.image}}
-                style={{height: 120, width: 85}}
+                source={{ uri: single.image }}
+                style={{ height: 120, width: 85 }}
               />
             </View>
-            <View style={{flex: 1, paddingHorizontal: 12}}>
-              <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+            <View style={{ flex: 1, paddingHorizontal: 12 }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
                 {single.name}
               </Text>
-              <Text style={{fontSize: 16}}>{single.expansion?.name}</Text>
-              <Text style={{fontSize: 16}}>
+              <Text style={{ fontSize: 16 }}>{single.expansion?.name}</Text>
+              <Text style={{ fontSize: 16 }}>
                 {single.expansion?.code}-{single?.number?.padStart(4, '0')}
               </Text>
-              <Text style={{fontSize: 16}}>{single.rarity}</Text>
+              <Text style={{ fontSize: 16 }}>{single.rarity}</Text>
             </View>
           </View>
-          <View style={{marginVertical: 20, width: '100%'}}>
+          <View style={{ marginVertical: 20, width: '100%' }}>
             {inventary?.find(c => c.singleId === single.id) ? (
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
                 <Button
                   onPress={showSingle(single)}
                   type="ghost"
-                  style={{flex: 1, marginRight: 8}}>
+                  style={{ flex: 1, marginRight: 8 }}>
                   <Text>MODIFICAR</Text>
                 </Button>
                 <Button
                   onPress={handleAddCard(single)}
                   type="primary"
-                  style={{flex: 1, marginLeft: 8}}>
+                  style={{ flex: 1, marginLeft: 8 }}>
                   <Text>AGREGAR</Text>
                 </Button>
               </View>
             ) : (
-              <View style={{width: '100%'}}>
+              <View style={{ width: '100%' }}>
                 <Button onPress={handleAddCard(single)} type="primary">
                   <Text>AGREGAR</Text>
                 </Button>
@@ -235,7 +247,7 @@ const InventaryCard = () => {
       <Modal hasBackdrop={true} isVisible={showModal}>
         <KeyboardAvoidingView behavior="position">
           <View
-            style={{backgroundColor: 'white', borderRadius: 4, padding: 12}}>
+            style={{ backgroundColor: 'white', borderRadius: 4, padding: 12 }}>
             <Title>Selecciona el idioma</Title>
             <View style={styles.row}>
               {flags?.map(flag => (
@@ -254,7 +266,7 @@ const InventaryCard = () => {
                   }}>
                   <Image
                     source={flagsImages[flag.code]}
-                    style={{borderRadius: 4, width: 'auto', height: 32}}
+                    style={{ borderRadius: 4, width: 'auto', height: 32 }}
                   />
                 </TouchableOpacity>
               ))}
@@ -268,7 +280,7 @@ const InventaryCard = () => {
                   size={32}
                   color="#000000"
                 />
-                <Text style={{fontSize: 30, textAlign: 'center', width: 50}}>
+                <Text style={{ fontSize: 30, textAlign: 'center', width: 50 }}>
                   {quantity}
                 </Text>
                 <Icon onPress={add} name="ios-add" size={32} color="#000000" />
@@ -291,7 +303,7 @@ const InventaryCard = () => {
                   }}>
                   <Image
                     source={statusIcon[status.icon]}
-                    style={{width: 24, height: 24}}
+                    style={{ width: 24, height: 24 }}
                   />
                 </TouchableOpacity>
               ))}
@@ -387,19 +399,19 @@ const InventaryCard = () => {
               </>
             )}
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Button
                 onPress={closeModal}
                 disabled={loading}
                 type="warning"
-                style={{flex: 1, marginHorizontal: 8}}>
+                style={{ flex: 1, marginHorizontal: 8 }}>
                 CANCELAR
               </Button>
               <Button
                 disabled={!canSubmit || loading}
                 onPress={updateCard}
                 type="primary"
-                style={{flex: 1, marginHorizontal: 8}}>
+                style={{ flex: 1, marginHorizontal: 8 }}>
                 <Text>AGREGAR</Text>
               </Button>
             </View>

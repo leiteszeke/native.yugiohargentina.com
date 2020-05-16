@@ -5,15 +5,21 @@ import { Text } from 'react-native';
 import styles from './styles';
 
 export const Title = ({ children, style, ...props }) => (
-  <Text style={[styles.title, style]} {...props}>{children}</Text>
-)
+  <Text style={[styles.title, style]} {...props}>
+    {children}
+  </Text>
+);
 
 export const Subtitle = ({ children, style, ...props }) => (
-  <Text style={[styles.subtitle, style]} {...props}>{children}</Text>
-)
+  <Text style={[styles.subtitle, style]} {...props}>
+    {children}
+  </Text>
+);
 
 export const BigNumber = ({ children, style, ...props }) => (
-  <Text style={[styles.bigNumber, style]} {...props}>{children}</Text>
-)
+  <Text style={[styles.bigNumber, style]} {...props}>
+    {children}
+  </Text>
+);
 
-export default { Title, Subtitle };
+export default { Title, Subtitle };

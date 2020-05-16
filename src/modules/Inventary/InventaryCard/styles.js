@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
 
   switchButton: {
-    fontSize: 20, 
+    fontSize: 20,
     fontWeight: 'bold',
   },
 
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 
   textOn: {
     color: '#FFFFFF',
-  }
+  },
 });
 
 export default styles;

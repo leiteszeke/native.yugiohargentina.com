@@ -1,18 +1,18 @@
 // Dependencies
 import React from 'react';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
-import {Button} from '@ant-design/react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Button } from '@ant-design/react-native';
 import Modal from 'react-native-modal';
-import {useRoute} from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 // Components
 import Layout from '#components/Layout';
-import {Title} from '#components/Text';
+import { Title } from '#components/Text';
 // Services
 import * as CardsService from '#services/cards';
 import * as LanguagesService from '#services/languages';
 import * as WishlistService from '#services/wishlist-cards';
 // Contexts
-import {useLoader} from '#contexts/Loader';
+import { useLoader } from '#contexts/Loader';
 
 const flagsImages = {
   ES: require('#images/flags/es.png'),
@@ -27,8 +27,8 @@ const flagsImages = {
 
 const WishlistCard = () => {
   const route = useRoute();
-  const {isLoading, showLoader, hideLoader} = useLoader();
-  const {id, name} = route.params;
+  const { isLoading, showLoader, hideLoader } = useLoader();
+  const { id, name } = route.params;
   const [wishlist, setWishlist] = React.useState([]);
   const [card, setCard] = React.useState({});
   const [singles, setSingles] = React.useState({});
@@ -98,7 +98,7 @@ const WishlistCard = () => {
   };
 
   const removeCard = (item, index) => () => {
-    setSingles({loading: true, index});
+    setSingles({ loading: true, index });
 
     WishlistService.remove(item.id).then(() => {
       fetchWishlist();
@@ -109,7 +109,7 @@ const WishlistCard = () => {
   const fetchCard = () => {
     CardsService.get(id).then(res => {
       setCard(res.data);
-      setSingles({loading: false, index: null});
+      setSingles({ loading: false, index: null });
       setLoading(false);
     });
   };
@@ -127,17 +127,21 @@ const WishlistCard = () => {
   };
 
   React.useEffect(() => {
-    if (card && flags && wishlist) hideLoader();
-  }, [card, flags, wishlist]);
+    if (card && flags && wishlist) {
+      hideLoader();
+    }
+  }, [card, flags, hideLoader, wishlist]);
 
   React.useEffect(() => {
     showLoader();
     fetchCard();
     fetchWishlist();
     fetchLanguages();
-  }, [id]);
+  }, [fetchCard, fetchWishlist, id, showLoader]);
 
-  if (isLoading) return null;
+  if (isLoading) {
+    return null;
+  }
 
   const events = {
     onWillFocus: () => {
@@ -148,42 +152,50 @@ const WishlistCard = () => {
   };
 
   return (
-    <Layout header events={events} title={name} style={{padding: 16}} withBack>
+    <Layout
+      header
+      events={events}
+      title={name}
+      style={{ padding: 16 }}
+      withBack>
       {card?.singles?.map((single, index) => (
         <React.Fragment key={single.id}>
-          <View style={{flexDirection: 'row', marginTop: 12}}>
-            <View style={{width: 85}}>
+          <View style={{ flexDirection: 'row', marginTop: 12 }}>
+            <View style={{ width: 85 }}>
               <Image
                 resizeMode="contain"
-                source={{uri: single.image}}
-                style={{height: 120, width: 85}}
+                source={{ uri: single.image }}
+                style={{ height: 120, width: 85 }}
               />
             </View>
-            <View style={{flex: 1, paddingHorizontal: 12}}>
-              <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+            <View style={{ flex: 1, paddingHorizontal: 12 }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
                 {single.name}
               </Text>
-              <Text style={{fontSize: 16}}>{single.expansion?.name}</Text>
-              <Text style={{fontSize: 16}}>
+              <Text style={{ fontSize: 16 }}>{single.expansion?.name}</Text>
+              <Text style={{ fontSize: 16 }}>
                 {single.expansion?.code}-{single?.number?.padStart(4, '0')}
               </Text>
-              <Text style={{fontSize: 16}}>{single.rarity}</Text>
+              <Text style={{ fontSize: 16 }}>{single.rarity}</Text>
             </View>
           </View>
-          <View style={{marginVertical: 20, width: '100%'}}>
+          <View style={{ marginVertical: 20, width: '100%' }}>
             {wishlist?.cards?.find(c => c.singleId === single.id) ? (
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
                 <Button
                   onPress={removeCard(single, index)}
                   type="warning"
-                  style={{flex: 1, marginRight: 8}}>
+                  style={{ flex: 1, marginRight: 8 }}>
                   <Text>QUITAR</Text>
                 </Button>
                 <Button
                   onPress={handleModify(single)}
                   type="primary"
-                  style={{flex: 1, marginLeft: 8}}>
+                  style={{ flex: 1, marginLeft: 8 }}>
                   <Text>MODIFICAR</Text>
                 </Button>
               </View>
@@ -197,8 +209,11 @@ const WishlistCard = () => {
       ))}
 
       <Modal hasBackdrop={true} isVisible={showModal}>
-        <View style={{backgroundColor: 'white', borderRadius: 4, padding: 12}}>
-          <Title style={{textAlign: 'center'}}>Selecciona el/los idiomas</Title>
+        <View
+          style={{ backgroundColor: 'white', borderRadius: 4, padding: 12 }}>
+          <Title style={{ textAlign: 'center' }}>
+            Selecciona el/los idiomas
+          </Title>
           <View
             style={{
               flexDirection: 'row',
@@ -221,23 +236,24 @@ const WishlistCard = () => {
                 }}>
                 <Image
                   source={flagsImages[flag.code]}
-                  style={{borderRadius: 4}}
+                  style={{ borderRadius: 4 }}
                 />
               </TouchableOpacity>
             ))}
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Button
               onPress={closeModal}
               type="warning"
-              style={{flex: 1, marginHorizontal: 8}}>
+              style={{ flex: 1, marginHorizontal: 8 }}>
               CANCELAR
             </Button>
             <Button
               disabled={languages.length === 0}
               onPress={action === 'CREATE' ? addCard : updateCard}
               type="primary"
-              style={{flex: 1, marginHorizontal: 8}}>
+              style={{ flex: 1, marginHorizontal: 8 }}>
               {action === 'CREATE' ? (
                 <Text>AGREGAR</Text>
               ) : (

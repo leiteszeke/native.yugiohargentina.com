@@ -1,26 +1,26 @@
 // Dependencies
 import React from 'react';
 import dayjs from 'dayjs';
-import {Linking, Text, TouchableOpacity, View} from 'react-native';
+import { Linking, Text, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 // Components
-import TextBadge from '#components/TextBadge';
+import TextBadge from '#components/TextBadge/TextBadge';
 import Layout from '#components/Layout';
 // Contexts
-import {useLoader} from '#contexts/Loader';
+import { useLoader } from '#contexts/Loader';
 // Styles
 import styles from './styles';
 // Services
-import {all} from '#services/tournaments';
+import { all } from '#services/tournaments';
 // Utils
-import {getCurrentRound, parseTournamentState} from '#utils/challonge';
+import { getCurrentRound, parseTournamentState } from '#utils/challonge';
 // Images
 import Logo from '#images/logo.png';
 
 const Tournaments = () => {
   const [tournaments, setTournaments] = React.useState(null);
-  const {isLoading, showLoader, hideLoader} = useLoader();
+  const { isLoading, showLoader, hideLoader } = useLoader();
 
   const fetchTournaments = () => {
     all()
@@ -33,7 +33,7 @@ const Tournaments = () => {
 
   React.useEffect(() => {
     fetchTournaments();
-  }, []);
+  }, [fetchTournaments]);
 
   return (
     <Layout header title="Torneos" withBack style={styles.layout}>
@@ -63,13 +63,13 @@ const Tournaments = () => {
               width: 100,
             }}>
             <FastImage
-              source={tournament.image ? {uri: tournament.image} : Logo}
-              style={{height: 90, width: 90, borderRadius: 8, marginTop: 8}}
+              source={tournament.image ? { uri: tournament.image } : Logo}
+              style={{ height: 90, width: 90, borderRadius: 8, marginTop: 8 }}
               resizeMode="contain"
             />
           </View>
-          <View style={{flex: 1, padding: 4, marginTop: 4}}>
-            <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 8}}>
+          <View style={{ flex: 1, padding: 4, marginTop: 4 }}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>
               {tournament.title}
             </Text>
             <View
@@ -80,7 +80,12 @@ const Tournaments = () => {
               }}>
               <Icon size={24} name="md-people" />
               <Text
-                style={{fontSize: 20, marginLeft: 6, flex: 1, marginBottom: 4}}>
+                style={{
+                  fontSize: 20,
+                  marginLeft: 6,
+                  flex: 1,
+                  marginBottom: 4,
+                }}>
                 {tournament.players.length}
               </Text>
               <TextBadge
@@ -91,8 +96,8 @@ const Tournaments = () => {
                 ).toUpperCase()}
               />
             </View>
-            <View style={{alignItems: 'center', flexDirection: 'row'}}>
-              <View style={{flex: 1, flexDirection: 'row'}}>
+            <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+              <View style={{ flex: 1, flexDirection: 'row' }}>
                 {tournament.rounds > 0 && (
                   <>
                     <Icon size={24} name="logo-game-controller-b" />
@@ -107,7 +112,7 @@ const Tournaments = () => {
                     {!!tournament.top && (
                       <>
                         <Icon size={24} name="ios-podium" />
-                        <Text style={{fontSize: 20, marginLeft: 6, flex: 1}}>
+                        <Text style={{ fontSize: 20, marginLeft: 6, flex: 1 }}>
                           {tournament.top.players.length}
                         </Text>
                       </>
@@ -124,14 +129,14 @@ const Tournaments = () => {
                 {dayjs().isBefore(dayjs(tournament.dateFrom)) ? (
                   <>
                     <Icon size={24} name="md-time" />
-                    <Text style={{fontSize: 20, marginLeft: 6}}>
+                    <Text style={{ fontSize: 20, marginLeft: 6 }}>
                       {dayjs(tournament.dateFrom).format('DD/MM HH:mm')}
                     </Text>
                   </>
                 ) : (
                   <>
                     <Icon size={24} name="ios-calendar" />
-                    <Text style={{fontSize: 20, marginLeft: 6}}>
+                    <Text style={{ fontSize: 20, marginLeft: 6 }}>
                       {dayjs(tournament.dateFrom).format('DD/MM/YY')}
                     </Text>
                   </>

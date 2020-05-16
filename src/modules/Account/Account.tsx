@@ -1,9 +1,9 @@
 // Dependencies
 import React from 'react';
-import {Button} from '@ant-design/react-native';
-import {View, Text, Alert} from 'react-native';
+import { Button } from '@ant-design/react-native';
+import { View, Text, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
 // Components
 import Input from '#components/Input';
@@ -14,17 +14,17 @@ import * as Countries from '#services/countries';
 import * as Users from '#services/users';
 import * as States from '#services/states';
 // Contexts
-import {useLoader} from '#contexts/Loader';
-import {useUser} from '#contexts/User';
+import { useLoader } from '#contexts/Loader';
+import { useUser } from '#contexts/User';
 // Styles
-import styles, {dropdownStyle} from './styles';
+import styles, { dropdownStyle } from './styles';
 // Helpers
-import {removeSession} from '#helpers/session';
+import { removeSession } from '#helpers/session';
 
 const Account = () => {
-  const {navigate} = useNavigation();
-  const {showLoader, isLoading, hideLoader} = useLoader();
-  const {user, updateUser} = useUser();
+  const { navigate } = useNavigation();
+  const { showLoader, isLoading, hideLoader } = useLoader();
+  const { user, updateUser } = useUser();
   const [data, setData] = React.useState(null);
   const [states, setStates] = React.useState(null);
   const [countries, setCountries] = React.useState(null);
@@ -83,23 +83,31 @@ const Account = () => {
   React.useEffect(() => {
     showLoader();
     Users.me().then(res => setData(res.data));
-    States.all().then(({data}) => setStates(data));
-    Countries.all().then(({data}) =>
+    States.all().then(({ data }) => setStates(data));
+    Countries.all().then(({ data }) =>
       setCountries(
         data?.sort((a, b) => {
-          if (a.name > b.name) return 1;
-          if (b.name > a.name) return -1;
+          if (a.name > b.name) {
+            return 1;
+          }
+          if (b.name > a.name) {
+            return -1;
+          }
           return 0;
         }) || [],
       ),
     );
-  }, []);
+  }, [showLoader]);
 
   React.useEffect(() => {
-    if (data !== null && states !== null && countries !== null) hideLoader();
-  }, [data, states, countries]);
+    if (data !== null && states !== null && countries !== null) {
+      hideLoader();
+    }
+  }, [data, states, countries, hideLoader]);
 
-  if (isLoading) return null;
+  if (isLoading) {
+    return null;
+  }
 
   const actions = (
     <Icon onPress={saveData} name="ios-save" color="#000000" size={32} />
@@ -108,9 +116,9 @@ const Account = () => {
   if (user.id <= 0) {
     return (
       <Layout header noScroll title="Mi cuenta" withBack>
-        <View style={{flex: 1, padding: 16}}>
-          <FeatureHide style={{height: '100%', margin: 16}}>
-            <Text style={{marginBottom: 20}}>
+        <View style={{ flex: 1, padding: 16 }}>
+          <FeatureHide style={{ height: '100%', margin: 16 }}>
+            <Text style={{ marginBottom: 20 }}>
               Para ver tu cuenta, primero debes iniciar sesión.
             </Text>
             <Button onPress={logout} type="primary">
@@ -124,12 +132,12 @@ const Account = () => {
 
   return (
     <Layout header headerActions={actions} title="Mi cuenta" withBack>
-      <View style={{paddingHorizontal: 16, paddingTop: 16}}>
+      <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
         <Text style={styles.title}>
           {data?.name} {data?.lastname}
         </Text>
       </View>
-      <View style={{flex: 1, paddingBottom: 16, paddingHorizontal: 16}}>
+      <View style={{ flex: 1, paddingBottom: 16, paddingHorizontal: 16 }}>
         <Input
           onChange={setValue('cossyId')}
           maxLength={10}
@@ -181,7 +189,10 @@ const Account = () => {
             <RNPickerSelect
               items={
                 states
-                  ? states.map(state => ({label: state.name, value: state.id}))
+                  ? states.map(state => ({
+                      label: state.name,
+                      value: state.id,
+                    }))
                   : []
               }
               onValueChange={setValue('stateId')}

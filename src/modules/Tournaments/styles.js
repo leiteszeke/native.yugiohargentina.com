@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-  layout: {padding: 16},
+  layout: { padding: 16 },
 });

@@ -9,22 +9,22 @@ import {
   View,
   KeyboardAvoidingView,
 } from 'react-native';
-import {Button} from '@ant-design/react-native';
+import { Button } from '@ant-design/react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
-import {useRoute} from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 // Components
 import Layout from '#components/Layout';
-import {Title} from '#components/Text';
+import { Title } from '#components/Text';
 // Services
 import * as CardsService from '#services/cards';
 import * as InventaryCardService from '#services/inventary-cards';
 // Helpers
-import {format} from '#helpers/number';
+import { format } from '#helpers/number';
 // Contexts
-import {useCardStatus} from '#contexts/CardStatus';
-import {useLoader} from '#contexts/Loader';
-import {useLanguage} from '#contexts/Language';
+import { useCardStatus } from '#contexts/CardStatus';
+import { useLoader } from '#contexts/Loader';
+import { useLanguage } from '#contexts/Language';
 // Styles
 import styles from './styles';
 
@@ -49,15 +49,15 @@ const statusIcon = {
   poor: require('#images/status/poor.png'),
 };
 
-const defaultParams = {card: {id: null, name: null}, single: null};
+const defaultParams = { card: { id: null, name: null }, single: null };
 
 const InventarySingle = () => {
   const route = useRoute();
-  const {showLoader, hideLoader} = useLoader();
-  const {getById, languages: flags} = useLanguage();
-  const {getIconById, statuses} = useCardStatus();
+  const { showLoader, hideLoader } = useLoader();
+  const { getById, languages: flags } = useLanguage();
+  const { getIconById, statuses } = useCardStatus();
   const {
-    card: {id, name},
+    card: { id, name },
     single,
   } = route.params || defaultParams;
   const [card, setCard] = React.useState(null);
@@ -133,7 +133,7 @@ const InventarySingle = () => {
           onPress: deleteCard(item),
         },
       ],
-      {cancelable: false},
+      { cancelable: false },
     );
 
   const closeModal = () => {
@@ -153,14 +153,16 @@ const InventarySingle = () => {
   const setStatus = id => () => setCurrentStatus(id);
 
   React.useEffect(() => {
-    if (card && flags && inventary && statuses) hideLoader();
-  }, [card, flags, statuses]);
+    if (card && flags && inventary && statuses) {
+      hideLoader();
+    }
+  }, [card, flags, hideLoader, inventary, statuses]);
 
   React.useEffect(() => {
     showLoader();
     fetchCard();
     fetchInventary();
-  }, [id]);
+  }, [fetchCard, fetchInventary, id, showLoader]);
 
   React.useEffect(() => {
     if (!sell) {
@@ -203,7 +205,9 @@ const InventarySingle = () => {
   };
 
   const currentCard = React.useMemo(() => {
-    if (!card || !card.id) return null;
+    if (!card || !card.id) {
+      return null;
+    }
 
     return {
       ...card,
@@ -213,33 +217,40 @@ const InventarySingle = () => {
 
   const inventaryCards = React.useMemo(
     () => inventary?.filter(f => f.singleId === single.id),
-    [inventary],
+    [inventary, single.id],
   );
 
-  if (!currentCard) return null;
+  if (!currentCard) {
+    return null;
+  }
 
   return (
-    <Layout header events={events} title={name} style={{padding: 16}} withBack>
-      <View style={{flexDirection: 'row', marginVertical: 12}}>
-        <View style={{width: 85}}>
+    <Layout
+      header
+      events={events}
+      title={name}
+      style={{ padding: 16 }}
+      withBack>
+      <View style={{ flexDirection: 'row', marginVertical: 12 }}>
+        <View style={{ width: 85 }}>
           <Image
             resizeMode="contain"
-            source={{uri: currentCard.single.image}}
-            style={{height: 120, width: 85}}
+            source={{ uri: currentCard.single.image }}
+            style={{ height: 120, width: 85 }}
           />
         </View>
-        <View style={{flex: 1, paddingHorizontal: 12}}>
-          <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+        <View style={{ flex: 1, paddingHorizontal: 12 }}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
             {currentCard.single.name}
           </Text>
-          <Text style={{fontSize: 16}}>
+          <Text style={{ fontSize: 16 }}>
             {currentCard.single.expansion?.name}
           </Text>
-          <Text style={{fontSize: 16}}>
+          <Text style={{ fontSize: 16 }}>
             {currentCard.single.expansion?.code}-
             {currentCard.single?.number?.padStart(4, '0')}
           </Text>
-          <Text style={{fontSize: 16}}>{currentCard.single.rarity}</Text>
+          <Text style={{ fontSize: 16 }}>{currentCard.single.rarity}</Text>
         </View>
       </View>
 
@@ -252,7 +263,7 @@ const InventarySingle = () => {
           <View style={styles.cardData}>
             <Image
               source={statusIcon[getIconById(iCard.statusId)]}
-              style={{borderRadius: 4, width: 24, height: 24}}
+              style={{ borderRadius: 4, width: 24, height: 24 }}
             />
             <Text style={styles.cardDetail}>
               Cant: {iCard.quantity}
@@ -281,7 +292,7 @@ const InventarySingle = () => {
       <Modal hasBackdrop={true} isVisible={showModal}>
         <KeyboardAvoidingView behavior="position">
           <View
-            style={{backgroundColor: 'white', borderRadius: 4, padding: 12}}>
+            style={{ backgroundColor: 'white', borderRadius: 4, padding: 12 }}>
             <Title>Selecciona el idioma</Title>
             <View style={styles.row}>
               {flags?.map(flag => (
@@ -300,7 +311,7 @@ const InventarySingle = () => {
                   }}>
                   <Image
                     source={flagsImages[flag.code]}
-                    style={{borderRadius: 4, width: 'auto', height: 32}}
+                    style={{ borderRadius: 4, width: 'auto', height: 32 }}
                   />
                 </TouchableOpacity>
               ))}
@@ -314,7 +325,7 @@ const InventarySingle = () => {
                   size={32}
                   color="#000000"
                 />
-                <Text style={{fontSize: 30, textAlign: 'center', width: 50}}>
+                <Text style={{ fontSize: 30, textAlign: 'center', width: 50 }}>
                   {quantity}
                 </Text>
                 <Icon onPress={add} name="ios-add" size={32} color="#000000" />
@@ -337,7 +348,7 @@ const InventarySingle = () => {
                   }}>
                   <Image
                     source={statusIcon[status.icon]}
-                    style={{width: 30, height: 30}}
+                    style={{ width: 30, height: 30 }}
                   />
                 </TouchableOpacity>
               ))}
@@ -433,19 +444,19 @@ const InventarySingle = () => {
               </>
             )}
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Button
                 onPress={closeModal}
                 disabled={loading}
                 type="warning"
-                style={{flex: 1, marginHorizontal: 8}}>
+                style={{ flex: 1, marginHorizontal: 8 }}>
                 CANCELAR
               </Button>
               <Button
                 disabled={!canSubmit || loading}
                 type="primary"
                 onPress={updateCard}
-                style={{flex: 1, marginHorizontal: 8}}>
+                style={{ flex: 1, marginHorizontal: 8 }}>
                 <Text>GUARDAR</Text>
               </Button>
             </View>

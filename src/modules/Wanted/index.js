@@ -1,6 +1,6 @@
 // Dependencies
 import React from 'react';
-import {Button, Modal as AntModal} from '@ant-design/react-native';
+import { Button, Modal as AntModal } from '@ant-design/react-native';
 import {
   Dimensions,
   FlatList,
@@ -10,7 +10,7 @@ import {
   View,
   Switch,
 } from 'react-native';
-import {useNavigation, useIsFocused} from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 // Components
 import CardListModal from '#components/CardListModal';
@@ -22,18 +22,18 @@ import * as UserService from '#services/users';
 // Styles
 import styles from './styles';
 // Contexts
-import {useLoader} from '#contexts/Loader';
-import {useUser} from '#contexts/User';
+import { useLoader } from '#contexts/Loader';
+import { useUser } from '#contexts/User';
 // Helpers
-import {getDeviceInfo} from '#helpers/device';
-import {removeSession} from '#helpers/session';
-import {getToken} from '#helpers/messaging';
+import { getDeviceInfo } from '#helpers/device';
+import { removeSession } from '#helpers/session';
+import { getToken } from '#helpers/messaging';
 
-const Wanted = ({onSession}) => {
-  const {navigate} = useNavigation();
-  const {user} = useUser();
+const Wanted = ({ onSession }) => {
+  const { navigate } = useNavigation();
+  const { user } = useUser();
   const focused = useIsFocused();
-  const {isLoading, hideLoader} = useLoader();
+  const { isLoading, hideLoader } = useLoader();
   const [notify, setNotify] = React.useState(false);
   const [wishlist, setWishlist] = React.useState({});
   const [showModal, setShowModal] = React.useState(false);
@@ -54,7 +54,7 @@ const Wanted = ({onSession}) => {
   };
 
   const openCard = (id, name) => () => {
-    navigate('WishlistCard', {id, name});
+    navigate('WishlistCard', { id, name });
   };
   const fetchCards = () =>
     WishlistService.all()
@@ -65,15 +65,17 @@ const Wanted = ({onSession}) => {
     if (focused && user.id > 0) {
       fetchCards();
     }
-  }, [focused]);
+  }, [fetchCards, focused, user.id]);
 
   React.useEffect(() => {
-    if (prev?.id && prev?.name) openCard(prev.id, prev.name)();
-  }, [prev]);
+    if (prev?.id && prev?.name) {
+      openCard(prev.id, prev.name)();
+    }
+  }, [openCard, prev]);
 
   const toggleModal = (id, name) => {
     if (id && name) {
-      setPrev({id, name});
+      setPrev({ id, name });
     } else {
       setPrev(null);
     }
@@ -86,12 +88,12 @@ const Wanted = ({onSession}) => {
     const deviceInfo = await getDeviceInfo();
 
     if (token && user.id > 0) {
-      UserService.updateDevice(user.id, {token, ...deviceInfo});
+      UserService.updateDevice(user.id, { token, ...deviceInfo });
     } else {
       AntModal.alert(
         '¡Oops!',
         'Debes permitir las push notifications para poder activar esta opción',
-        [{text: 'OK'}],
+        [{ text: 'OK' }],
       );
 
       setNotify(false);
@@ -102,16 +104,18 @@ const Wanted = ({onSession}) => {
     if (notify) {
       handleNotification();
     }
-  }, [notify]);
+  }, [handleNotification, notify]);
 
-  if (isLoading) return null;
+  if (isLoading) {
+    return null;
+  }
 
   if (user.id <= 0) {
     return (
       <Layout header noScroll title="Lista de Deseos">
-        <View style={{flex: 1, padding: 16}}>
-          <FeatureHide style={{margin: 16, height: '100%'}}>
-            <Text style={{marginBottom: 20}}>
+        <View style={{ flex: 1, padding: 16 }}>
+          <FeatureHide style={{ margin: 16, height: '100%' }}>
+            <Text style={{ marginBottom: 20 }}>
               Para ver tu lista de deseos, primero debes iniciar sesión.
             </Text>
             <Button onPress={logout} type="primary">
@@ -127,7 +131,7 @@ const Wanted = ({onSession}) => {
     <Icon onPress={toggleModal} name="ios-add" color="#000000" size={32} />
   );
 
-  const renderItem = ({item: {card, single}}) => (
+  const renderItem = ({ item: { card, single } }) => (
     <TouchableOpacity
       onPress={openCard(card.id, card.name)}
       style={styles.card}>
@@ -149,7 +153,7 @@ const Wanted = ({onSession}) => {
           header: true,
           headerActions: actions,
           noScroll: true,
-          style: {padding: 16, flex: 1},
+          style: { padding: 16, flex: 1 },
           title: 'Lista de Deseos',
           withBack: true,
         }}>

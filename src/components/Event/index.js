@@ -1,6 +1,6 @@
 // Dependencies
 import React from 'react';
-import {View, Text, Image, Linking, TouchableOpacity} from 'react-native';
+import { View, Text, Image, Linking, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment-timezone';
 // Styles
@@ -9,11 +9,11 @@ import styles from './styles';
 import Logo from '#images/logo.png';
 
 const Event = event => {
-  const image = event.image ? {uri: event.image} : Logo;
+  const image = event.image ? { uri: event.image } : Logo;
 
   const goToEvent = React.useCallback(async () => {
     Linking.openURL(`https://facebook.com/events/${event.fbuid}`);
-  }, []);
+  }, [event.fbuid]);
 
   return (
     <View style={styles.wrapper}>
@@ -22,8 +22,8 @@ const Event = event => {
       </View>
       <View style={styles.container}>
         <Text style={styles.title}>{event.title}</Text>
-        <View style={{flexDirection: 'row'}}>
-          <View style={{flex: 1}}>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ flex: 1 }}>
             <Text style={styles.text}>{event.location}</Text>
             <Text style={styles.text}>
               {moment(event.dateFrom)

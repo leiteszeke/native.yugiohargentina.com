@@ -12,7 +12,7 @@ import Logo from '#images/logo.png';
 // Styles
 import styles from './styles';
 // Contexts
-import {useLoader} from '#contexts/Loader';
+import { useLoader } from '#contexts/Loader';
 
 const Store = store => {
   const imagesUrl = `${SITE_URL}/images/stores/`;
@@ -26,9 +26,15 @@ const Store = store => {
   );
 
   const parseType = type => {
-    if (type === 'facebook') return 'logo-facebook';
-    if (type === 'instagram') return 'logo-instagram';
-    if (type === 'enviroment') return 'ios-map';
+    if (type === 'facebook') {
+      return 'logo-facebook';
+    }
+    if (type === 'instagram') {
+      return 'logo-instagram';
+    }
+    if (type === 'enviroment') {
+      return 'ios-map';
+    }
     return 'ios-home';
   };
 
@@ -41,8 +47,8 @@ const Store = store => {
         resizeMode="contain"
       />
       <View style={styles.storeData}>
-        <Text style={{fontSize: 20}}>{store.name}</Text>
-        <Text style={{fontSize: 14}}>
+        <Text style={{ fontSize: 20 }}>{store.name}</Text>
+        <Text style={{ fontSize: 14 }}>
           {store.address}, {store.city}, {store.state.name}
         </Text>
         <View style={styles.iconContainer}>
@@ -52,7 +58,7 @@ const Store = store => {
                 <Icon
                   color="#1890ff"
                   name={parseType(link.type)}
-                  style={{marginRight: 12}}
+                  style={{ marginRight: 12 }}
                   size={20}
                 />
               </TouchableOpacity>
@@ -64,7 +70,7 @@ const Store = store => {
 };
 
 const Stores = () => {
-  const {isLoading, showLoader, hideLoader} = useLoader();
+  const { isLoading, showLoader, hideLoader } = useLoader();
   const [stores, setStores] = React.useState([]);
 
   React.useEffect(() => {
@@ -73,19 +79,25 @@ const Stores = () => {
       .then(res => {
         setStores(
           res.data.sort((a, b) => {
-            if (a.name < b.name) return -1;
-            if (a.name > b.name) return 1;
+            if (a.name < b.name) {
+              return -1;
+            }
+            if (a.name > b.name) {
+              return 1;
+            }
             return 0;
           }),
         );
       })
       .finally(() => hideLoader());
-  }, []);
+  }, [hideLoader, showLoader]);
 
-  if (isLoading) return null;
+  if (isLoading) {
+    return null;
+  }
 
   return (
-    <Layout header title="Locales" withBack style={{padding: 16}}>
+    <Layout header title="Locales" withBack style={{ padding: 16 }}>
       {stores.map(store => (
         <Store key={store.id} {...store} />
       ))}

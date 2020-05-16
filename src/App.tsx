@@ -1,22 +1,22 @@
 // Dependencies
 import React from 'react';
-import {SENTRY_DSN} from 'react-native-dotenv';
-import {Provider, theme} from '@ant-design/react-native';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import { SENTRY_DSN } from 'react-native-dotenv';
+import { Provider, theme } from '@ant-design/react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as Sentry from '@sentry/react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import numeral from 'numeral';
 // Stack
 import Stack from './Stack';
 // Services
-import {navigationRef} from '#services/navigation';
+import { navigationRef } from '#services/navigation';
 // Contexts
-import {LoaderProvider} from '#contexts/Loader';
-import {UserProvider} from '#contexts/User';
+import { LoaderProvider } from '#contexts/Loader';
+import { UserProvider } from '#contexts/User';
 // Versioning
-import {version} from '../package.json';
+import { version } from '../package.json';
 // Theme
-import appTheme from './theme';
+import appTheme from '#theme';
 
 if (SENTRY_DSN !== '') {
   Sentry.init({
@@ -45,7 +45,9 @@ numeral.register('locale', 'es', {
   },
 });
 
-numeral.locale('es');
+if (!numeral.locale('es')) {
+  numeral.locale('es');
+}
 
 const myTheme = {
   ...theme,

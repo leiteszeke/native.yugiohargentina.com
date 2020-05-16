@@ -1,25 +1,25 @@
 // Dependencies
-import React, {useState} from 'react';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
-import {ActivityIndicator, Button, NoticeBar} from '@ant-design/react-native';
-import {useNavigation} from '@react-navigation/native';
+import React, { useState } from 'react';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Button, NoticeBar } from '@ant-design/react-native';
+import { useNavigation } from '@react-navigation/native';
 // Components
 import Layout from '#components/Layout';
 import Input from '#components/Input';
 // Services
 import * as User from '#services/users';
 // Helpers
-import {setSession} from '#helpers/session';
+import { setSession } from '#helpers/session';
 // Images
 import Logo from '#images/logo.png';
 // Hooks
-import {useUser} from '#contexts/User';
+import { useUser } from '#contexts/User';
 // Styles
 import styles from './styles';
 
-const Register = ({onSession}) => {
-  const {navigate} = useNavigation();
-  const {fetchUser} = useUser();
+const Register = ({ onSession }) => {
+  const { navigate } = useNavigation();
+  const { fetchUser } = useUser();
   const [data, setData] = useState({});
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +27,7 @@ const Register = ({onSession}) => {
 
   const setValue = name => e => {
     const value = e.nativeEvent.text;
-    setData({...data, [name]: value});
+    setData({ ...data, [name]: value });
 
     setErrors(prev => ({
       ...prev,
@@ -101,7 +101,7 @@ const Register = ({onSession}) => {
           <NoticeBar
             icon={false}
             style={styles.alert}
-            marqueeProps={{loop: false, style: styles.marquee}}>
+            marqueeProps={{ loop: false, style: styles.marquee }}>
             El email ya se encuentra en uso.
           </NoticeBar>
         )}
