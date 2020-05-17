@@ -16,5 +16,5 @@ export const getDeviceInfo = async () => {
     screenSize,
     uuid,
     windowSize,
-  }
-}
+  };
+};

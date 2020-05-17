@@ -1,5 +1,5 @@
 // Dependencies
-import {Platform, StyleSheet} from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 export const dropdownStyle = StyleSheet.create({
   inputIOS: {

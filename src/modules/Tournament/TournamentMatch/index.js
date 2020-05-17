@@ -1,8 +1,12 @@
 // Dependencies
 import React from 'react';
-import {Text, View, Alert, Linking} from 'react-native';
-import {Button} from '@ant-design/react-native';
-import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
+import { Text, View, Alert, Linking } from 'react-native';
+import { Button } from '@ant-design/react-native';
+import {
+  CommonActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 // Components
 import Input from '#components/Input';
@@ -10,18 +14,18 @@ import Layout from '#components/Layout';
 // Styles
 import styles from './styles';
 // Services
-import {report} from '#services/tournaments';
+import { report } from '#services/tournaments';
 // Utils
-import {parseMatchState, getPlayers} from '#utils/challonge';
+import { parseMatchState, getPlayers } from '#utils/challonge';
 
 const MATCH_OPEN = 'open';
 
 const TournamentMatch = async () => {
   const navigation = useNavigation();
   const {
-    params: {tournament, match},
+    params: { tournament, match },
   } = useRoute();
-  const [result, setResult] = React.useState({player1: 0, player2: 0});
+  const [result, setResult] = React.useState({ player1: 0, player2: 0 });
   const [replayId, setReplayId] = React.useState(null);
 
   const setReplay = e => setReplayId(e.nativeEvent.text);
@@ -32,14 +36,20 @@ const TournamentMatch = async () => {
   };
 
   const add = player => () => {
-    if (result[player] === 2) return false;
-    if (result.player1 + result.player2 >= 3) return false;
-    setResult(prev => ({...prev, [player]: prev[player] + 1}));
+    if (result[player] === 2) {
+      return false;
+    }
+    if (result.player1 + result.player2 >= 3) {
+      return false;
+    }
+    setResult(prev => ({ ...prev, [player]: prev[player] + 1 }));
   };
 
   const remove = player => () => {
-    if (result[player] === 0) return false;
-    setResult(prev => ({...prev, [player]: prev[player] - 1}));
+    if (result[player] === 0) {
+      return false;
+    }
+    setResult(prev => ({ ...prev, [player]: prev[player] - 1 }));
   };
 
   const matchPlayers = getPlayers(tournament.players, match);
@@ -66,7 +76,7 @@ const TournamentMatch = async () => {
       player1Matches: result.player1,
       player2Matches: result.player2,
     }).then(() => {
-      navigation.dispatch(CommonActions.setParams({refresh: true}));
+      navigation.dispatch(CommonActions.setParams({ refresh: true }));
       navigation.goBack();
     });
   };
@@ -95,14 +105,14 @@ const TournamentMatch = async () => {
       'Reportar resultado',
       resultMessage,
       [
-        {text: 'Cancelar', style: 'cancel'},
-        {text: 'Aceptar', onPress: submitResult},
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Aceptar', onPress: submitResult },
       ],
-      {cancelable: true},
+      { cancelable: true },
     );
   };
 
-  const PlayerItem = ({player}) => {
+  const PlayerItem = ({ player }) => {
     const playerIndex = `player${player}`;
     const selectedPlayer = matchPlayers[playerIndex];
 
@@ -119,14 +129,14 @@ const TournamentMatch = async () => {
           backgroundColor: '#FAFAFA',
           padding: 8,
         }}>
-        <View style={{flex: 1}}>
-          <Text style={{fontSize: 20, marginBottom: 4}}>
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: 20, marginBottom: 4 }}>
             {selectedPlayer.name}
           </Text>
-          <Text style={{fontSize: 18, marginBottom: 4}}>
+          <Text style={{ fontSize: 18, marginBottom: 4 }}>
             {selectedPlayer.cossy}
           </Text>
-          <Text style={{fontSize: 18}}>{selectedPlayer.deck}</Text>
+          <Text style={{ fontSize: 18 }}>{selectedPlayer.deck}</Text>
         </View>
         <View
           style={{
@@ -158,11 +168,13 @@ const TournamentMatch = async () => {
 
   return (
     <Layout header title={tournament.title} withBack style={styles.layout}>
-      <View style={{flex: 1}}>
-        <Text style={{fontSize: 24, marginBottom: 8}}>Ronda {match.round}</Text>
-        <Text style={{fontSize: 20, marginBottom: 20}}>
+      <View style={{ flex: 1 }}>
+        <Text style={{ fontSize: 24, marginBottom: 8 }}>
+          Ronda {match.round}
+        </Text>
+        <Text style={{ fontSize: 20, marginBottom: 20 }}>
           Estado:{' '}
-          <Text style={{fontWeight: 'bold'}}>
+          <Text style={{ fontWeight: 'bold' }}>
             {parseMatchState(match.state).toUpperCase()}
           </Text>
         </Text>
@@ -173,14 +185,14 @@ const TournamentMatch = async () => {
         )}
       </View>
       {match.state === MATCH_OPEN && (
-        <View style={{height: 60, justifyContent: 'flex-end'}}>
+        <View style={{ height: 60, justifyContent: 'flex-end' }}>
           <Button onPress={onSubmit} type="primary">
             REPORTAR RESULTADO
           </Button>
         </View>
       )}
       {match.state !== MATCH_OPEN && (
-        <View style={{height: 60, justifyContent: 'flex-end'}}>
+        <View style={{ height: 60, justifyContent: 'flex-end' }}>
           <Button type="primary" onPress={goToReplay}>
             VER REPETICIÓN
           </Button>

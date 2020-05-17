@@ -1,8 +1,8 @@
 // Dependencies
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-  container: { 
+  container: {
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderRadius: 4,
@@ -11,7 +11,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     padding: 8,
     shadowColor: '#000000',
-    shadowOffset:{
+    shadowOffset: {
       height: 3,
       width: 0,
     },
@@ -20,7 +20,7 @@ export default StyleSheet.create({
 
   title: {
     fontSize: 16,
-    textAlign: 'center'
+    textAlign: 'center',
   },
 
   number: {

@@ -1,8 +1,9 @@
 // Dependencies
-import React, {useState} from 'react';
-import {Alert, Image, Text, TouchableOpacity, View} from 'react-native';
-import {ActivityIndicator, Button, NoticeBar} from '@ant-design/react-native';
-import {useNavigation} from '@react-navigation/native';
+import React, { useState } from 'react';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Button, NoticeBar } from '@ant-design/react-native';
+import { useNavigation } from '@react-navigation/native';
+import Image from 'react-native-fast-image';
 // Components
 import Layout from '#components/Layout';
 import Input from '#components/Input';
@@ -15,7 +16,7 @@ import styles from './styles';
 
 const Recover = () => {
   const [step, setStep] = useState('RECOVER');
-  const {goBack, navigate} = useNavigation();
+  const { goBack, navigate } = useNavigation();
   const [data, setData] = useState({});
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +24,7 @@ const Recover = () => {
 
   const setValue = name => value => {
     setShowAlert(false);
-    setData(prev => ({...prev, [name]: value}));
+    setData(prev => ({ ...prev, [name]: value }));
 
     setErrors(prev => ({
       ...prev,
@@ -38,7 +39,7 @@ const Recover = () => {
     setShowAlert(false);
 
     if (!data.code) {
-      setErrors({code: true});
+      setErrors({ code: true });
       setShowAlert(true);
       return true;
     }
@@ -53,7 +54,7 @@ const Recover = () => {
             ? 'El código ingresado es inválido.'
             : 'Ha ocurrido un error, vuelve a intentar';
 
-        Alert.alert('Recuperar Contraseña', errorMessage, [{text: 'OK'}], {
+        Alert.alert('Recuperar Contraseña', errorMessage, [{ text: 'OK' }], {
           cancelable: true,
         });
       })
@@ -64,34 +65,34 @@ const Recover = () => {
     setShowAlert(false);
 
     if (!data.password) {
-      setErrors({password: true});
+      setErrors({ password: true });
       setShowAlert(true);
       return true;
     }
 
     if (data.password !== data.rePassword) {
-      setErrors({password: true, rePassword: true});
+      setErrors({ password: true, rePassword: true });
       setShowAlert(true);
       return true;
     }
 
     setIsLoading(true);
 
-    User.updatePassword({code: data.code, password: data.password})
+    User.updatePassword({ code: data.code, password: data.password })
       .then(() => {
         Alert.alert(
           'Recuperar Contraseña',
           'Tu contraseña ha sido actualizada correctamente.',
-          [{text: 'Ingresar', onPress: () => navigate('Login')}],
-          {cancelable: true},
+          [{ text: 'Ingresar', onPress: () => navigate('Login') }],
+          { cancelable: true },
         );
       })
       .catch(() => {
         Alert.alert(
           'Recuperar Contraseña',
           'Ha ocurrido un error, vuelve a intentar',
-          [{text: 'OK'}],
-          {cancelable: true},
+          [{ text: 'OK' }],
+          { cancelable: true },
         );
       })
       .finally(() => setIsLoading(false));
@@ -101,20 +102,20 @@ const Recover = () => {
     setShowAlert(false);
 
     if (!data.email) {
-      setErrors({email: true});
+      setErrors({ email: true });
       setShowAlert(true);
       return true;
     }
 
     setIsLoading(true);
 
-    User.recover({email: data.email})
+    User.recover({ email: data.email })
       .then(() => {
         Alert.alert(
           'Recuperar Contraseña',
           'La solicitud ha sido exitosa. Revisa tu correo para continuar el proceso.',
-          [{text: 'OK', onPress: () => setData({})}],
-          {cancelable: true},
+          [{ text: 'OK', onPress: () => setData({}) }],
+          { cancelable: true },
         );
       })
       .catch(err => {
@@ -123,7 +124,7 @@ const Recover = () => {
             ? 'El email ingresado es incorrecto.'
             : 'Ha ocurrido un error, vuelve a intentar';
 
-        Alert.alert('Recuperar Contraseña', errorMessage, [{text: 'OK'}], {
+        Alert.alert('Recuperar Contraseña', errorMessage, [{ text: 'OK' }], {
           cancelable: true,
         });
       })
@@ -132,17 +133,23 @@ const Recover = () => {
 
   const getErrorMessage = () => {
     if (step === 'RECOVER') {
-      if (data.email === '') return 'Debes completar con el email.';
+      if (data.email === '') {
+        return 'Debes completar con el email.';
+      }
       return 'El email ingresado es incorrecto.';
     }
 
     if (step === 'CODE') {
-      if (data.code === '') return 'Debes completar con el código.';
+      if (data.code === '') {
+        return 'Debes completar con el código.';
+      }
       return 'El código ingresado es incorrecto.';
     }
 
     if (step === 'REDEEM') {
-      if (data.password === '') return 'Debes ingresar la nueva contraseña.';
+      if (data.password === '') {
+        return 'Debes ingresar la nueva contraseña.';
+      }
       return 'Las contraseñas no coinciden';
     }
 
@@ -165,7 +172,6 @@ const Recover = () => {
             style={[styles.textInput, errors.email ? styles.inputError : {}]}
             onChange={setValue('email')}
             placeholder="Email"
-            placeholderTextColor="#FFFFFF"
             value={data?.email}
           />
         )}
@@ -176,7 +182,6 @@ const Recover = () => {
             onChange={setValue('code')}
             placeholder="Código"
             value={data?.code}
-            placeholderTextColor="#FFFFFF"
           />
         )}
         {step === 'REDEEM' && (
@@ -189,7 +194,6 @@ const Recover = () => {
               ]}
               onChange={setValue('password')}
               placeholder="Contraseña"
-              placeholderTextColor="#FFFFFF"
               secureTextEntry={true}
               value={data.password}
             />
@@ -202,7 +206,6 @@ const Recover = () => {
               ]}
               onChange={setValue('rePassword')}
               placeholder="Confirmar contraseña"
-              placeholderTextColor="#FFFFFF"
               secureTextEntry={true}
               value={data.rePassword}
             />
@@ -212,7 +215,7 @@ const Recover = () => {
           <NoticeBar
             icon={false}
             style={styles.alert}
-            marqueeProps={{loop: false, style: styles.marquee}}>
+            marqueeProps={{ loop: false, style: styles.marquee }}>
             {getErrorMessage()}
           </NoticeBar>
         )}

@@ -9,7 +9,9 @@ export const removeSession = () => AsyncStorage.removeItem(SESSION_KEY);
 
 export const getSession = async () => {
   const session = await AsyncStorage.getItem(SESSION_KEY);
-  if (!session) return null;
+  if (!session) {
+    return null;
+  }
   return JSON.parse(session);
 };
 

@@ -5,9 +5,7 @@ import { View } from 'react-native';
 import styles from './styles';
 
 const FeatureHide = ({ children, style }) => (
-  <View style={[styles.container, style]}>
-    {children}
-  </View>
-)
+  <View style={[styles.container, style]}>{children}</View>
+);
 
 export default FeatureHide;
