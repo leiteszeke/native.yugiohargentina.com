@@ -7,85 +7,52 @@ import Icon from 'react-native-vector-icons/Ionicons';
 // Components
 import TextBadge from '#components/TextBadge/TextBadge';
 import Layout from '#components/Layout';
-// Contexts
-import { useLoader } from '#contexts/Loader';
 // Styles
-import styles from './styles';
+import styles from './Tournaments.styles';
 // Services
 import { all } from '#services/tournaments';
 // Utils
-import { getCurrentRound, parseTournamentState } from '#utils/challonge';
+import { parseTournamentState } from '#utils/challonge';
 // Images
 import Logo from '#images/logo.png';
+// Types
+import { TournamentProps } from '#types';
 
 const Tournaments = () => {
-  const [tournaments, setTournaments] = React.useState(null);
-  const { isLoading, showLoader, hideLoader } = useLoader();
+  const [tournaments, setTournaments] = React.useState<Array<TournamentProps> | null>(null);
 
-  const fetchTournaments = () => {
-    all()
-      .then(res => setTournaments(res.data))
-      .finally(() => hideLoader());
-  };
+  const fetchTournaments = () => all().then(res => setTournaments(res.data));
 
-  const openTournament = id => () =>
+  const openTournament = (id: number) => () =>
     Linking.openURL(`https://yugiohargentina.com/tournaments/${id}`);
 
   React.useEffect(() => {
     fetchTournaments();
-  }, [fetchTournaments]);
+  }, []);
 
   return (
     <Layout header title="Torneos" withBack style={styles.layout}>
-      {tournaments?.map(tournament => (
+      {tournaments && tournaments?.map((tournament: TournamentProps) => (
         <TouchableOpacity
           key={tournament.id}
           onPress={openTournament(tournament.id)}
-          style={{
-            alignItems: 'flex-start',
-            backgroundColor: 'white',
-            flexDirection: 'row',
-            borderRadius: 8,
-            marginBottom: 20,
-            paddingHorizontal: 4,
-            shadowColor: 'rgba(0, 0, 0, 0.6)',
-            elevation: 4,
-            shadowOffset: {
-              height: 3,
-              width: 0,
-            },
-            shadowOpacity: 1,
-          }}>
+          style={styles.tournamentContainer}>
           <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 100,
-            }}>
+            style={styles.tournamentImageContainer}>
             <FastImage
               source={tournament.image ? { uri: tournament.image } : Logo}
-              style={{ height: 90, width: 90, borderRadius: 8, marginTop: 8 }}
+              style={styles.tournamentImage}
               resizeMode="contain"
             />
           </View>
-          <View style={{ flex: 1, padding: 4, marginTop: 4 }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>
+          <View style={styles.tournamentData}>
+            <Text style={styles.tournamentTitle}>
               {tournament.title}
             </Text>
             <View
-              style={{
-                alignItems: 'center',
-                flexDirection: 'row',
-                marginBottom: 8,
-              }}>
+              style={styles.tournamentPlayers}>
               <Icon size={24} name="md-people" />
-              <Text
-                style={{
-                  fontSize: 20,
-                  marginLeft: 6,
-                  flex: 1,
-                  marginBottom: 4,
-                }}>
+              <Text style={styles.tournamentPlayersCount}>
                 {tournament.players.length}
               </Text>
               <TextBadge
@@ -96,24 +63,20 @@ const Tournaments = () => {
                 ).toUpperCase()}
               />
             </View>
-            <View style={{ alignItems: 'center', flexDirection: 'row' }}>
-              <View style={{ flex: 1, flexDirection: 'row' }}>
+            <View style={styles.tournamentRounds}>
+              <View style={styles.tournamentRoundsData}>
                 {tournament.rounds > 0 && (
                   <>
                     <Icon size={24} name="logo-game-controller-b" />
                     <Text
-                      style={{
-                        fontSize: 20,
-                        marginHorizontal: 6,
-                        marginBottom: 4,
-                      }}>
+                      style={styles.tournamentRoundsCount}>
                       {tournament.rounds}
                     </Text>
                     {!!tournament.top && (
                       <>
                         <Icon size={24} name="ios-podium" />
-                        <Text style={{ fontSize: 20, marginLeft: 6, flex: 1 }}>
-                          {tournament.top.players.length}
+                        <Text style={styles.tournamentPlayersTopCount}>
+                          {tournament?.top?.players.length}
                         </Text>
                       </>
                     )}
@@ -121,22 +84,18 @@ const Tournaments = () => {
                 )}
               </View>
               <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'flex-end',
-                }}>
+                style={styles.tournamentDateContainer}>
                 {dayjs().isBefore(dayjs(tournament.dateFrom)) ? (
                   <>
                     <Icon size={24} name="md-time" />
-                    <Text style={{ fontSize: 20, marginLeft: 6 }}>
+                    <Text style={styles.tournamentDate}>
                       {dayjs(tournament.dateFrom).format('DD/MM HH:mm')}
                     </Text>
                   </>
                 ) : (
                   <>
                     <Icon size={24} name="ios-calendar" />
-                    <Text style={{ fontSize: 20, marginLeft: 6 }}>
+                    <Text style={styles.tournamentDate}>
                       {dayjs(tournament.dateFrom).format('DD/MM/YY')}
                     </Text>
                   </>

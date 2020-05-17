@@ -1,8 +1,9 @@
 // Dependencies
 import React, { useState } from 'react';
-import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator, Button, NoticeBar } from '@ant-design/react-native';
 import { useNavigation } from '@react-navigation/native';
+import Image from 'react-native-fast-image';
 // Components
 import Layout from '#components/Layout';
 import Input from '#components/Input';
@@ -171,7 +172,6 @@ const Recover = () => {
             style={[styles.textInput, errors.email ? styles.inputError : {}]}
             onChange={setValue('email')}
             placeholder="Email"
-            placeholderTextColor="#FFFFFF"
             value={data?.email}
           />
         )}
@@ -182,7 +182,6 @@ const Recover = () => {
             onChange={setValue('code')}
             placeholder="Código"
             value={data?.code}
-            placeholderTextColor="#FFFFFF"
           />
         )}
         {step === 'REDEEM' && (
@@ -195,7 +194,6 @@ const Recover = () => {
               ]}
               onChange={setValue('password')}
               placeholder="Contraseña"
-              placeholderTextColor="#FFFFFF"
               secureTextEntry={true}
               value={data.password}
             />
@@ -208,7 +206,6 @@ const Recover = () => {
               ]}
               onChange={setValue('rePassword')}
               placeholder="Confirmar contraseña"
-              placeholderTextColor="#FFFFFF"
               secureTextEntry={true}
               value={data.rePassword}
             />

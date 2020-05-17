@@ -6,17 +6,16 @@ import {
   CommonActions,
   useNavigation,
   useRoute,
+  RouteProp,
   useIsFocused,
 } from '@react-navigation/native';
 // Components
 import Layout from '#components/Layout';
-import { Title } from '#components/Text';
+import { Title } from '#components/Text/Text';
 import HomeAdvertise from '#components/HomeAdvertise';
 import Event from '#components/Event';
 import FeatureHide from '#components/FeatureHide';
 import Card from '#components/Card';
-// Contexts
-import { useLoader } from '#contexts/Loader';
 // Services
 import Advertising from '#services/advertisings';
 import Events from '#services/events';
@@ -25,75 +24,76 @@ import Statistics from '#services/statistics';
 import { useUser } from '#contexts/User';
 // Helpers
 import { removeSession } from '#helpers/session';
+// Types
+import { RootStackParamList, EventProps } from '#types';
+
+type StatsProps = {
+  wanted: number;
+  inventary: number;
+  credits: number;
+  inbeated: number;
+}
+
+type AdvertisingProps = {
+  id: number;
+  title: string;
+}
 
 const Dashboard = () => {
   const navigation = useNavigation();
   const { user } = useUser();
   const isFocused = useIsFocused();
-  const { hideLoader, showLoader } = useLoader();
-  const [stats, setStats] = React.useState(null);
-  const [advertising, setAdvertising] = React.useState(null);
-  const [event, setEvent] = React.useState(null);
-  const { params } = useRoute();
+  const { params } = useRoute<RouteProp<RootStackParamList, 'Dashboard'>>();
 
-  const fetchEvent = () =>
-    Events.all({ limit: 1 }).then(res => setEvent(res.data));
+  const [stats, setStats] = React.useState<StatsProps | null>(null);
+  const [advertising, setAdvertising] = React.useState<AdvertisingProps | null>(null);
+  const [event, setEvent] = React.useState<EventProps | null>(null);
+  const [fetchingStatistics, setFetchingStatistics] = React.useState<boolean>(false);
+
+  const fetchEvent = () => Events.all({ limit: 1 }).then(res => {
+    if (res.data.length > 0) setEvent(res.data);
+  });
 
   const fetchStatistics = () => {
-    if (user.id > 0) {
-      Statistics.all()
-        .then(res => setStats(res.data))
-        .finally(() => hideLoader());
-    }
+    if (user.id > 0) Statistics.all().then(res => setStats(res.data))
   };
 
-  const fetchAdvertising = () =>
-    Advertising.all().then(res => setAdvertising(res.data || {}));
+  const fetchAdvertising = () => Advertising.all().then(res => setAdvertising(res.data || {}));
 
   const logout = () => {
     removeSession();
     navigation.navigate('Auth');
   };
 
-  React.useEffect(() => {
-    showLoader();
+  const init = () => {
     fetchAdvertising();
     fetchEvent();
-  }, [showLoader]);
+  }
+
+  React.useEffect(() => {
+    init()
+  }, []);
 
   React.useEffect(() => {
     if (params?.refresh) {
-      showLoader();
-      fetchAdvertising();
-      fetchEvent();
+      init();
       navigation.dispatch(CommonActions.setParams({}));
     }
-  }, [isFocused, navigation, params, showLoader]);
+  }, [isFocused, navigation, params]);
 
   React.useEffect(() => {
-    if (user !== null && stats === null) {
+    if (user?.id > 0 && stats === null && !fetchingStatistics) {
+      setFetchingStatistics(true);
       fetchStatistics();
     }
-  }, [fetchStatistics, stats, user]);
-
-  React.useEffect(() => {
-    if (event !== null && advertising !== null && user !== null) {
-      hideLoader();
-    }
-  }, [advertising, event, hideLoader, user]);
+  }, [fetchingStatistics, fetchStatistics, stats, user]);
 
   if (user === null) {
     return null;
   }
 
-  const events = {
-    onWillFocus: () => {
-      fetchStatistics();
-    },
-  };
-
   return (
-    <Layout header events={events} title="Dashboard">
+    <Layout header title="Dashboard">
       {advertising?.id && (
         <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
           <Title>{advertising.title}</Title>
@@ -101,7 +101,7 @@ const Dashboard = () => {
         </View>
       )}
 
-      {event?.length > 0 && advertising && !advertising?.id && (
+      {event !== null && advertising && !advertising?.id && (
         <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
           <Event {...event} />
         </View>

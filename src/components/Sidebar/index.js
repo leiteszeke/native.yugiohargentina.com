@@ -1,20 +1,24 @@
 // Dependencies
 import React from 'react';
-import { Image, View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Image from 'react-native-fast-image';
 // Images
 import Logo from '#images/logo.png';
 // Styles
 import styles from './styles';
 // Helpers
 import { removeSession } from '#helpers/session';
+import { useUser } from '#contexts/User';
 
-const Sidebar = ({ onSession, navigation }) => {
+const Sidebar = ({ navigation }) => {
+  const { handleSession } = useUser();
+
   const logoutUser = React.useCallback(() => {
     removeSession();
-    onSession();
-  }, [onSession]);
+    handleSession();
+  }, [handleSession]);
 
   const navigateTo = React.useCallback(
     route => () => navigation.navigate(route),

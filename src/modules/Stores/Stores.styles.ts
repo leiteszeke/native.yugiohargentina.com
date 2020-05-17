@@ -2,6 +2,10 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+  layout: {
+    padding: 16,
+  },
+
   storeContainer: {
     borderBottomColor: '#001529',
     borderBottomWidth: 1,
@@ -19,6 +23,18 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 12,
     paddingVertical: 6,
+  },
+
+  storeName: {
+    fontSize: 20,
+  },
+
+  storeAddress: {
+    fontSize: 14,
+  },
+
+  storeLinkIcon: {
+    marginRight: 12,
   },
 
   iconContainer: {

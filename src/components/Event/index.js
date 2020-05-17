@@ -1,6 +1,7 @@
 // Dependencies
 import React from 'react';
-import { View, Text, Image, Linking, TouchableOpacity } from 'react-native';
+import { View, Text, Linking, TouchableOpacity } from 'react-native';
+import Image from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment-timezone';
 // Styles

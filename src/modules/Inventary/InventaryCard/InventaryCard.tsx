@@ -1,34 +1,32 @@
 // Dependencies
 import React from 'react';
 import {
-  Alert,
-  Image,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  Image,
   KeyboardAvoidingView,
 } from 'react-native';
 import { Button } from '@ant-design/react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useIsFocused, RouteProp } from '@react-navigation/native';
 // Components
 import Layout from '#components/Layout';
-import { Title } from '#components/Text';
+import { Title } from '#components/Text/Text';
 // Services
 import * as CardsService from '#services/cards';
 import * as InventaryCardService from '#services/inventary-cards';
-// Helpers
-import { format } from '#helpers/number';
-// Contexts
-import { useCardStatus } from '#contexts/CardStatus';
-import { useLoader } from '#contexts/Loader';
-import { useLanguage } from '#contexts/Language';
 // Styles
-import styles from './styles';
+import styles from './InventaryCard.styles';
+// Types
+import { RootStackParamList, InventaryCardProps, CardProps, SingleProps, MyObject, FlagProps, StatusProps } from '#types'
+// Contexts
+import { useLanguage } from '#contexts/Language';
+import { useCardStatus } from '#contexts/CardStatus';
 
-const flagsImages = {
+const flagsImages: MyObject = {
   ES: require('#images/flags/es.png'),
   FR: require('#images/flags/fr.png'),
   IT: require('#images/flags/it.png'),
@@ -39,7 +37,7 @@ const flagsImages = {
   KO: require('#images/flags/kr.png'),
 };
 
-const statusIcon = {
+const statusIcon: MyObject = {
   mint: require('#images/status/mint.png'),
   'near-mint': require('#images/status/near-mint.png'),
   excellent: require('#images/status/excellent.png'),
@@ -49,97 +47,71 @@ const statusIcon = {
   poor: require('#images/status/poor.png'),
 };
 
-const defaultParams = { card: { id: null, name: null }, single: null };
-
-const InventarySingle = () => {
-  const route = useRoute();
-  const { showLoader, hideLoader } = useLoader();
-  const { getById, languages: flags } = useLanguage();
-  const { getIconById, statuses } = useCardStatus();
-  const {
-    card: { id, name },
-    single,
-  } = route.params || defaultParams;
-  const [card, setCard] = React.useState(null);
-  const [quantity, setQuantity] = React.useState(0);
-  const [currentStatus, setCurrentStatus] = React.useState(null);
-  const [inventary, setInventary] = React.useState(null);
-  const [language, setLanguage] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
-  const [showModal, setShowModal] = React.useState(false);
-  const [sell, setSell] = React.useState(false);
-  const [isPublic, setIsPublic] = React.useState(false);
-  const [price, setPrice] = React.useState(null);
-  const [currency, setCurrency] = React.useState('ARS');
+const InventaryCard = () => {
+  const route = useRoute<RouteProp<RootStackParamList, 'InventaryCard'>>();
+  const { navigate } = useNavigation();
+  const isFocused = useIsFocused()
+  const { languages } = useLanguage()
+  const { statuses: cardStatuses } = useCardStatus()
+  const { id, name } = route.params;
+  const [card, setCard] = React.useState<CardProps | null>(null);
+  const [selected, setSelected] = React.useState<number | null>(null);
+  const [quantity, setQuantity] = React.useState<number>(0);
+  const [flags, setFlags] = React.useState<Array<FlagProps>>([]);
+  const [currentStatus, setCurrentStatus] = React.useState<number | null>(null);
+  const [inventary, setInventary] = React.useState<Array<InventaryCardProps> | null>(null);
+  const [statuses, setStatuses] = React.useState<Array<StatusProps> | null>(null);
+  const [language, setLanguage] = React.useState<Array<string>>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [showModal, setShowModal] = React.useState<boolean>(false);
+  const [sell, setSell] = React.useState<boolean>(false);
+  const [isPublic, setIsPublic] = React.useState<boolean>(false);
+  const [price, setPrice] = React.useState<number | null>(null);
+  const [currency, setCurrency] = React.useState<string>('ARS');
 
   const fetchInventary = () =>
     InventaryCardService.all()
       .then(res => setInventary(res.data))
-      .finally(() => hideLoader());
+
+  const handleAddCard = (item: SingleProps) => () => {
+    setSelected(item.id);
+    setShowModal(true);
+  };
 
   const add = () => setQuantity(quantity + 1);
   const remove = () => quantity > 0 && setQuantity(quantity - 1);
   const toggleSell = () => setSell(!sell);
   const togglePublic = () => setIsPublic(!isPublic);
-  const setCardCurrency = code => () => setCurrency(code);
+  const setCardCurrency = (code: string) => () => setCurrency(code);
 
-  const handleModify = item => () => {
-    const lang = flags.find(f => f.id === item.languageId);
-    setIsPublic(item.isPublic);
-    setPrice(item.price);
-    setCurrency(item.currencyId === 1 ? 'ARS' : 'USD');
-    setLanguage([lang.code]);
-    setSell(item.inSale);
-    setQuantity(item.quantity);
-    setCurrentStatus(item.statusId);
-    setShowModal(true);
+  const closeModal = () => {
+    setSelected(null);
+    setShowModal(false);
+    setLanguage([]);
   };
 
   const updateCard = () => {
     setLoading(true);
 
-    InventaryCardService.update({
-      cardId: card.id,
-      languageId: flags
-        .filter(f => language.includes(f.code))
-        .map(f => f.id)[0],
-      statusId: currentStatus,
-      inSale: sell,
-      price: parseFloat(price),
-      currencyId: currency === 'ARS' ? 1 : 2,
-      singleId: single.id,
-      quantity,
-    })
-      .then(() => closeModal())
-      .finally(() => fetchInventary());
-  };
-
-  const deleteCard = item => () =>
-    InventaryCardService.remove(item.id)
-      .then(() => fetchInventary())
-      .finally(() => setLoading(false));
-
-  const handleRemove = item => () =>
-    Alert.alert(
-      'Eliminar',
-      '¿Estas seguro que quieres eliminar esta carta de tu inventario?',
-      [
-        {
-          text: 'Cancelar',
-          style: 'cancel',
-        },
-        {
-          text: 'Eliminar',
-          onPress: deleteCard(item),
-        },
-      ],
-      { cancelable: false },
-    );
-
-  const closeModal = () => {
-    setShowModal(false);
-    setLanguage([]);
-    setLoading(false);
+    if (card) {
+      InventaryCardService.update({
+        cardId: card.id,
+        languageId: flags
+          .filter((f: FlagProps) => language.indexOf(f.code) >= 0)
+          .map(f => f.id)[0],
+        statusId: currentStatus,
+        inSale: sell,
+        price: parseFloat(price ? price.toString() : '0'),
+        currencyId: currency === 'ARS' ? 1 : 2,
+        singleId: selected,
+        quantity,
+      })
+        .then(() => {
+          closeModal()
+          fetchInventary();
+          fetchCard();
+        })
+    }
   };
 
   const fetchCard = () => {
@@ -149,39 +121,11 @@ const InventarySingle = () => {
     });
   };
 
-  const setLang = code => () => setLanguage([code]);
-  const setStatus = id => () => setCurrentStatus(id);
-
-  React.useEffect(() => {
-    if (card && flags && inventary && statuses) {
-      hideLoader();
-    }
-  }, [card, flags, hideLoader, inventary, statuses]);
-
-  React.useEffect(() => {
-    showLoader();
-    fetchCard();
-    fetchInventary();
-  }, [fetchCard, fetchInventary, id, showLoader]);
-
-  React.useEffect(() => {
-    if (!sell) {
-      setIsPublic(false);
-      setPrice(null);
-      setCurrency('ARS');
-    }
-  }, [sell]);
-
-  React.useEffect(() => {
-    if (!showModal) {
-      setIsPublic(false);
-      setPrice(null);
-      setCurrency('ARS');
-      setLanguage([]);
-      setQuantity(0);
-      setCurrentStatus(null);
-    }
-  }, [showModal]);
+  const setLang = (code: string) => () => setLanguage([code]);
+  const setStatus = (id: number) => () => setCurrentStatus(id);
+  const showSingle = (single: SingleProps) => () =>
+    navigate('InventarySingle', { card, inventary, single });
+  const setPriceValue = (value: string) => setPrice(parseFloat(value))
 
   const canSubmit = React.useMemo(
     () =>
@@ -193,100 +137,83 @@ const InventarySingle = () => {
         quantity > 0 &&
         currentStatus !== null &&
         sell &&
-        parseFloat(price) > 0),
+        parseFloat(price ? price.toString() : '0') > 0),
     [language, quantity, currentStatus, sell, price],
   );
 
-  const events = {
-    onWillFocus: () => {
-      showLoader();
+  React.useEffect(() => {
+    if (isFocused) {
       fetchCard();
-    },
-  };
-
-  const currentCard = React.useMemo(() => {
-    if (!card || !card.id) {
-      return null;
+      fetchInventary();
+      setIsPublic(false);
+      setPrice(null);
+      setCurrency('ARS');
+      setLanguage([]);
+      setQuantity(0);
+      setCurrentStatus(null);
     }
+  }, [isFocused])
 
-    return {
-      ...card,
-      single: card?.singles?.find(f => f.id === single.id),
-    };
-  }, [card, single]);
+  React.useEffect(() => {
+    setFlags(languages)
+  }, [languages])
 
-  const inventaryCards = React.useMemo(
-    () => inventary?.filter(f => f.singleId === single.id),
-    [inventary, single.id],
-  );
-
-  if (!currentCard) {
-    return null;
-  }
+  React.useEffect(() => {
+    setStatuses(cardStatuses)
+  }, [cardStatuses])
 
   return (
-    <Layout
-      header
-      events={events}
-      title={name}
-      style={{ padding: 16 }}
-      withBack>
-      <View style={{ flexDirection: 'row', marginVertical: 12 }}>
-        <View style={{ width: 85 }}>
-          <Image
-            resizeMode="contain"
-            source={{ uri: currentCard.single.image }}
-            style={{ height: 120, width: 85 }}
-          />
-        </View>
-        <View style={{ flex: 1, paddingHorizontal: 12 }}>
-          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-            {currentCard.single.name}
-          </Text>
-          <Text style={{ fontSize: 16 }}>
-            {currentCard.single.expansion?.name}
-          </Text>
-          <Text style={{ fontSize: 16 }}>
-            {currentCard.single.expansion?.code}-
-            {currentCard.single?.number?.padStart(4, '0')}
-          </Text>
-          <Text style={{ fontSize: 16 }}>{currentCard.single.rarity}</Text>
-        </View>
-      </View>
-
-      {inventaryCards?.map(iCard => (
-        <View key={iCard.id} style={styles.cardContainer}>
-          <Image
-            source={flagsImages[getById(iCard.languageId).code]}
-            style={styles.flag}
-          />
-          <View style={styles.cardData}>
-            <Image
-              source={statusIcon[getIconById(iCard.statusId)]}
-              style={{ borderRadius: 4, width: 24, height: 24 }}
-            />
-            <Text style={styles.cardDetail}>
-              Cant: {iCard.quantity}
-              {iCard.inSale && <> x {format(iCard.price)}</>}
-            </Text>
+    <Layout header title={card?.name || name} style={{ padding: 16 }} withBack>
+      {card?.singles?.map((single, index) => (
+        <React.Fragment key={single.id}>
+          <View style={{ flexDirection: 'row', marginTop: 12 }}>
+            <View style={{ width: 85 }}>
+              <Image
+                resizeMode="contain"
+                source={{ uri: single.image ? single.image : `https://storage.googleapis.com/ygoprodeck.com/pics/${single.cardCode}.jpg` }}
+                style={{ height: 120, width: 85 }}
+              />
+            </View>
+            <View style={{ flex: 1, paddingHorizontal: 12 }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+                {card.name}
+              </Text>
+              <Text style={{ fontSize: 16 }}>{single.expansion?.name}</Text>
+              <Text style={{ fontSize: 16 }}>
+                {single.expansionCode}-{single.expansionNumber}
+              </Text>
+              <Text style={{ fontSize: 16 }}>{single.rarity}</Text>
+            </View>
           </View>
-          <View style={styles.iconContainer}>
-            <Icon
-              onPress={handleModify(iCard)}
-              color="#000000"
-              name="ios-brush"
-              size={30}
-              style={styles.iconLeft}
-            />
-            <Icon
-              onPress={handleRemove(iCard)}
-              color="#000000"
-              name="ios-trash"
-              size={30}
-              style={styles.iconRight}
-            />
+          <View style={{ marginVertical: 20, width: '100%' }}>
+            {inventary?.find(c => c.singleId === single.id) ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Button
+                  onPress={showSingle(single)}
+                  type="ghost"
+                  style={{ flex: 1, marginRight: 8 }}>
+                  <Text>MODIFICAR</Text>
+                </Button>
+                <Button
+                  onPress={handleAddCard(single)}
+                  type="primary"
+                  style={{ flex: 1, marginLeft: 8 }}>
+                  <Text>AGREGAR</Text>
+                </Button>
+              </View>
+            ) : (
+              <View style={{ width: '100%' }}>
+                <Button onPress={handleAddCard(single)} type="primary">
+                  <Text>AGREGAR</Text>
+                </Button>
+              </View>
+            )}
           </View>
-        </View>
+        </React.Fragment>
       ))}
 
       <Modal hasBackdrop={true} isVisible={showModal}>
@@ -300,7 +227,7 @@ const InventarySingle = () => {
                   key={flag.id}
                   onPress={setLang(flag.code)}
                   style={{
-                    borderColor: language.includes(flag.code)
+                    borderColor: language.indexOf(flag.code) >= 0
                       ? 'black'
                       : 'transparent',
                     marginHorizontal: 4,
@@ -333,7 +260,7 @@ const InventarySingle = () => {
             </View>
             <Title>Selecciona el estado</Title>
             <View style={styles.row}>
-              {statuses?.map(status => (
+              {statuses?.map((status: StatusProps) => (
                 <TouchableOpacity
                   key={status.id}
                   onPress={setStatus(status.id)}
@@ -348,7 +275,7 @@ const InventarySingle = () => {
                   }}>
                   <Image
                     source={statusIcon[status.icon]}
-                    style={{ width: 30, height: 30 }}
+                    style={{ width: 24, height: 24 }}
                   />
                 </TouchableOpacity>
               ))}
@@ -406,9 +333,9 @@ const InventarySingle = () => {
                       </Text>
                     </TouchableOpacity>
                     <TextInput
-                      defaultValue={price && price.toString()}
+                      defaultValue={price ? price.toString() : '0'}
                       keyboardType="decimal-pad"
-                      onChangeText={setPrice}
+                      onChangeText={setPriceValue}
                       placeholder="0"
                       style={styles.input}
                     />
@@ -454,10 +381,10 @@ const InventarySingle = () => {
               </Button>
               <Button
                 disabled={!canSubmit || loading}
-                type="primary"
                 onPress={updateCard}
+                type="primary"
                 style={{ flex: 1, marginHorizontal: 8 }}>
-                <Text>GUARDAR</Text>
+                <Text>AGREGAR</Text>
               </Button>
             </View>
           </View>
@@ -467,4 +394,4 @@ const InventarySingle = () => {
   );
 };
 
-export default InventarySingle;
+export default InventaryCard;

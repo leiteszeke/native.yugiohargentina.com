@@ -1,53 +1,43 @@
 // Dependencies
 import React from 'react';
-import {ImageBackground} from 'react-native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import * as Sentry from '@sentry/react-native';
-// Helpers
-import {getSession} from '#helpers/session';
-// Services
-import {navigate} from '#services/navigation';
+import { ImageBackground, StyleSheet } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 // Modules
 import Account from '#modules/Account/Account';
-import Dashboard from '#modules/Dashboard';
+import Dashboard from '#modules/Dashboard/Dashboard';
 import Login from '#modules/Login';
 import Eras from '#modules/Eras/Eras';
 import Sets from '#modules/Sets/Sets';
 import Register from '#modules/Register';
 import Recover from '#modules/Recover';
-import Events from '#modules/Events';
-import Stores from '#modules/Stores';
-import Inventary from '#modules/Inventary';
-import InventaryCard from '#modules/Inventary/InventaryCard';
-import InventarySingle from '#modules/Inventary/InventarySingle';
-import Wanted from '#modules/Wanted';
-import WishlistCard from '#modules/Wanted/WishlistCard';
-import Tournaments from '#modules/Tournaments';
+import Events from '#modules/Events/Events';
+import Stores from '#modules/Stores/Stores';
+import Inventary from '#modules/Inventary/Inventary';
+import InventaryCard from '#modules/Inventary/InventaryCard/InventaryCard';
+import InventarySingle from '#modules/Inventary/InventarySingle/InventarySingle';
+import Wanted from '#modules/Wanted/Wanted';
+import WishlistCard from '#modules/Wanted/WishlistCard/WishlistCard';
+import Tournaments from '#modules/Tournaments/Tournaments';
 import TournamentLanding from '#modules/Tournament/TournamentLanding';
 import TournamentInscription from '#modules/Tournament/TournamentInscription';
 import TournamentMatch from '#modules/Tournament/TournamentMatch';
 // Components
 import Sidebar from './components/Sidebar';
 // Contexts
-import {CardStatusProvider} from '#contexts/CardStatus';
-import {LanguageProvider} from '#contexts/Language';
+import { CardStatusProvider } from '#contexts/CardStatus';
+import { LanguageProvider } from '#contexts/Language';
 // Images
 import bgImage from '#images/bg.png';
+import { useUser } from '#contexts/User';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-type WithSession = {
-  onSession?: () => any;
-}
-
-const AppStack = ({ onSession }: WithSession) => (
+const AppStack = () => (
   <LanguageProvider>
     <CardStatusProvider>
-      <Drawer.Navigator
-        initialRouteName="Cards"
-        drawerContent={props => <Sidebar {...{...props, onSession}} />}>
+      <Drawer.Navigator drawerContent={props => <Sidebar {...{ ...props }} />}>
         <Drawer.Screen name="Dashboard" component={Dashboard} />
 
         <Drawer.Screen name="Cards" component={Eras} />
@@ -73,37 +63,16 @@ const AppStack = ({ onSession }: WithSession) => (
   </LanguageProvider>
 );
 
-const AuthStack = ({ onSession }: WithSession) => (
+const AuthStack = () => (
   <Stack.Navigator headerMode="none">
-    <Stack.Screen name="Login">
-      {props => <Login {...{...props, onSession}} />}
-    </Stack.Screen>
-    <Stack.Screen name="Register">
-      {props => <Register {...{...props, onSession}} />}
-    </Stack.Screen>
+    <Stack.Screen name="Login" component={Login} />
+    <Stack.Screen name="Register" component={Register} />
     <Stack.Screen name="Recover" component={Recover} />
   </Stack.Navigator>
 );
 
 const App = () => {
-  const handleSession = async () => {
-    const session = await getSession();
-
-    if (session && session.id) {
-      if (session.id > 0) {
-        Sentry.configureScope(scope =>
-          scope.setUser({
-            id: session?.id,
-            email: session?.email,
-          }),
-        );
-      }
-
-      return navigate('App');
-    }
-
-    return navigate('Auth');
-  };
+  const { handleSession } = useUser();
 
   React.useEffect(() => {
     handleSession();
@@ -112,16 +81,18 @@ const App = () => {
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Loading">
-        {() => <ImageBackground source={bgImage} style={{flex: 1}} />}
+        {() => <ImageBackground source={bgImage} style={styles.flex} />}
       </Stack.Screen>
-      <Stack.Screen name="Auth">
-        {props => <AuthStack {...props} onSession={handleSession} />}
-      </Stack.Screen>
-      <Stack.Screen name="App">
-        {props => <AppStack {...props} onSession={handleSession} />}
-      </Stack.Screen>
+      <Stack.Screen name="Auth" component={AuthStack} />
+      <Stack.Screen name="App" component={AppStack} />
     </Stack.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
+});
 
 export default App;

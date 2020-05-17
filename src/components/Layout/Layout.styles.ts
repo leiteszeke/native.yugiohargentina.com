@@ -32,7 +32,6 @@ export default StyleSheet.create({
 
   container: {
     alignContent: 'flex-start',
-    flex: 1,
     paddingBottom: 16,
   },
 

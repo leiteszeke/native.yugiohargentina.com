@@ -1,7 +1,7 @@
 // Dependencies
 import React from 'react';
 import { SENTRY_DSN } from 'react-native-dotenv';
-import { Provider, theme } from '@ant-design/react-native';
+import { Provider } from '@ant-design/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as Sentry from '@sentry/react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -25,32 +25,30 @@ if (SENTRY_DSN !== '') {
 
   Sentry.configureScope(scope => scope.setExtra('app_version', version));
 }
-
-numeral.register('locale', 'es', {
-  delimiters: {
-    thousands: '',
-    decimal: ',',
-  },
-  abbreviations: {
-    thousand: 'k',
-    million: 'm',
-    billion: 'b',
-    trillion: 't',
-  },
-  ordinal: function(number) {
-    return number === 1 ? 'er' : 'er';
-  },
-  currency: {
-    symbol: '$',
-  },
-});
-
-if (!numeral.locale('es')) {
-  numeral.locale('es');
+if (typeof numeral.locales.es === 'undefined') {
+  numeral.register('locale', 'es', {
+    delimiters: {
+      thousands: '',
+      decimal: ',',
+    },
+    abbreviations: {
+      thousand: 'k',
+      million: 'm',
+      billion: 'b',
+      trillion: 't',
+    },
+    ordinal: function(number) {
+      return number === 1 ? 'er' : 'er';
+    },
+    currency: {
+      symbol: '$',
+    },
+  });
 }
 
+numeral.locale('es');
+
 const myTheme = {
-  ...theme,
   ...appTheme,
   border_color_base: '#FFFFFF',
 };

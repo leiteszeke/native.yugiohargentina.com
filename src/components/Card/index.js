@@ -2,7 +2,7 @@
 import React from 'react';
 import { View } from 'react-native';
 // Components
-import { BigNumber, Subtitle } from '#components/Text';
+import { BigNumber, Subtitle } from '#components/Text/Text';
 // Styles
 import styles from './styles';
 

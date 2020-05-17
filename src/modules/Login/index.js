@@ -1,8 +1,9 @@
 // Dependencies
 import React, { useState } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator, Button, NoticeBar } from '@ant-design/react-native';
 import { useNavigation } from '@react-navigation/native';
+import Image from 'react-native-fast-image';
 // Components
 import Layout from '#components/Layout';
 import Input from '#components/Input';
@@ -17,9 +18,9 @@ import { useUser } from '#contexts/User';
 // Styles
 import styles from './styles';
 
-const Login = ({ onSession }) => {
+const Login = () => {
   const { navigate } = useNavigation();
-  const { fetchUser } = useUser();
+  const { fetchUser, handleSession } = useUser();
   const [data, setData] = useState({});
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +39,7 @@ const Login = ({ onSession }) => {
   const loginAnonymous = async () => {
     await setSession({ id: -1 });
     await fetchUser();
-    onSession();
+    handleSession();
   };
 
   const goRecover = () => navigate('Recover');
@@ -52,7 +53,7 @@ const Login = ({ onSession }) => {
         await setSession(res.data);
         await fetchUser();
         setIsLoading(false);
-        return onSession();
+        handleSession();
       })
       .catch(res => {
         if (res.message === 'user_not_found') {
@@ -74,7 +75,6 @@ const Login = ({ onSession }) => {
           style={[styles.textInput, errors.email ? styles.inputError : {}]}
           onChange={setValue('email')}
           placeholder="Email"
-          placeholderTextColor="#FFFFFF"
           value={data?.email}
         />
         <View style={styles.separator} />
@@ -85,7 +85,6 @@ const Login = ({ onSession }) => {
           style={[styles.textInput, errors.password ? styles.inputError : {}]}
           secureTextEntry={true}
           value={data?.password}
-          placeholderTextColor="#FFFFFF"
         />
         {showAlert && (
           <NoticeBar

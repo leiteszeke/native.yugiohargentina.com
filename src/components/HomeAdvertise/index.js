@@ -1,6 +1,7 @@
 // Dependencies
 import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import Image from 'react-native-fast-image';
 import { useNavigation } from '@react-navigation/native';
 // Contexts
 import { useUser } from '#contexts/User';

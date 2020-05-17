@@ -1,7 +1,7 @@
 // Dependencies
 import React from 'react';
 import { Button } from '@ant-design/react-native';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
@@ -14,20 +14,20 @@ import * as Countries from '#services/countries';
 import * as Users from '#services/users';
 import * as States from '#services/states';
 // Contexts
-import { useLoader } from '#contexts/Loader';
 import { useUser } from '#contexts/User';
 // Styles
 import styles, { dropdownStyle } from './styles';
 // Helpers
 import { removeSession } from '#helpers/session';
+// Types
+import { CountryProps, UserProps, StateProps } from '#types';
 
 const Account = () => {
   const { navigate } = useNavigation();
-  const { showLoader, isLoading, hideLoader } = useLoader();
   const { user, updateUser } = useUser();
-  const [data, setData] = React.useState(null);
-  const [states, setStates] = React.useState(null);
-  const [countries, setCountries] = React.useState(null);
+  const [data, setData] = React.useState<UserProps | null>(null);
+  const [states, setStates] = React.useState<Array<StateProps> | null>(null);
+  const [countries, setCountries] = React.useState<Array<CountryProps> | null>(null);
 
   const logout = () => {
     removeSession();
@@ -35,79 +35,62 @@ const Account = () => {
   };
 
   const saveData = () => {
-    const {
-      city,
-      cossyId,
-      challongeId,
-      countryId,
-      duelLinksId,
-      duelingBookId,
-      discordId,
-      stateId,
-    } = data;
+    if (data) {
+      Users.update(data.id, data).then(res => {
+        setData(res.data);
+        updateUser();
 
-    showLoader();
-
-    Users.update(data?.id, {
-      challongeId,
-      city,
-      countryId,
-      cossyId,
-      discordId,
-      duelingBookId,
-      duelLinksId,
-      stateId,
-    }).then(res => {
-      hideLoader();
-      setData(res.data);
-      updateUser();
-
-      Alert.alert('Actualizar Usuario', 'Se han actualizado tus datos.');
-    });
+        Alert.alert('Actualizar Usuario', 'Se han actualizado tus datos.');
+      });
+    }
   };
 
-  const setValue = name => e => {
-    if (typeof e?.persist === 'function') {
-      e?.persist();
+  const setValue = (name: string) => (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+    if (typeof e.persist === 'function') {
+      e.persist();
     }
 
-    const value = e?.nativeEvent?.text || e;
+    const newData: UserProps | null = data;
 
-    setData(prev => ({
-      ...prev,
-      stateId: name === 'countryId' && value !== 1 ? null : prev.stateId,
-      [name]: value,
-    }));
+    if (newData !== null) {
+      newData[name] = e.nativeEvent.text;
+      setData(newData);
+    }
   };
 
-  React.useEffect(() => {
-    showLoader();
-    Users.me().then(res => setData(res.data));
-    States.all().then(({ data }) => setStates(data));
-    Countries.all().then(({ data }) =>
-      setCountries(
-        data?.sort((a, b) => {
-          if (a.name > b.name) {
-            return 1;
-          }
-          if (b.name > a.name) {
-            return -1;
-          }
-          return 0;
-        }) || [],
-      ),
-    );
-  }, [showLoader]);
+  const setSelectValue = (name: string) => (value: string | number) => {
+    const newData: UserProps | null = data;
 
-  React.useEffect(() => {
-    if (data !== null && states !== null && countries !== null) {
-      hideLoader();
+    if (newData !== null) {
+      if (name === 'countryId' && value !== 1) {
+        newData.stateId = null
+      }
+
+      newData[name] = value;
+
+      setData(newData);
     }
-  }, [data, states, countries, hideLoader]);
-
-  if (isLoading) {
-    return null;
   }
+
+  const fetchUser = () => Users.me().then(res => setData(res.data));
+  const fetchStates = () => States.all().then(({ data }) => setStates(data));
+
+  const fetchCountries = () => Countries.all()
+    .then(({ data }) => {
+      const countriesSorted = data.sort((a: CountryProps, b: CountryProps) => {
+        if (a.name > b.name) return 1;
+        if (b.name > a.name) return -1;
+        return 0;
+      });
+      setCountries(countriesSorted);
+    });
+
+  React.useEffect(() => {
+    fetchUser();
+    fetchStates();
+    fetchCountries();
+  }, []);
+
 
   const actions = (
     <Icon onPress={saveData} name="ios-save" color="#000000" size={32} />
@@ -130,11 +113,15 @@ const Account = () => {
     );
   }
 
+  if (data === null) {
+    return null;
+  }
+
   return (
     <Layout header headerActions={actions} title="Mi cuenta" withBack>
       <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
         <Text style={styles.title}>
-          {data?.name} {data?.lastname}
+          {data.name} {data.lastname}
         </Text>
       </View>
       <View style={{ flex: 1, paddingBottom: 16, paddingHorizontal: 16 }}>
@@ -174,7 +161,7 @@ const Account = () => {
                   }))
                 : []
             }
-            onValueChange={setValue('countryId')}
+            onValueChange={setSelectValue('countryId')}
             placeholder={{
               color: 'black',
               label: 'Seleccione un Pais',
@@ -195,7 +182,7 @@ const Account = () => {
                     }))
                   : []
               }
-              onValueChange={setValue('stateId')}
+              onValueChange={setSelectValue('stateId')}
               placeholder={{
                 color: 'black',
                 label: 'Seleccione una Provincia',

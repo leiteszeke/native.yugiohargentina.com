@@ -12,7 +12,7 @@ import styles from './Sets.styles';
 import { all } from '#services/sets';
 import { navigate } from '#services/navigation';
 // Types
-import { MyObject } from '#types';
+import { MyObject, RootStackParamList } from '#types';
 
 enum ExpansionType {
   EXPANSION = 'EXPANSION',
@@ -36,12 +36,6 @@ type SetTypes = {
   [typeof ExpansionType]: Array<SetProps>;
 }
 
-type RootStackParamList = {
-  Sets: { eraId?: number; eraName?: string; };
-}
-
-type SetsRouteProps = RouteProp<RootStackParamList, 'Sets'>;
-
 const parseSets = (sets: Array<SetProps>): SetTypes => ({
   [ExpansionType.EXPANSION]: sets.filter((s: SetProps) => s.type === ExpansionType.EXPANSION),
   [ExpansionType.PRICE]: sets.filter((s: SetProps) => s.type === ExpansionType.PRICE),
@@ -54,7 +48,7 @@ const parseSets = (sets: Array<SetProps>): SetTypes => ({
 })
 
 const Sets = () => {
-  const { params } = useRoute<SetsRouteProps>();
+  const { params } = useRoute<RouteProp<RootStackParamList, 'Sets'>>();
   const [sets, setSets] = React.useState<SetTypes | null>(null);
   const [expansionType, setExpansionType] = React.useState<ExpansionType>(ExpansionType.EXPANSION);
 
@@ -69,7 +63,6 @@ const Sets = () => {
   const renderSet = (set: SetProps) => (
     <TouchableOpacity key={set.id} onPress={() => goSet(set.id, set.name)} style={styles.set}>
       <FastImage
-        onError={() => console.log(set.code, set.name)}
         source={{ uri: `https://s3-us-west-2.amazonaws.com/static.yugiohargentina.com/expansions/${set.code}.png`}}
         style={styles.setImage}
       />

@@ -2,20 +2,20 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  list: {
+  layout: {
     flex: 1,
+    padding: 16,
   },
-
-  card: {
-    borderBottomColor: 'gray',
-    borderBottomWidth: 1,
-    height: 40,
+  emptyPage: {
+    alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 6,
+    paddingHorizontal: 16,
   },
 
-  cardName: {
-    fontSize: 16,
+  emptyMessage: {
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
 

@@ -9,5 +9,5 @@ declare module 'react-native-dotenv' {
 
   export const API_URL: string;
   export const LANDING_URL: string;
-  export const SITRE_URL: string;
+  export const SITE_URL: string;
 }

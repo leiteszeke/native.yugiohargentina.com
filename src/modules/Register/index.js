@@ -1,7 +1,8 @@
 // Dependencies
 import React, { useState } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator, Button, NoticeBar } from '@ant-design/react-native';
+import Image from 'react-native-fast-image';
 import { useNavigation } from '@react-navigation/native';
 // Components
 import Layout from '#components/Layout';
@@ -17,9 +18,9 @@ import { useUser } from '#contexts/User';
 // Styles
 import styles from './styles';
 
-const Register = ({ onSession }) => {
+const Register = () => {
   const { navigate } = useNavigation();
-  const { fetchUser } = useUser();
+  const { fetchUser, handleSession } = useUser();
   const [data, setData] = useState({});
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +45,7 @@ const Register = ({ onSession }) => {
         await setSession(res.data);
         await fetchUser();
         setIsLoading(false);
-        return onSession();
+        handleSession();
       })
       .catch(res => {
         if (res.message === 'email_in_use') {
@@ -66,7 +67,6 @@ const Register = ({ onSession }) => {
           style={[styles.textInput, errors.name ? styles.inputError : {}]}
           onChange={setValue('name')}
           placeholder="Nombre"
-          placeholderTextColor="#FFFFFF"
           value={data?.name}
         />
         <View style={styles.separator} />
@@ -75,7 +75,6 @@ const Register = ({ onSession }) => {
           style={[styles.textInput, errors.lastname ? styles.inputError : {}]}
           onChange={setValue('lastname')}
           placeholder="Apellido"
-          placeholderTextColor="#FFFFFF"
           value={data?.lastname}
         />
         <View style={styles.separator} />
@@ -84,7 +83,6 @@ const Register = ({ onSession }) => {
           style={[styles.textInput, errors.email ? styles.inputError : {}]}
           onChange={setValue('email')}
           placeholder="Email"
-          placeholderTextColor="#FFFFFF"
           value={data?.email}
         />
         <View style={styles.separator} />
@@ -94,7 +92,6 @@ const Register = ({ onSession }) => {
           secureTextEntry={true}
           onChange={setValue('password')}
           placeholder="Contraseña"
-          placeholderTextColor="#FFFFFF"
           value={data?.password}
         />
         {showAlert && (

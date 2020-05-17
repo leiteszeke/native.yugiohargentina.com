@@ -2,6 +2,15 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+  layout: {
+    flex: 1,
+  },
+
+  container: {
+    flex: 1,
+    backgroundColor: 'red',
+  },
+
   searchInput: {
     marginTop: 4,
     paddingHorizontal: 16,
