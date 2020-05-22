@@ -84,9 +84,12 @@ const Inventary = () => {
 
   const actions = <Icon onPress={openListModal} name="ios-add" color="#000000" size={32} />
 
-  const renderItem = ({ item: { card, single } }: { item: InventaryCardProps }) => (
+  const renderItem = ({ item: { card, single } }: { item: InventaryCardProps }) => {
+    if (!card) return null
+
+    return (
     <TouchableOpacity
-      onPress={openCard(card.id, card.name)}
+      onPress={openCard(card?.id, card?.name)}
       style={styles.card}>
       <Text numberOfLines={2} style={styles.cardName}>
         {card.name} - {single.rarity} - {single.expansionCode}-
@@ -94,10 +97,14 @@ const Inventary = () => {
       </Text>
     </TouchableOpacity>
   );
+}
 
   React.useEffect(() => {
     if (focused) {
+      setPrev(null);
       fetchCards();
+    } else {
+      setPrev(null)
     }
   }, [focused])
 
