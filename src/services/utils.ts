@@ -1,12 +1,12 @@
 // Utils
 import { getSession, removeSession } from '#helpers/session';
 // Configs
-import { API_URL, IS_DEBUG } from 'react-native-dotenv';
+import Config from 'react-native-config';
 // Services
 import { navigate } from '#services/navigation';
 import { MyObject, RequestConfig, RequestOptions, RequestMethod } from '#types';
 
-export const url = API_URL;
+export const url = Config.API_URL;
 
 const getToken = async () => {
   const user = await getSession();
@@ -15,12 +15,17 @@ const getToken = async () => {
 
 const objectToQueryString = (obj: MyObject) =>
   Object.keys(obj)
-    .map(key => `${key}=${obj[key]}`)
+    .map((key) => `${key}=${obj[key]}`)
     .join('&');
 
-const request = async (initialUrl: string, params?: MyObject, method: RequestMethod = 'GET', config: RequestConfig = {}) => {
+const request = async (
+  initialUrl: string,
+  params?: MyObject,
+  method: RequestMethod = 'GET',
+  config: RequestConfig = {},
+) => {
   const randomNumber = Math.floor(Math.random() * 100);
-  let url = `${API_URL}${initialUrl}`;
+  let url = `${Config.API_URL}${initialUrl}`;
   const options: RequestOptions = {
     method,
     headers: {
@@ -68,14 +73,17 @@ const request = async (initialUrl: string, params?: MyObject, method: RequestMet
     if (debug) console.debug(`Debugging Response ${randomNumber}`, result);
     return Promise.resolve(result);
   } catch (e) {
-    if (debug) console.debug(`Debugging Response Error ${randomNumber}`, e)
+    if (debug) console.debug(`Debugging Response Error ${randomNumber}`, e);
     throw new Error(e);
   }
 };
 
-const get = (url: string, params?: MyObject, options?: RequestConfig) => request(url, params, 'GET', options);
-const post = (url: string, params?: MyObject, options?: RequestConfig) => request(url, params, 'POST', options);
-const put = (url: string, params?: MyObject, options?: RequestConfig) => request(url, params, 'PUT', options);
+const get = (url: string, params?: MyObject, options?: RequestConfig) =>
+  request(url, params, 'GET', options);
+const post = (url: string, params?: MyObject, options?: RequestConfig) =>
+  request(url, params, 'POST', options);
+const put = (url: string, params?: MyObject, options?: RequestConfig) =>
+  request(url, params, 'PUT', options);
 const _delete = (url: string, params?: MyObject, options?: RequestConfig) =>
   request(url, params, 'DELETE', options);
 
@@ -87,7 +95,7 @@ export const client = {
 };
 
 export const handleSuccess = (res: MyObject) => {
-  if (res.error) return handleError(new Error(JSON.stringify(res)))
+  if (res.error) return handleError(new Error(JSON.stringify(res)));
 
   return res;
 };
@@ -97,32 +105,24 @@ export const handleError = (err: Error) => {
     return {
       error: true,
       data: [],
-      message: 'request_failed'
-    }
+      message: 'request_failed',
+    };
   }
 
   return {
     error: true,
     data: [],
     message: err.message,
-  }
+  };
 };
 
 export const basicClient = {
   get: (url: string, params?: MyObject, options?: RequestConfig) =>
-    get(url, params, options)
-      .then(handleSuccess)
-      .catch(handleError),
+    get(url, params, options).then(handleSuccess).catch(handleError),
   post: (url: string, params?: MyObject, options?: RequestConfig) =>
-    post(url, params, options)
-      .then(handleSuccess)
-      .catch(handleError),
+    post(url, params, options).then(handleSuccess).catch(handleError),
   put: (url: string, params?: MyObject, options?: RequestConfig) =>
-    put(url, params, options)
-      .then(handleSuccess)
-      .catch(handleError),
+    put(url, params, options).then(handleSuccess).catch(handleError),
   delete: (url: string, params?: MyObject, options?: RequestConfig) =>
-    _delete(url, params, options)
-      .then(handleSuccess)
-      .catch(handleError),
+    _delete(url, params, options).then(handleSuccess).catch(handleError),
 };

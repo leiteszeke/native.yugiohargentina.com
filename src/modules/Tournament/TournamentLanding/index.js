@@ -4,7 +4,7 @@ import { Alert, View } from 'react-native';
 import { Button } from '@ant-design/react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import WebView from 'react-native-webview';
-import { LANDING_URL } from 'react-native-dotenv';
+import Config from 'react-native-config';
 // Contexts
 import { useUser } from '#contexts/User';
 // Components
@@ -33,7 +33,7 @@ const TournamentLanding = () => {
     <Layout header withBack containerStyle={{ flex: 1 }} style={styles.layout}>
       <View style={{ flex: 1 }}>
         <WebView
-          source={{ uri: `${LANDING_URL}${advertisingId}` }}
+          source={{ uri: `${Config.LANDING_URL}${advertisingId}` }}
           style={{
             backgroundColor: 'transparent',
             marginBottom: 12,

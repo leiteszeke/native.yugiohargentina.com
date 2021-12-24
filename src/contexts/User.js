@@ -1,6 +1,6 @@
 // Dependencies
 import React from 'react';
-import * as Sentry from '@sentry/react-native';
+// import * as Sentry from '@sentry/react-native';
 // Helpers
 import { getSession, setSession } from '#helpers/session';
 // Services
@@ -22,12 +22,12 @@ const UserProvider = ({ children }) => {
 
     if (session && session.id) {
       if (session.id > 0) {
-        Sentry.configureScope(scope =>
-          scope.setUser({
-            id: session?.id,
-            email: session?.email,
-          }),
-        );
+        // Sentry.configureScope(scope =>
+        //   scope.setUser({
+        //     id: session?.id,
+        //     email: session?.email,
+        //   }),
+        // );
       }
 
       return navigate('App');
@@ -37,7 +37,7 @@ const UserProvider = ({ children }) => {
   };
 
   const updateUser = () =>
-    me().then(async res => {
+    me().then(async (res) => {
       await setSession(res.data);
       fetchUser();
     });

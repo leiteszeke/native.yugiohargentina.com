@@ -4,5 +4,11 @@
 >
     <application
       android:label="@string/app_name"
+      android:usesCleartextTraffic="true"
+      tools:targetApi="28"
+      tools:ignore="GoogleAppIndexingWarning"
+    >
+      <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+    </application>
     />
 </manifest>
